@@ -1,0 +1,16 @@
+
+#atomDetail .scientific-addon{grid-column:1/-1;padding:22px;--sc-accent:#5dcdf1;border:1px solid color-mix(in srgb,var(--sc-accent),#1d354b 65%);background:radial-gradient(ellipse at 76% 0%,color-mix(in srgb,var(--sc-accent) 10%,transparent),transparent 65%),#0a1524}
+.science-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.science-eyebrow{letter-spacing:.2em;font:700 12px ui-monospace,monospace;color:var(--sc-accent);border-bottom:1px solid #375069;padding-bottom:9px;margin:12px 0 14px}
+.science-kv{display:flex;justify-content:space-between;gap:15px;padding:8px 0;border-bottom:1px solid #183247;font-size:12px}.science-kv span{color:#91aabc}.science-kv strong{text-align:right;font-family:ui-monospace,monospace}
+.science-small{font-size:12px;line-height:1.6;color:#a8bece;margin:14px 0}
+.science-uses{padding:9px 0;border-bottom:1px solid #19334a;color:#dce7f3;font-size:13px}.science-uses small{font-family:ui-monospace,monospace;color:var(--sc-accent);margin-right:11px}
+.science-spectrum{position:relative;overflow:hidden;height:95px;border:1px solid #38506a;border-radius:7px;background:linear-gradient(90deg,#391b6a 0%,#1728a7 14%,#0872cb 27%,#02a58e 42%,#84b61a 54%,#e9ba19 66%,#cf4b20 81%,#661725 100%)}
+.science-spectrum::after{content:"";position:absolute;inset:0;background:#020610aa;pointer-events:none}
+.science-line{position:absolute;top:0;bottom:0;width:2px;z-index:1;box-shadow:0 0 6px 2px currentColor;opacity:.98}
+.science-spectrum-axis{display:flex;justify-content:space-between;font:11px ui-monospace,monospace;color:#9cb2c5;margin-top:5px}
+.science-mini{display:flex;gap:4px;flex-wrap:wrap;margin-top:16px;border-top:1px solid #304359;padding-top:13px}
+.science-mini button{min-width:40px;font:11px ui-monospace,monospace;padding:6px;border:1px solid #31506b;background:#0d2133;color:#d8ecff;border-radius:5px;cursor:pointer}
+.science-mini button.active{border-color:var(--sc-accent);color:var(--sc-accent)}
+#scientificMode.active{border-color:#d9aaec;background:#312448;color:#fff}
+@media(max-width:700px){.science-grid{grid-template-columns:1fr;gap:10px}#atomDetail .scientific-addon{padding:13px}}

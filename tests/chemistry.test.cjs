@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict');
+const {test}=require('node:test');
+const engine=require('../assets/js/chemistry-engine.js');
+const atoms=(...symbols)=>symbols.map((s,i)=>({id:i+1,s,x:i*40,y:0}));
+const bond=(a,b,order=1)=>({a,b,order});
+test('water VSEPR bent angle',()=>{let a=atoms('O','H','H'), b=[bond(1,2),bond(1,3)];let r=engine.analyze(a,b);assert.equal(r.validity,'plausible');assert.equal(r.centers[0].geometry,'bent');assert.equal(r.centers[0].approxAngle,104.5);let xyz=engine.referenceGeometry(a,b);assert.equal(xyz.length,3)});
+test('methane tetrahedral',()=>{let a=atoms('C','H','H','H','H'),b=[2,3,4,5].map(j=>bond(1,j));assert.equal(engine.analyze(a,b).centers[0].geometry,'tetrahedral');assert.equal(engine.referenceGeometry(a,b).length,5)});
+test('carbon dioxide linear',()=>{let a=atoms('C','O','O'),b=[bond(1,2,2),bond(1,3,2)];assert.equal(engine.analyze(a,b).centers[0].geometry,'linear')});
+test('overbonded carbon is rejected',()=>{let a=atoms('C','H','H','H','H','H'),b=[2,3,4,5,6].map(j=>bond(1,j));assert.equal(engine.analyze(a,b).validity,'invalid')});
+test('auto hydrogen only for constrained CNO',()=>{let a=atoms('C');assert.deepEqual(engine.suggestedHydrogens(a,[]),[{id:1,count:4}]);assert.deepEqual(engine.suggestedHydrogens(atoms('Fe'),[]),[])});
+test('ionic / metallic classification',()=>{assert.equal(engine.classifyBond('Na','Cl').type,'ionic-possible');assert.equal(engine.classifyBond('Fe','Fe').type,'metallic');assert.equal(engine.classifyBond('H','O').type,'polar-covalent')});
+test('no fictitious molecular geometry for lattice',()=>{assert.equal(engine.referenceGeometry(atoms('Na','Cl'),[bond(1,2)]),null)});
