@@ -1,0 +1,308 @@
+{
+  "name": "glucose",
+  "cid": 5793,
+  "formula": "C6H12O6",
+  "molecular_weight": "180.16",
+  "smiles": "C(C1C(C(C(C(O1)O)O)O)O)O",
+  "iupac": "(3R,4S,5S,6R)-6-(hydroxymethyl)oxane-2,3,4,5-tetrol",
+  "structure": {
+    "atoms": [
+      {
+        "id": 1,
+        "atomic_number": 8,
+        "x": -0.6679,
+        "y": 1.1587,
+        "z": 0.257
+      },
+      {
+        "id": 2,
+        "atomic_number": 8,
+        "x": -0.887,
+        "y": -2.4483,
+        "z": -0.3388
+      },
+      {
+        "id": 3,
+        "atomic_number": 8,
+        "x": 1.8623,
+        "y": -2.0693,
+        "z": 0.4696
+      },
+      {
+        "id": 4,
+        "atomic_number": 8,
+        "x": 2.8609,
+        "y": 0.5414,
+        "z": -0.4619
+      },
+      {
+        "id": 5,
+        "atomic_number": 8,
+        "x": 1.1222,
+        "y": 2.6552,
+        "z": 0.2574
+      },
+      {
+        "id": 6,
+        "atomic_number": 8,
+        "x": -3.3742,
+        "y": 0.9717,
+        "z": -0.1865
+      },
+      {
+        "id": 7,
+        "atomic_number": 6,
+        "x": -0.3727,
+        "y": -1.247,
+        "z": 0.23
+      },
+      {
+        "id": 8,
+        "atomic_number": 6,
+        "x": 1.0856,
+        "y": -1.0709,
+        "z": -0.194
+      },
+      {
+        "id": 9,
+        "atomic_number": 6,
+        "x": -1.2211,
+        "y": -0.0621,
+        "z": -0.2375
+      },
+      {
+        "id": 10,
+        "atomic_number": 6,
+        "x": 1.6082,
+        "y": 0.3151,
+        "z": 0.1839
+      },
+      {
+        "id": 11,
+        "atomic_number": 6,
+        "x": 0.6388,
+        "y": 1.4132,
+        "z": -0.2534
+      },
+      {
+        "id": 12,
+        "atomic_number": 6,
+        "x": -2.655,
+        "y": -0.1577,
+        "z": 0.274
+      },
+      {
+        "id": 13,
+        "atomic_number": 1,
+        "x": -0.4248,
+        "y": -1.3522,
+        "z": 1.3206
+      },
+      {
+        "id": 14,
+        "atomic_number": 1,
+        "x": 1.2066,
+        "y": -1.2487,
+        "z": -1.2697
+      },
+      {
+        "id": 15,
+        "atomic_number": 1,
+        "x": -1.2548,
+        "y": -0.0098,
+        "z": -1.3343
+      },
+      {
+        "id": 16,
+        "atomic_number": 1,
+        "x": 1.7952,
+        "y": 0.3598,
+        "z": 1.2636
+      },
+      {
+        "id": 17,
+        "atomic_number": 1,
+        "x": 0.5967,
+        "y": 1.5141,
+        "z": -1.344
+      },
+      {
+        "id": 18,
+        "atomic_number": 1,
+        "x": -2.6916,
+        "y": -0.1535,
+        "z": 1.3685
+      },
+      {
+        "id": 19,
+        "atomic_number": 1,
+        "x": -3.1564,
+        "y": -1.0581,
+        "z": -0.0922
+      },
+      {
+        "id": 20,
+        "atomic_number": 1,
+        "x": -0.8514,
+        "y": -2.3615,
+        "z": -1.3066
+      },
+      {
+        "id": 21,
+        "atomic_number": 1,
+        "x": 1.4973,
+        "y": -2.9356,
+        "z": 0.22
+      },
+      {
+        "id": 22,
+        "atomic_number": 1,
+        "x": 2.7165,
+        "y": 0.4989,
+        "z": -1.4227
+      },
+      {
+        "id": 23,
+        "atomic_number": 1,
+        "x": 1.4876,
+        "y": 2.5033,
+        "z": 1.1448
+      },
+      {
+        "id": 24,
+        "atomic_number": 1,
+        "x": -2.9192,
+        "y": 1.7652,
+        "z": 0.144
+      }
+    ],
+    "bonds": [
+      {
+        "a": 1,
+        "b": 9,
+        "order": 1
+      },
+      {
+        "a": 1,
+        "b": 11,
+        "order": 1
+      },
+      {
+        "a": 2,
+        "b": 7,
+        "order": 1
+      },
+      {
+        "a": 2,
+        "b": 20,
+        "order": 1
+      },
+      {
+        "a": 3,
+        "b": 8,
+        "order": 1
+      },
+      {
+        "a": 3,
+        "b": 21,
+        "order": 1
+      },
+      {
+        "a": 4,
+        "b": 10,
+        "order": 1
+      },
+      {
+        "a": 4,
+        "b": 22,
+        "order": 1
+      },
+      {
+        "a": 5,
+        "b": 11,
+        "order": 1
+      },
+      {
+        "a": 5,
+        "b": 23,
+        "order": 1
+      },
+      {
+        "a": 6,
+        "b": 12,
+        "order": 1
+      },
+      {
+        "a": 6,
+        "b": 24,
+        "order": 1
+      },
+      {
+        "a": 7,
+        "b": 8,
+        "order": 1
+      },
+      {
+        "a": 7,
+        "b": 9,
+        "order": 1
+      },
+      {
+        "a": 7,
+        "b": 13,
+        "order": 1
+      },
+      {
+        "a": 8,
+        "b": 10,
+        "order": 1
+      },
+      {
+        "a": 8,
+        "b": 14,
+        "order": 1
+      },
+      {
+        "a": 9,
+        "b": 12,
+        "order": 1
+      },
+      {
+        "a": 9,
+        "b": 15,
+        "order": 1
+      },
+      {
+        "a": 10,
+        "b": 11,
+        "order": 1
+      },
+      {
+        "a": 10,
+        "b": 16,
+        "order": 1
+      },
+      {
+        "a": 11,
+        "b": 17,
+        "order": 1
+      },
+      {
+        "a": 12,
+        "b": 18,
+        "order": 1
+      },
+      {
+        "a": 12,
+        "b": 19,
+        "order": 1
+      }
+    ],
+    "geometry": "3d"
+  },
+  "source": "PubChem PUG REST",
+  "source_url": "https://pubchem.ncbi.nlm.nih.gov/compound/5793",
+  "retrieved_at": "2026-10-29T16:20:04.481026+00:00",
+  "data_status": "reference structural data; no thermodynamic or kinetic stability conclusion",
+  "data_rights": "PubChem NCBI public data; record-specific third-party rights may apply; verify before redistribution"
+}

@@ -1,0 +1,15 @@
+{
+  "z": 42,
+  "symbol": "Mo",
+  "status": "unverified_empty",
+  "lines": [],
+  "source": "NIST ASD neutral atom (Mo I)",
+  "url": "https://physics.nist.gov/cgi-bin/ASD/lines1.pl?spectra=Mo+I&limits_type=0&low_w=380&upp_w=750&unit=1&submit=Retrieve+Data&de=0&I_scale_type=1&format=3&line_out=0&remove_js=on&show_obs_wl=1&show_ritz_wl=0&show_av=0&show_intens=1&output=0&page_size=5000",
+  "fetched_utc": 1793290703,
+  "unit": "nm",
+  "window_nm": [
+    380,
+    750
+  ],
+  "intensity_status": "not_calibrated"
+}

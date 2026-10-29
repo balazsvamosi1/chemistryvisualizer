@@ -1,0 +1,39 @@
+{
+  "name": "hydrogen chloride",
+  "cid": 313,
+  "formula": "ClH",
+  "molecular_weight": "36.46",
+  "smiles": "Cl",
+  "iupac": "chlorane",
+  "structure": {
+    "atoms": [
+      {
+        "id": 1,
+        "atomic_number": 17,
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      {
+        "id": 2,
+        "atomic_number": 1,
+        "x": 0.6058,
+        "y": -0.2053,
+        "z": -1.1384
+      }
+    ],
+    "bonds": [
+      {
+        "a": 1,
+        "b": 2,
+        "order": 1
+      }
+    ],
+    "geometry": "3d"
+  },
+  "source": "PubChem PUG REST",
+  "source_url": "https://pubchem.ncbi.nlm.nih.gov/compound/313",
+  "retrieved_at": "2026-10-29T16:20:08.540625+00:00",
+  "data_status": "reference structural data; no thermodynamic or kinetic stability conclusion",
+  "data_rights": "PubChem NCBI public data; record-specific third-party rights may apply; verify before redistribution"
+}

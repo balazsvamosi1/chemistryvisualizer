@@ -1,0 +1,111 @@
+{
+  "name": "acetic acid",
+  "cid": 176,
+  "formula": "C2H4O2",
+  "molecular_weight": "60.05",
+  "smiles": "CC(=O)O",
+  "iupac": "acetic acid",
+  "structure": {
+    "atoms": [
+      {
+        "id": 1,
+        "atomic_number": 8,
+        "x": -0.3035,
+        "y": 1.289,
+        "z": -0.0002
+      },
+      {
+        "id": 2,
+        "atomic_number": 8,
+        "x": -0.98,
+        "y": -0.8878,
+        "z": -0.0002
+      },
+      {
+        "id": 3,
+        "atomic_number": 6,
+        "x": 1.3743,
+        "y": -0.3516,
+        "z": -0.0002
+      },
+      {
+        "id": 4,
+        "atomic_number": 6,
+        "x": -0.0907,
+        "y": -0.0496,
+        "z": 0.0006
+      },
+      {
+        "id": 5,
+        "atomic_number": 1,
+        "x": 1.8368,
+        "y": 0.057,
+        "z": -0.9021
+      },
+      {
+        "id": 6,
+        "atomic_number": 1,
+        "x": 1.84,
+        "y": 0.0676,
+        "z": 0.8952
+      },
+      {
+        "id": 7,
+        "atomic_number": 1,
+        "x": 1.5207,
+        "y": -1.4356,
+        "z": 0.0064
+      },
+      {
+        "id": 8,
+        "atomic_number": 1,
+        "x": -1.2598,
+        "y": 1.5081,
+        "z": -0.0008
+      }
+    ],
+    "bonds": [
+      {
+        "a": 1,
+        "b": 4,
+        "order": 1
+      },
+      {
+        "a": 1,
+        "b": 8,
+        "order": 1
+      },
+      {
+        "a": 2,
+        "b": 4,
+        "order": 2
+      },
+      {
+        "a": 3,
+        "b": 4,
+        "order": 1
+      },
+      {
+        "a": 3,
+        "b": 5,
+        "order": 1
+      },
+      {
+        "a": 3,
+        "b": 6,
+        "order": 1
+      },
+      {
+        "a": 3,
+        "b": 7,
+        "order": 1
+      }
+    ],
+    "geometry": "3d"
+  },
+  "source": "PubChem PUG REST",
+  "source_url": "https://pubchem.ncbi.nlm.nih.gov/compound/176",
+  "retrieved_at": "2026-10-29T16:20:03.645315+00:00",
+  "data_status": "reference structural data; no thermodynamic or kinetic stability conclusion",
+  "data_rights": "PubChem NCBI public data; record-specific third-party rights may apply; verify before redistribution"
+}
