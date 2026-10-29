@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "materials": [
+    {
+      "id": "formaldehyde",
+      "hu": "Formaldehid",
+      "de": "Formaldehyd",
+      "f": "CH₂O",
+      "category": "szerves",
+      "type": "molecule",
+      "description": [
+        "Egyszerű aldehid.",
+        "Einfaches Aldehyd."
+      ],
+      "structure": {
+        "kind": "molecule",
+        "atoms": [
+          [
+            "C",
+            0,
+            0
+          ],
+          [
+            "O",
+            110,
+            0
+          ],
+          [
+            "H",
+            -65,
+            -75
+          ],
+          [
+            "H",
+            -65,
+            75
+          ]
+        ],
+        "edges": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            0,
+            3,
+            1
+          ]
+        ]
+      }
+    }
+  ]
+}

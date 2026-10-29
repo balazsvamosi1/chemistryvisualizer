@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "models": [
+    {
+      "id": "diatomic",
+      "hu": "Kétatomos modell (általános)",
+      "de": "Zweiatomiges Modell (generisch)",
+      "epsilon": 0.25,
+      "sigma": 3.2,
+      "note_hu": "Szemléltető Lennard–Jones potenciál, nem valós kötésenergia.",
+      "note_de": "Illustratives Lennard-Jones-Potenzial; keine reale Bindungsenergie."
+    },
+    {
+      "id": "argon",
+      "hu": "Argonpár — semleges kölcsönhatás",
+      "de": "Argonpaar — neutrale Wechselwirkung",
+      "epsilon": 0.0103,
+      "sigma": 3.405,
+      "note_hu": "Lennard–Jones jellegű argonpár-közelítés; nem kvantumkémiai számítás.",
+      "note_de": "Lennard-Jones-Näherung für ein Argonpaar, keine Quantenchemierechnung."
+    },
+    {
+      "id": "custom",
+      "hu": "Hipotetikus kristályegység",
+      "de": "Hypothetische Kristalleinheit",
+      "epsilon": 0.6,
+      "sigma": 2.6,
+      "note_hu": "Kitalált anyag; minden paraméter feltételezés.",
+      "note_de": "Fiktives Material; alle Parameter sind Annahmen."
+    }
+  ]
+}
