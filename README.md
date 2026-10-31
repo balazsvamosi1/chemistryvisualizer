@@ -88,3 +88,22 @@ The original scientific tabs remain in place. A third **EN** button adds English
 Project assets added: `assets/js/quest.js` (MIT), `assets/js/english.js` (localization extension), `assets/css/quest.css`. No external dependencies were added. Game progress completion is stored in browser localStorage when available.
 
 Launch with `python3 server.py` and visit `http://127.0.0.1:8000`. Test syntax with `node --check assets/js/quest.js` and `node --check assets/js/english.js`.
+
+
+## Chemistry Quest 1.9.2 — jump and progression fixes
+
+- Increased jump impulse from 540 to 600 px/s; gravitational acceleration remains 950 px/s².
+- Added jump buffering (0.20 s) and coyote time (0.13 s).
+- The mid-level oxygen quiz is now shown above the canvas and **does not pause** game movement.
+- Select the answer by clicking/tapping the buttons; the correct oxygen atomic number is 8.
+- E builds H₂O using two collected H atoms and one O atom; next to the fire enemy, E splashes the water.
+- Existing scientific modules and UI preserved.
+
+## Chemistry Quest 1.9.3 — two-level update
+
+- Fixed jump collision with raised platforms: ledges are one-way, allowing jumps from below and landing from above.
+- Jump input buffering and coyote time prevent missed jumps; Space/W/Up or touch Jump.
+- Level 1: collect 2 H + 1 O, craft H₂O, solve oxygen puzzle, use E on the fire creature, reach the exit.
+- Level 2: collect 1 C + 2 O, craft CO₂, use E near a moving fire robot, reach the exit.
+- Complete Level 1 to reveal **Next level**; restart resets current level.
+- The water/CO₂ fire suppression is a game mechanic, not a general guarantee for real-world fires; CO₂ extinguishers are unsuitable for some fire classes and situations.
