@@ -66,7 +66,8 @@ function sphere(x,y,r,color){
  ctx.beginPath();ctx.arc(x,y,Math.max(2,r),0,Math.PI*2);ctx.fillStyle=g;ctx.fill();ctx.strokeStyle='#ffffff55';ctx.lineWidth=1;ctx.stroke();
 }
 function render3D(){
- const rect=cvs.getBoundingClientRect();if(rect.width<50){requestAnimationFrame(render3D);return}
+ if(document.hidden||cvs.getClientRects().length===0){setTimeout(()=>requestAnimationFrame(render3D),250);return}
+ const rect=cvs.getBoundingClientRect();if(rect.width<50){setTimeout(()=>requestAnimationFrame(render3D),250);return}
  const dpr=Math.min(window.devicePixelRatio||1,2),w=rect.width,h=rect.height;
  if(cvs.width!==Math.round(w*dpr)||cvs.height!==Math.round(h*dpr)){cvs.width=Math.round(w*dpr);cvs.height=Math.round(h*dpr)}
  ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
@@ -94,7 +95,7 @@ function render3D(){
    }
  }
  if(molAtoms.length===0){ctx.fillStyle='#9bb9ca';ctx.textAlign='center';ctx.font='14px system-ui';ctx.fillText(document.documentElement.lang==='de'?'Baue oder lade ein Molekül':'Építs vagy tölts be egy molekulát',w/2,h/2)}
- requestAnimationFrame(render3D);
+ setTimeout(()=>requestAnimationFrame(render3D),95);
 }
 function updateLabels(){
  let de=document.documentElement.lang==='de',material=typeof currentMaterialModel!=='undefined'&&currentMaterialModel;

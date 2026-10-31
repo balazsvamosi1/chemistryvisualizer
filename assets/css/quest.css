@@ -9,3 +9,5 @@
 
 /* Quest 1.9.2: puzzle is visibly above the canvas and does not freeze movement. */
 .quest-quiz{position:relative;margin:8px 0 12px;border:2px solid #68c8ee;box-shadow:0 0 20px #2d8dbe33}.quest-quiz button{min-height:43px}
+
+.quest-arsenal{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0;max-height:105px;overflow:auto}.quest-arsenal button{font:600 12px monospace;border:1px solid #476b8e;background:#172b45;color:#d8eeff;padding:7px 9px;border-radius:5px}.quest-arsenal button.active{background:#225e6a;border-color:#7bdedb;color:#fff}.quest-arsenal button:hover{border-color:#a8d9f1}

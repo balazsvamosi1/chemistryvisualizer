@@ -9,6 +9,10 @@ from physics import nist
 ROOT=Path(__file__).resolve().parent
 os.chdir(ROOT)
 SYNC_LOCK=threading.Lock()
+SYNC_STATE_LOCK=threading.Lock()
+def sync_snapshot():
+ with SYNC_STATE_LOCK:
+  return {**SYNC, 'errors':list(SYNC['errors'])}
 SYNC={'running':False,'done':0,'total':0,'errors':[]}
 
 def sync_worker(names):
@@ -16,9 +20,12 @@ def sync_worker(names):
  try:
   for name in names:
    try:fetch_pubchem(name)
-   except Exception as exc:SYNC['errors'].append({'name':name,'message':str(exc)[:160]})
-   SYNC['done']+=1
- finally:SYNC['running']=False;SYNC_LOCK.release()
+   except Exception as exc:
+    with SYNC_STATE_LOCK:SYNC['errors'].append({'name':name,'message':str(exc)[:160]})
+   with SYNC_STATE_LOCK:SYNC['done']+=1
+ finally:
+  with SYNC_STATE_LOCK:SYNC['running']=False
+  SYNC_LOCK.release()
 
 class Handler(SimpleHTTPRequestHandler):
  def reply(self,status,obj):
@@ -30,7 +37,7 @@ class Handler(SimpleHTTPRequestHandler):
   if u.path=='/api/nist/element':
    try:return self.reply(200,nist.read(int(parse_qs(u.query).get('z',['0'])[0])))
    except (ValueError,IndexError) as exc:return self.reply(400,{'error':str(exc)})
-  if u.path=='/api/physics/status':return self.reply(200,{'cache':list_cache(),'models':model_status(),'sync':dict(SYNC),'backend':'reference data + model checkpoint cache; no energy/stability inference'})
+  if u.path=='/api/physics/status':return self.reply(200,{'cache':list_cache(),'models':model_status(),'sync':sync_snapshot(),'backend':'reference data + model checkpoint cache; no energy/stability inference'})
   if u.path=='/api/physics/molecule':
    name=parse_qs(u.query).get('name',[''])[0]
    try:
@@ -56,7 +63,7 @@ class Handler(SimpleHTTPRequestHandler):
     from physics.cache import safe_name
     names=[safe_name(n) for n in names]
     if not SYNC_LOCK.acquire(False):return self.reply(409,{'error':'Synchronization already running'})
-    SYNC.update({'running':True,'done':0,'total':len(names),'errors':[]})
+    with SYNC_STATE_LOCK:SYNC.update({'running':True,'done':0,'total':len(names),'errors':[]})
     threading.Thread(target=sync_worker,args=(names,),daemon=True).start()
     return self.reply(202,{'started':True,'total':len(names)})
    if u.path=='/api/physics/models':
@@ -68,4 +75,7 @@ if __name__=='__main__':
  parser=argparse.ArgumentParser();parser.add_argument('--port',type=int,default=8000)
  args=parser.parse_args()
  print(f'Chemistry Lab Beta 1.5: http://127.0.0.1:{args.port}/',flush=True)
- ThreadingHTTPServer(('127.0.0.1',args.port),Handler).serve_forever()
+ httpd=ThreadingHTTPServer(('127.0.0.1',args.port),Handler)
+ try:httpd.serve_forever()
+ except KeyboardInterrupt:pass
+ finally:httpd.server_close()

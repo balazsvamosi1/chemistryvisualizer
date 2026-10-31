@@ -107,3 +107,27 @@ Launch with `python3 server.py` and visit `http://127.0.0.1:8000`. Test syntax w
 - Level 2: collect 1 C + 2 O, craft CO₂, use E near a moving fire robot, reach the exit.
 - Complete Level 1 to reveal **Next level**; restart resets current level.
 - The water/CO₂ fire suppression is a game mechanic, not a general guarantee for real-world fires; CO₂ extinguishers are unsuitable for some fire classes and situations.
+
+
+## Beta 1.9.7 — P0 Stability Fix
+
+- Fixed lanthanide/actinide metal category aliases (`lanth`, `act`).
+- Ammonia (NH3) is a molecular material, not an ionic lattice.
+- Protected all concurrent `SYNC` state updates and reads with a dedicated state lock; returned snapshots copy the mutable error list.
+- Reduced idle CPU/GPU pressure by throttling canvas redraws in hidden and inactive tabs and capping active 2D/3D animation loops. Animation detail is reduced versus the previous release.
+- Added a deterministic Chemistry Quest test interface (`ChemQuest.test`) for browser automation. It is a test hook, not a game mechanic.
+- Added concurrency, dataset and source regression tests. Run `python3 -m unittest discover -s tests -p 'test_*.py'` and `node --test tests/*.test.cjs`.
+- Browser E2E test script in the distribution was attempted but blocked by the current runtime's localhost navigation restrictions; do not treat the game's integration flow as verified.
+- Scope: P0 corrections only; no redesign or feature deletion.
+
+
+## Beta 2.0 — Chemistry Quest: 10 levels
+
+The Chemistry Quest is now a ten-stage educational platform game. Controls: A/D or arrows to move, Space/W to jump, **C** to craft with a recipe dropdown, **E** to launch the selected reagent, **Q/Tab** to cycle weapons, **1–9/0** to choose an arsenal slot. Atom pickups pause the game until a correctly answered randomized middle-school chemistry question. Ammo persists between stages; level 10 needs carried-over HCl and NaOH and freshly crafted CH4 plus two O2 charges. Finish a stage and click Next Level.
+
+This is an educational model, **not** an instruction for conducting reactions or using real chemicals as weapons. NaCl, NaOH and Ca(OH)2 are ionic substances, not discrete covalent molecules. H2 reduction of rust needs suitable reaction conditions; HCl acid chemistry requires an aqueous solution; methane combustion needs an oxidizer and ignition; some obstacle outcomes are deliberately fictional.
+
+Smoke test: `node --test tests/*.test.cjs && python3 -m unittest discover -s tests -p 'test_*.py'`.
+
+### Implementation scope and limitations (v2.0.0)
+The 10 stages have distinct target types, recipes, reaction rules and learning facts, but share a common retro level layout rather than ten individually illustrated level maps. The levels 3, 8, and 9 include lightweight additional movement mechanics (hydrogen boost, ghost platform, bubble pad). Complex chemistry, precise quantities, and actual combustion safety are outside the simulation; the rules are didactic abstractions. For stage 2 a water charge is provided so the player can extinguish the opening crate; stage 10 starts with one HCl and NaOH each to prevent an unsolvable boss. The projectile misses are refunded.
