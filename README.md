@@ -141,3 +141,14 @@ The 10 stages have distinct target types, recipes, reaction rules and learning f
 - Chemistry Quest: renewable element pickup sources on every level prevent softlocks after failed shots or crafting several reagents. Older unlocked recipes can also be crafted in later stages.
 - Atom quiz still pauses movement and grants atoms only after a correct response. Craft: C, use: E, switch: Q/Tab.
 - GitHub Pages provides no PubChem/NIST downloads, physics model inference, or Python API. Run locally for those.
+
+
+## Beta 2.0.2 — Quest obstacles and chemical effects
+
+- Restores two visible, jumpable damage hazards per level, with terrain-specific hazard types (sparks, steam, acidic pools, ice, spores, etc.). Hazard contact removes health with an invulnerability interval.
+- Eleven crafted reagents have their own projectile visual profiles: water drops, CO₂ cloud, hydrogen bubbles, alkaline droplets, acid mist, ammonia vapour, salt crystals, limewater spray, peroxide foam, methane flame, oxygen bubbles. These are illustrations, not physical computational-fluid simulations.
+- Successful reaction-matrix hits create short-lived particle effects and contextual reaction text in HU/DE/EN for selected interactions. Chemical prerequisites are not silently represented as spontaneous reactions (e.g. hydrogen reduction needs heat, methane combustion needs ignition and oxygen).
+- Added `tests/quest_visuals.test.cjs` for obstacles, damage, unique projectile profiles and hit effects.
+- Run `node --test tests/*.test.cjs` and `python3 -m unittest discover -s tests -p 'test_*.py'`.
+
+This is a gameplay update, not a guarantee of laboratory-grade chemistry or fire-safety guidance.
