@@ -14,20 +14,77 @@ const levels=[
 {pickups:[['O',212,301],['C',490,265],['O',970,245],['C',1420,256],['O',1690,300]],ledges:ledges2,hazards:[{x:810,y:405,w:58,h:20},{x:1310,y:405,w:50,h:20},{x:1790,y:405,w:45,h:20}],boss:{x:1850,y:388,w:44,h:37,min:1740,max:2040,speed:125},formula:'CO₂',requirements:{C:1,O:2},quiz:false}
 ];
 let level=0,player,inventory,items,boss,water,quizSolved,quizActive,completed,keys={},jumpBuffer=0,coyote=0,elapsed=0,lastTime=0,camera=0,invulnerable=0,shotTimer=0,shotStart=null,shotTarget=null,notice='',frameId=0;
+let pendingAtom=null, lastQuestion=-1, nextLevelCountdown=0,craftOpen=false,selectedRecipe='';
+const atomQuestions={
+ H:[
+ {hu:['Mi a hidrogén vegyjele?', 'H','He','O'],de:['Was ist das Symbol für Wasserstoff?','H','He','O'],en:['What is the symbol for hydrogen?','H','He','O']},
+ {hu:['Hány protonja van a hidrogénnek?','1','2','8'],de:['Wie viele Protonen hat Wasserstoff?','1','2','8'],en:['How many protons does hydrogen have?','1','2','8']},
+ {hu:['Melyik állítás igaz a hidrogénre?','Nemfém','Nemesgáz','Alkálifém'],de:['Welche Aussage über Wasserstoff ist richtig?','Nichtmetall','Edelgas','Alkalimetall'],en:['Which statement about hydrogen is correct?','Nonmetal','Noble gas','Alkali metal']}
+ ],
+ O:[
+ {hu:['Mennyi az oxigén rendszáma?','8','6','12'],de:['Wie lautet die Ordnungszahl von Sauerstoff?','8','6','12'],en:['What is the atomic number of oxygen?','8','6','12']},
+ {hu:['Hány vegyértékelektronja van az oxigénnek?','6','2','8'],de:['Wie viele Valenzelektronen hat Sauerstoff?','6','2','8'],en:['How many valence electrons does oxygen have?','6','2','8']},
+ {hu:['Mi a közönséges oxigéngáz képlete?','O₂','O₃','H₂O'],de:['Wie lautet die Formel des gewöhnlichen Sauerstoffgases?','O₂','O₃','H₂O'],en:['What is the formula of ordinary oxygen gas?','O₂','O₃','H₂O']}
+ ],
+ C:[
+ {hu:['Mennyi a szén rendszáma?','6','8','12'],de:['Wie lautet die Ordnungszahl von Kohlenstoff?','6','8','12'],en:['What is the atomic number of carbon?','6','8','12']},
+ {hu:['Hány vegyértékelektronja van a szénnek?','4','2','6'],de:['Wie viele Valenzelektronen hat Kohlenstoff?','4','2','6'],en:['How many valence electrons does carbon have?','4','2','6']},
+ {hu:['Melyik anyag tartalmaz kizárólag szénatomokat?','Gyémánt','Víz','Konyhasó'],de:['Welcher Stoff besteht nur aus Kohlenstoff?','Diamant','Wasser','Kochsalz'],en:['Which substance is made entirely of carbon?','Diamond','Water','Table salt']}
+ ]};
+const quizLanguage=()=>typeof lang==='string'&&['hu','de','en'].includes(lang)?lang:'hu';
+
 const gate={x:2130,y:338,w:33,h:87};
-const quiz=$('questQuiz')||document.createElement('div');quiz.id='questQuiz';quiz.className='quest-quiz';quiz.hidden=true;if(!quiz.parentNode)cv.insertAdjacentElement('afterend',quiz);
+const quiz=$('questQuiz')||document.createElement('div');quiz.id='questQuiz';quiz.className='quest-quiz';quiz.hidden=true;cv.insertAdjacentElement('beforebegin',quiz);
+const craftMenu=document.createElement('div');craftMenu.id='questCraftMenu';craftMenu.className='quest-quiz';craftMenu.hidden=true;cv.insertAdjacentElement('beforebegin',craftMenu);
+const recipes=[{id:'H2O',formula:'H₂O',atoms:{H:2,O:1},level:0},{id:'CO2',formula:'CO₂',atoms:{C:1,O:2},level:1},{id:'O2',formula:'O₂',atoms:{O:2},level:-1}];
+function makeCraftMenu(){craftMenu.replaceChildren();const title=document.createElement('strong');title.textContent=({hu:'Melyik molekulát készíted?',de:'Welches Molekül möchtest du herstellen?',en:'Which molecule do you want to craft?'})[quizLanguage()];craftMenu.append(title);
+ const select=document.createElement('select');select.id='questRecipeSelect';select.style.cssText='display:block;margin:12px 0;width:100%;padding:10px;background:#172e47;color:#fff;border:1px solid #70b9d8;border-radius:6px';
+ for(const r of recipes){const opt=document.createElement('option');opt.value=r.id;opt.textContent=r.formula+' — '+Object.entries(r.atoms).map(([a,n])=>n+' '+a).join(' + ');select.append(opt)}
+ select.value=selectedRecipe||levels[level].formula.replaceAll('₂','2').replaceAll('₃','3');craftMenu.append(select);
+ const controls=document.createElement('div');controls.className='quest-options';const confirm=document.createElement('button');confirm.textContent=({hu:'Elkészítés',de:'Herstellen',en:'Craft'})[quizLanguage()];confirm.onclick=()=>{selectedRecipe=select.value;craftOpen=false;craftMenu.hidden=true;craft(selectedRecipe);cv.focus({preventScroll:true})};const cancel=document.createElement('button');cancel.textContent=({hu:'Mégse',de:'Abbrechen',en:'Cancel'})[quizLanguage()];cancel.onclick=closeCraft;controls.append(confirm,cancel);craftMenu.append(controls);}
+function openCraft(){if(quizActive||completed)return;craftOpen=true;makeCraftMenu();craftMenu.hidden=false;craftMenu.querySelector('select').focus({preventScroll:true})}
+function closeCraft(){craftOpen=false;craftMenu.hidden=true;cv.focus({preventScroll:true})}
 const next=document.createElement('button');next.id='questNext';next.hidden=true;next.type='button';next.style.margin='12px 4px';cv.insertAdjacentElement('afterend',next);next.onclick=()=>loadLevel(1);
 function say(s){notice=s;$('questMessage').textContent=s}
-function loadLevel(n){level=n;let data=levels[level];player={x:50,y:380,vx:0,vy:0,w:25,h:36,ground:false,hp:3};inventory={H:0,O:0,C:0};items=data.pickups.map(([s,x,y])=>({s,x,y,taken:false}));boss={...data.boss,dir:1,alive:true};water=false;quizSolved=!data.quiz;quizActive=false;completed=false;camera=0;elapsed=0;invulnerable=0;jumpBuffer=0;coyote=0;shotTimer=0;next.hidden=true;quiz.hidden=true;keys={};say(tr('move'));hud()}
+function loadLevel(n){level=n;let data=levels[level];player={x:50,y:380,vx:0,vy:0,w:25,h:36,ground:false,hp:3};inventory={H:0,O:0,C:0};items=data.pickups.map(([s,x,y])=>({s,x,y,taken:false}));boss={...data.boss,dir:1,alive:true};water=false;quizSolved=!data.quiz;quizActive=false;completed=false;camera=0;elapsed=0;invulnerable=0;jumpBuffer=0;coyote=0;shotTimer=0;pendingAtom=null;nextLevelCountdown=0;next.hidden=true;quiz.hidden=true;craftOpen=false;craftMenu.hidden=true;selectedRecipe='';keys={};say(tr('move'));hud()}
 function hud(){const k=String(level+1);$('questHealth').textContent='♥ '+tr('health')+': '+player.hp+'/3';$('questInventory').textContent=tr('atoms')+': H × '+inventory.H+' | O × '+inventory.O+' | C × '+inventory.C+(water?' | '+levels[level].formula+' ✓':'');$('questGoal').textContent=tr('goal'+k);$('questRecipe').textContent=tr('need'+k)+' · '+tr('science')}
-function craft(){if(completed||quizActive)return;const req=levels[level].requirements;if(water){say(tr('made'+(level+1)));return}if(Object.entries(req).some(([s,n])=>inventory[s]<n)){say(tr('missing'+(level+1)));return}
-const atoms=level===0?[{id:'a',s:'O'},{id:'b',s:'H'},{id:'c',s:'H'}]:[{id:'a',s:'C'},{id:'b',s:'O'},{id:'c',s:'O'}];const bonds=level===0?[{a:'a',b:'b',order:1,kind:'covalent'},{a:'a',b:'c',order:1,kind:'covalent'}]:[{a:'a',b:'b',order:2,kind:'covalent'},{a:'a',b:'c',order:2,kind:'covalent'}];
-if(window.ChemistryEngine){const result=window.ChemistryEngine.analyze(atoms,bonds);if(result.issues?.length){say('Chemistry validation failed');return}}Object.entries(req).forEach(([s,n])=>inventory[s]-=n);water=true;say(tr('made'+(level+1)));hud()}
-function action(){if(completed)return;const dx=boss.x+boss.w/2-(player.x+player.w/2),dy=boss.y+boss.h/2-(player.y+player.h/2);if(boss.alive&&Math.hypot(dx,dy)<110){if(!water){say(tr('missing'+(level+1)));return}boss.alive=false;shotTimer=.5;shotStart={x:player.x+12,y:player.y+15};shotTarget={x:boss.x+boss.w/2,y:boss.y+boss.h/2};say(tr('splash'+(level+1)));hud();return}craft()}
-function askQuiz(){if(quizActive||quizSolved)return;quizActive=true;quiz.hidden=false;quiz.innerHTML='';const title=document.createElement('strong');title.textContent=tr('quiz');quiz.append(title);const buttons=document.createElement('div');buttons.className='quest-options';quiz.append(buttons);[6,8,12].forEach(n=>{const b=document.createElement('button');b.textContent=n;b.onclick=()=>{if(n===8){quizSolved=true;quizActive=false;quiz.hidden=true;say(tr('correct'))}else say(tr('wrong'))};buttons.append(b)});say(tr('quiz'))}
+function craft(recipeId){if(completed||quizActive)return;const rec=recipes.find(r=>r.id===recipeId);if(!rec)return;
+ if(water){say(tr('made'+(level+1)));return}
+ if(rec.level!==level){say(({hu:'Ezen a pályán ez nem a megfelelő küldetésmolekula.',de:'Das ist nicht das benötigte Missionsmolekül für dieses Level.',en:'This is not the mission molecule for this level.'})[quizLanguage()]);return}
+ if(Object.entries(rec.atoms).some(([symbol,count])=>inventory[symbol]<count)){say(tr('missing'+(level+1)));return}
+ const atoms=level===0?[{id:'a',s:'O'},{id:'b',s:'H'},{id:'c',s:'H'}]:[{id:'a',s:'C'},{id:'b',s:'O'},{id:'c',s:'O'}];
+ const bonds=level===0?[{a:'a',b:'b',order:1,kind:'covalent'},{a:'a',b:'c',order:1,kind:'covalent'}]:[{a:'a',b:'b',order:2,kind:'covalent'},{a:'a',b:'c',order:2,kind:'covalent'}];
+ if(window.ChemistryEngine){const result=window.ChemistryEngine.analyze(atoms,bonds);if(result.issues?.length){say('Chemistry validation failed');return}}
+ Object.entries(rec.atoms).forEach(([symbol,count])=>inventory[symbol]-=count);water=true;say(tr('made'+(level+1)));hud();}
+function action(){if(completed||quizActive)return;if(craftOpen){closeCraft();return}
+ const dx=boss.x+boss.w/2-(player.x+player.w/2),dy=boss.y+boss.h/2-(player.y+player.h/2);
+ if(boss.alive&&Math.hypot(dx,dy)<125){if(!water){say(tr('missing'+(level+1)));openCraft();return}boss.alive=false;shotTimer=.5;shotStart={x:player.x+12,y:player.y+15};shotTarget={x:boss.x+boss.w/2,y:boss.y+boss.h/2};say(tr('splash'+(level+1)));hud();return}
+ openCraft();}
+function askAtomQuestion(atom){
+ if(quizActive||completed)return;
+ pendingAtom=atom;quizActive=true;craftOpen=false;craftMenu.hidden=true;keys={};jumpBuffer=0;quiz.hidden=false;quiz.replaceChildren();
+ const pool=atomQuestions[atom.s],options=pool.map((_,i)=>i).filter(i=>i!==lastQuestion);
+ const idx=options[Math.floor(Math.random()*options.length)] ?? Math.floor(Math.random()*pool.length);
+ lastQuestion=idx;
+ const q=pool[idx][quizLanguage()];
+ const title=document.createElement('strong');title.textContent=atom.s+' · '+q[0];quiz.append(title);
+ const answers=[q[1],q[2],q[3]].map((text,i)=>({text,correct:i===0}));
+ for(let i=answers.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[answers[i],answers[j]]=[answers[j],answers[i]]}
+ const buttons=document.createElement('div');buttons.className='quest-options';quiz.append(buttons);
+ for(const answer of answers){
+  const b=document.createElement('button');b.textContent=answer.text;
+  b.onclick=()=>{
+   if(!answer.correct){say(tr('wrong'));b.disabled=true;b.style.opacity='.5';return}
+   atom.taken=true;inventory[atom.s]++;if(atom.s==='O')quizSolved=true;
+   pendingAtom=null;quizActive=false;quiz.hidden=true;say(tr('collect')+': '+atom.s+' ✓');hud();
+  };
+  buttons.append(b);
+ }
+ say(atom.s+' · '+q[0]);
+}
 function overlap(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
 function damage(){if(invulnerable>0)return;invulnerable=1.5;player.hp--;say(tr('hit'));if(player.hp<=0){player.hp=3;player.x=50;player.y=365;player.vy=0}hud()}
-function physics(dt){if(completed)return;elapsed+=dt;invulnerable=Math.max(0,invulnerable-dt);shotTimer=Math.max(0,shotTimer-dt);jumpBuffer=Math.max(0,jumpBuffer-dt);coyote=Math.max(0,coyote-dt);
+function physics(dt){if(completed){if(level===0&&nextLevelCountdown>0){nextLevelCountdown-=dt;if(nextLevelCountdown<=0)loadLevel(1)}return}if(quizActive||craftOpen)return;elapsed+=dt;invulnerable=Math.max(0,invulnerable-dt);shotTimer=Math.max(0,shotTimer-dt);jumpBuffer=Math.max(0,jumpBuffer-dt);coyote=Math.max(0,coyote-dt);
 const direction=(keys.left?-1:0)+(keys.right?1:0);player.vx=direction*230;
 if(jumpBuffer>0&&(player.ground||coyote>0)){player.vy=-530;player.ground=false;coyote=0;jumpBuffer=0}
 let oldY=player.y;player.x=Math.max(0,Math.min(2200-player.w,player.x+player.vx*dt));player.vy=Math.min(750,player.vy+1000*dt);player.y+=player.vy*dt;
@@ -37,13 +94,12 @@ for(const p of all){if(player.vy>=0&&oldY+player.h<=p.y+6&&player.y+player.h>=p.
 if(landed){player.ground=true;coyote=.11}else if(player.ground){player.ground=false;coyote=.11}
 if(jumpBuffer>0&&player.ground){player.vy=-530;player.ground=false;coyote=0;jumpBuffer=0}
 if(player.y>500){damage();player.x=65;player.y=350;player.vy=0}
-for(const atom of items)if(!atom.taken&&Math.hypot(atom.x-(player.x+12),atom.y-(player.y+16))<45){atom.taken=true;inventory[atom.s]++;say(tr('collect')+': '+atom.s);hud()}
+for(const atom of items)if(!atom.taken&&Math.hypot(atom.x-(player.x+12),atom.y-(player.y+16))<45){askAtomQuestion(atom);break}
 for(const h of levels[level].hazards)if(overlap(player,h)){damage();player.vy=-240;player.x-=player.vx>=0?25:-25}
-if(boss.alive){boss.x+=boss.dir*boss.speed*dt;if(boss.x<boss.min||boss.x>boss.max){boss.x=Math.min(boss.max,Math.max(boss.min,boss.x));boss.dir*=-1}if(overlap(player,boss)){damage();player.vy=-230;player.x+=player.x<boss.x?-35:35}}
-if(level===0&&player.x>1110&&!quizSolved&&!quizActive)askQuiz();
-// Quest modal is non-blocking. The player can move while it is visible.
-if(boss.alive&&player.x>boss.x-37){player.x=boss.x-37;if(Math.floor(elapsed*2)%3===0)say(tr('enemy'+(level+1)))}
-if(player.x>gate.x-50){if(water&&quizSolved&&!boss.alive){completed=true;next.hidden=level!==0;next.textContent=tr('next');say(tr('win'+(level+1)));if(level===1)try{localStorage.setItem('chemistryQuestWon','yes')}catch{}}else{player.x=gate.x-50;say(tr('gate'))}}
+if(boss.alive){boss.x+=boss.dir*boss.speed*dt;if(boss.x<boss.min||boss.x>boss.max){boss.x=Math.min(boss.max,Math.max(boss.min,boss.x));boss.dir*=-1}if(overlap(player,boss)){damage()}}
+// Atom questions pause the game and grant the collected atom only after the correct answer.
+if(boss.alive&&player.x>boss.x-37&&player.x<boss.x+boss.w+20){player.x=boss.x-37;if(Math.floor(elapsed*2)%3===0)say(tr('enemy'+(level+1)))}
+if(player.x>gate.x-50){if(water&&quizSolved&&!boss.alive){completed=true;next.hidden=level!==0;next.textContent=tr('next');nextLevelCountdown=level===0?3.0:0;say(tr('win'+(level+1)));if(level===1)try{localStorage.setItem('chemistryQuestWon','yes')}catch{}}else{player.x=gate.x-50;say(tr('gate'))}}
 camera=Math.max(0,Math.min(1280,player.x-270))}
 function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.ceil(w),Math.ceil(h))}
 function draw(){ctx.imageSmoothingEnabled=false;const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,level===0?'#08172b':'#24142c');bg.addColorStop(1,level===0?'#263958':'#453045');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);for(let i=0;i<85;i++)rect(((i*173)%2600-camera*.22)%1100,15+(i*79)%255,2,2,'#7e94b0');for(let i=0;i<22;i++){let x=i*120-camera*.45;rect(x,180+i%4*12,80,260,'#172540');rect(x+15,205+i%4*12,8,10,'#42687e')}
@@ -59,12 +115,12 @@ ctx.restore();ctx.font='bold 13px monospace';ctx.fillStyle='#d8eaff';ctx.textAli
 if(completed){rect(185,162,590,120,'#102e41');ctx.fillStyle='#b5ffda';ctx.font='bold 23px monospace';ctx.textAlign='center';ctx.fillText(tr('win'+(level+1)),480,225)}}
 function tick(time){const dt=Math.min(.033,(time-lastTime)/1000||.016);lastTime=time;if(!$('gameSection').classList.contains('hidden')){physics(dt);draw()}frameId=requestAnimationFrame(tick)}
 const bind={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right'};
-document.addEventListener('keydown',e=>{if($('gameSection').classList.contains('hidden'))return;if(/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName))return;if(bind[e.code])keys[bind[e.code]]=true;if(['ArrowUp','Space','KeyW'].includes(e.code)){jumpBuffer=.16;e.preventDefault()}if(e.code==='KeyE'&&!e.repeat)action();if(['ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault()});
+document.addEventListener('keydown',e=>{if($('gameSection').classList.contains('hidden'))return;if(/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)){if(e.code==='Escape'&&craftOpen)closeCraft();if(e.code==='KeyE'&&craftOpen){e.preventDefault();craftMenu.querySelector('.quest-options button').click()}return}if(quizActive||craftOpen){if(e.code==='Escape'&&craftOpen)closeCraft();return}if(bind[e.code])keys[bind[e.code]]=true;if(['ArrowUp','Space','KeyW'].includes(e.code)){jumpBuffer=.16;e.preventDefault()}if(e.code==='KeyE'&&!e.repeat){e.preventDefault();action()}if(['ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault()});
 document.addEventListener('keyup',e=>{if(bind[e.code])keys[bind[e.code]]=false});window.addEventListener('blur',()=>keys={});
 for(const [id,key] of [['questLeft','left'],['questRight','right']]){const b=$(id);b.addEventListener('pointerdown',e=>{e.preventDefault();keys[key]=true;b.setPointerCapture(e.pointerId)});for(const ev of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(ev,()=>keys[key]=false)}
-$('questJump').onclick=()=>jumpBuffer=.16;$('questCraft').onclick=action;$('questRestart').onclick=()=>loadLevel(level);$('questMute').onclick=()=>{$('questMute').textContent=$('questMute').textContent==='♫'?'♪':'♫'};
-function localize(){$('questSubtitle').textContent=tr('subtitle');$('questCraftLabel').textContent=tr('craft');$('questInstructions').textContent=tr('move');$('questRestart').title=tr('restart');if(!next.hidden)next.textContent=tr('next');hud();if(quizActive)quiz.firstChild.textContent=tr('quiz')}
+$('questJump').onclick=()=>jumpBuffer=.16;$('questCraft').onclick=()=>{if(craftOpen)closeCraft();else openCraft()};$('questRestart').onclick=()=>loadLevel(level);$('questMute').onclick=()=>{$('questMute').textContent=$('questMute').textContent==='♫'?'♪':'♫'};
+function localize(){$('questSubtitle').textContent=tr('subtitle');$('questCraftLabel').textContent=tr('craft');$('questInstructions').textContent=tr('move');$('questRestart').title=tr('restart');if(!next.hidden)next.textContent=tr('next');if(craftOpen)makeCraftMenu();hud();if(quizActive&&pendingAtom){quiz.firstChild.textContent=pendingAtom.s+' · '+quiz.firstChild.textContent.split(' · ').slice(1).join(' · ')}}
 function show(){tab='quest';for(const id of ['periodSection','moleculeSection','huntSection','materialsSection','physicsSection','specSection','reactionSection','atomDetail']){const e=$(id);if(e)e.classList.add('hidden')}for(const b of document.querySelectorAll('.tabs button'))b.classList.remove('active');$('gameTab').classList.add('active');$('gameSection').classList.remove('hidden');localize();cv.focus({preventScroll:true})}
 $('gameTab').onclick=show;document.querySelectorAll('.tabs button:not(#gameTab)').forEach(e=>e.addEventListener('click',()=>{$('gameSection').classList.add('hidden');keys={}},true));
-window.ChemQuest={localize,reset:()=>loadLevel(0),craft:action,debug:()=>({level:level+1,inventory:{...inventory},crafted:water,quizSolved,completed,bossAlive:boss.alive,player:{...player}}),jump:()=>jumpBuffer=.16};loadLevel(0);localize();frameId=requestAnimationFrame(tick);
+window.ChemQuest={localize,reset:()=>loadLevel(0),craft:openCraft,debug:()=>({level:level+1,inventory:{...inventory},crafted:water,quizSolved,completed,bossAlive:boss.alive,player:{...player}}),jump:()=>jumpBuffer=.16};loadLevel(0);localize();frameId=requestAnimationFrame(tick);
 })();
