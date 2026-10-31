@@ -77,3 +77,14 @@ Scientific atom panel now includes orbital electron-probability visualization fo
 NIST ASD neutral-atom **visible** line data can be fetched on demand with the `↻ NIST` button and stored in `cache/nist/NNN.json`. The UI never invents missing lines. The NIST endpoint can change: parser errors result in `unverified_empty`, not claims of zero spectral lines. Example: `curl -X POST http://127.0.0.1:8000/api/nist/sync -H 'Content-Type: application/json' -d '{"z":11}'`. Inspect `GET /api/nist/status` and `GET /api/nist/element?z=11`. Not every atom has independently verified NIST lines cached until successfully fetched. NIST source: https://physics.nist.gov/asd . Verify data reuse terms before redistributing cached datasets.
 
 Cache all 118 neutral-atom visible spectra (internet connection required, requests spaced apart): `python3 -m physics.nist --all --delay 2`. Every response is recorded with a status; unverified or failed results are **not** presented as valid spectra.
+
+
+## Beta 1.9 — English language + Chemistry Quest prototype
+
+The original scientific tabs remain in place. A third **EN** button adds English element names for all 118 elements, the major navigation labels and core atomic/molecule controls. The Chemistry Quest game is fully localized in HU/DE/EN. Some inherited deep scientific and material explanatory text still falls back to German; full English editorial translation is a follow-up task.
+
+**Chemistry Quest** is a playable self-contained 16-bit-inspired Canvas platform prototype: walk (A/D or left/right arrows), jump (W/Space/up), collect two H and one O atoms, craft H₂O (E or touch button), answer an atomic-number challenge and unlock the cooled lab door. Touch-screen movement buttons are provided. The game uses the existing ChemistryEngine for a simplified valence check. It uses no commercial assets or external engine. Crafting atoms is a **game abstraction**, not a chemically valid mechanism for synthesizing water.
+
+Project assets added: `assets/js/quest.js` (MIT), `assets/js/english.js` (localization extension), `assets/css/quest.css`. No external dependencies were added. Game progress completion is stored in browser localStorage when available.
+
+Launch with `python3 server.py` and visit `http://127.0.0.1:8000`. Test syntax with `node --check assets/js/quest.js` and `node --check assets/js/english.js`.

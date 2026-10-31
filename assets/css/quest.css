@@ -1,0 +1,8 @@
+.quest-section{padding:18px!important;background:linear-gradient(145deg,#101a35,#0c1226)!important}
+.quest-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.quest-top h2{font-size:27px;margin:5px 0}.quest-actions{display:flex;gap:8px}
+.quest-hud{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:12px 0;color:#cceef7;font:600 12px ui-monospace,monospace}
+#questCanvas{display:block;width:100%;height:auto;max-height:65vh;aspect-ratio:2/1;border:2px solid #4f6d96;border-radius:8px;background:#090f24;image-rendering:pixelated;touch-action:none;outline:none}
+.quest-controls{display:flex;justify-content:center;gap:12px;margin:12px 0;touch-action:manipulation}.quest-controls button{min-width:70px;min-height:52px;font-size:20px;background:#183153;color:white;border:1px solid #426b92;border-radius:9px;user-select:none}.quest-controls button:active{background:#237e9c}.quest-controls .quest-craft-button{font-size:15px;min-width:120px;color:#c7ffdf}
+.quest-info{display:grid;gap:8px}.quest-info #questMessage{padding:12px;background:#172e47;border-left:3px solid #72dbe6;min-height:42px;border-radius:5px}.quest-info #questRecipe{color:#b8ddc8}.quest-info p{font-size:12px;color:#9bacc9}
+@media(max-width:580px){.quest-section{padding:8px!important}.quest-controls{gap:6px}.quest-controls button{min-width:52px}.quest-hud{font-size:10px}}
+.quest-quiz{margin:10px 0;padding:15px;background:#1b3752;border:1px solid #72b9de;border-radius:10px;color:#dff6ff}.quest-quiz[hidden]{display:none}.quest-quiz .quest-options{display:flex;gap:12px;margin-top:12px}.quest-quiz button{padding:9px 24px;background:#245979;border:1px solid #8ed9ed;color:white;border-radius:6px;font-size:18px}
