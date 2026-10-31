@@ -131,3 +131,13 @@ Smoke test: `node --test tests/*.test.cjs && python3 -m unittest discover -s tes
 
 ### Implementation scope and limitations (v2.0.0)
 The 10 stages have distinct target types, recipes, reaction rules and learning facts, but share a common retro level layout rather than ten individually illustrated level maps. The levels 3, 8, and 9 include lightweight additional movement mechanics (hydrogen boost, ghost platform, bubble pad). Complex chemistry, precise quantities, and actual combustion safety are outside the simulation; the rules are didactic abstractions. For stage 2 a water charge is provided so the player can extinguish the opening crate; stage 10 starts with one HCl and NaOH each to prevent an unsolvable boss. The projectile misses are refunded.
+
+
+## Beta 2.0.1: GitHub Ready + Craft recovery
+
+- `cache` downloads, local model weights and Python bytecode are excluded by `.gitignore`. Files already tracked by git require `git rm --cached` to untrack.
+- GitHub Actions checks all JavaScript syntax and runs Node and Python tests on push/PR.
+- Optional GitHub Pages deployment: Settings → Pages → Deploy from branch → main / (root). The browser-only sections and Chemistry Quest work without the Python backend; the Physics Lab and NIST synchronization explicitly explain they need `python3 server.py`.
+- Chemistry Quest: renewable element pickup sources on every level prevent softlocks after failed shots or crafting several reagents. Older unlocked recipes can also be crafted in later stages.
+- Atom quiz still pauses movement and grants atoms only after a correct response. Craft: C, use: E, switch: Q/Tab.
+- GitHub Pages provides no PubChem/NIST downloads, physics model inference, or Python API. Run locally for those.

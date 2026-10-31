@@ -1,0 +1,12 @@
+const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
+const engine=require('../assets/js/chemistry-engine.js');
+function setup(){
+const nodes=new Map();let i=0;
+function node(id){if(!nodes.has(id))nodes.set(id,{id,hidden:false,textContent:'',style:{},value:'',classList:{contains:()=>false,add(){},remove(){}},children:[],append(...v){this.children.push(...v)},replaceChildren(...v){this.children=v},insertAdjacentElement(){},addEventListener(){},setAttribute(){},setPointerCapture(){},focus(){},getContext(){return {createLinearGradient(){return {addColorStop(){}}},fillRect(){},beginPath(){},arc(){},fill(){},save(){},restore(){},translate(){},fillText(){}}}});return nodes.get(id)}
+const document={hidden:false,activeElement:{tagName:'CANVAS'},getElementById:node,createElement:()=>node('_'+i++),querySelectorAll:()=>[],addEventListener(){}};
+const env={document,window:{ChemistryEngine:engine,addEventListener(){}},lang:'hu',requestAnimationFrame(){},setTimeout(){},Math,console};vm.createContext(env);vm.runInContext(fs.readFileSync(path.join(__dirname,'../assets/js/quest.js'),'utf8'),env);return {q:env.window.ChemQuest,dom:document};
+}
+test('level 2 can craft CO2 with actual ChemistryEngine and then craft H2O',()=>{const {q}=setup();q.test.loadLevel(1);q.test.setInventory({C:1,O:3,H:2});assert.equal(q.test.craft('CO2'),true);assert.equal(q.test.craft('H2O'),true);assert.equal(q.debug().arsenal.CO2,1);assert(q.debug().arsenal.H2O>=1)});
+test('level 7 can craft multiple ionic NaCl charges',()=>{const {q}=setup();q.test.loadLevel(6);q.test.setInventory({Na:3,Cl:3});for(let j=0;j<3;j++)assert.equal(q.test.craft('NaCl'),true);assert.equal(q.debug().arsenal.NaCl,3)});
+test('level 10 supports all multi-stage boss reagents',()=>{const {q}=setup();q.test.loadLevel(9);q.test.setInventory({C:1,H:4,O:4});assert.equal(q.test.craft('CH4'),true);assert.equal(q.test.craft('O2'),true);assert.equal(q.test.craft('O2'),true);assert.equal(q.debug().arsenal.O2,2)});
+test('element sources renew after a correct answer and time advances',()=>{const {q}=setup();q.test.loadLevel(1);q.test.setPlayer(160,278,true);q.test.advance(.016);q.test.answerCorrect();let before=q.debug().inventory.C+q.debug().inventory.H+q.debug().inventory.O;q.test.setPlayer(50,370,true);q.test.advance(5.5);q.test.setPlayer(160,278,true);q.test.advance(.016);q.test.answerCorrect();let after=q.debug().inventory.C+q.debug().inventory.H+q.debug().inventory.O;assert.equal(after,before+1)});
