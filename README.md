@@ -152,3 +152,8 @@ The 10 stages have distinct target types, recipes, reaction rules and learning f
 - Run `node --test tests/*.test.cjs` and `python3 -m unittest discover -s tests -p 'test_*.py'`.
 
 This is a gameplay update, not a guarantee of laboratory-grade chemistry or fire-safety guidance.
+
+
+## Beta 2.0.3 — Chemistry Quest Arsenal HUD
+
+The molecule arsenal is displayed above the game canvas. Unlocked recipes have selectable slots with formula, available charge count, and active selection. Select by mouse/touch or keyboard (1–9, 0, Q/Tab). The additional O₂ slot can be selected by click or Q/Tab cycling. C opens crafting and E fires the selected molecule. Slots update after crafting, shooting, changing level and switching weapons. On narrow screens, the weapon bar scrolls horizontally.
