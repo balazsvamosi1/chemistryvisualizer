@@ -32,3 +32,9 @@
 #bunsenMetalGlow{animation:bunsenMetalPulse .65s ease-in-out infinite alternate}
 @keyframes bunsenMetalPulse{from{opacity:.78;transform:translateY(2px)}to{opacity:1;transform:translateY(-2px)}}
 @media(prefers-reduced-motion:reduce){#bunsenMetalFlame,#bunsenMetalGlow{animation:none}}
+
+/* P0 classroom disclosure and hot-zone educational annotation */
+#bunsenPracticeWarning{margin:14px 0 0;padding:14px 16px;border-left:4px solid #e3aa55;background:#302b25;border-radius:7px;font-weight:600;line-height:1.65}
+#bunsenSpectrumCaveat,#bunsenEmitterExplanation{font-size:.9rem;line-height:1.55;max-width:72ch}
+#bunsenHotSpotCaption{font-size:.88rem;color:#ffda99}
+#bunsenHotSpot{filter:drop-shadow(0 0 4px #ffdf71)}
