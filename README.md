@@ -234,3 +234,10 @@ GitHub Pages assets are cache-busted with the `v=2.1.7` script and stylesheet su
 - **Spectroscopy:** Emission displays a deliberately schematic excitation/relaxation equation `X + energy → X*; X* → X + hν`, where X can represent an atom, ion or molecular species. An explanatory species label and multiple illustrative spectral lines appear for relevant samples, including the sodium D doublet and potassium's violet/near-infrared features. Calcium, barium and copper also flag possible molecular or ionic contributors. Colour is not inferred from one wavelength alone.
 - The existing metal-combustion equations and separate combustion visualisations are preserved; GitHub Actions is not re-enabled.
 - Verification: 11 targeted headless Bunsen regression tests passed; full browser integration not established.
+
+
+## Bunsen Lab P1 completion and follow-up audit (2026-11-02)
+
+Implemented optional educational modes for **flame tests** and **metal combustion** (Mg, Al, Fe), including qualitative illustration of aluminium-oxide passivation, an explicit separate ignition step, a sample-loop insertion/cleaning workflow, concentration and trace-sodium contamination effects, and a simplified spectral-line identification exercise. Existing scientific accuracy notices and the prominent warning that this cannot replace supervised practice with a real Bunsen burner remain in place.
+
+Limitations: colour/intensity/contamination are qualitative RGB models, not measured spectral radiance; the spectroscopy exercise displays representative lines rather than full emission spectra; the loop and ignition sequence is pedagogical and not a real equipment-operating procedure; aluminium passivation is represented only qualitatively. These limitations should be stated when using the tool in a classroom. The browser integration of the latest P1 UI has not yet been visually tested; targeted headless model tests passed. GitHub Actions remains disabled.
