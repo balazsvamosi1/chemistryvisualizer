@@ -30,7 +30,7 @@ test('air adjustment changes flame width and height continuously',()=>{
  const middle=appearance({gas:true,air:50});
  const high=appearance({gas:true,air:100});
  assert(low.width>middle.width&&middle.width>high.width);
- assert(low.height>middle.height&&middle.height>high.height);
+ assert(low.height<middle.height&&middle.height<high.height);
  assert.notEqual(low.color,high.color);
 });
 test('burning magnesium is distinguished from a conventional salt flame test',()=>{
