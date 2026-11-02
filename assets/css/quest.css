@@ -34,3 +34,13 @@
 .quest-builder-bonds{font-family:ui-monospace,monospace;min-height:23px;color:#a9e6ff;overflow-wrap:anywhere}
 .quest-builder-feedback{min-height:20px;color:#ffe2aa;font-size:13px}
 .quest-builder select{background:#183752;color:#fff;padding:6px;border-radius:5px}
+
+/* Beta 2.1.2: Shared Chemistry Quest equation builder */
+.quest-reaction-pane{display:grid;gap:10px;max-width:100%;padding:14px;border:1px solid #326a7d;border-radius:10px;background:#0b2437;color:#e4f3fb}
+.quest-reaction-pane label{display:grid;gap:5px;font-size:13px}
+.quest-reaction-pane select,.quest-reaction-pane input{min-width:0;max-width:100%;background:#17374d;color:#e8f9ff;border:1px solid #42677b;border-radius:6px;padding:8px}
+.quest-rxn-coeffs{display:flex;flex-wrap:wrap;gap:8px}
+.quest-rxn-coeffs label{flex:1 1 90px;max-width:150px}
+.quest-rxn-coeffs input{width:100%}
+.quest-reaction-feedback{min-height:20px;color:#ffd891}
+@media(max-width:600px){.quest-rxn-coeffs label{flex-basis:65px}.quest-reaction-pane{padding:9px}}
