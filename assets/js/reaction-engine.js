@@ -16,7 +16,7 @@
  AgIon:{formula:'Ag⁺',atoms:{Ag:1},charge:1},ClIon:{formula:'Cl⁻',atoms:{Cl:1},charge:-1},
  AgCl:{formula:'AgCl(s)',atoms:{Ag:1,Cl:1}},
  CuIon:{formula:'Cu²⁺',atoms:{Cu:1},charge:2},NH3:{formula:'NH₃',atoms:{N:1,H:3}},
- CuAmine:{formula:'[Cu(NH₃)₄]²⁺',atoms:{Cu:1,N:4,H:12},charge:2}
+ CuAmine:{formula:'[Cu(NH₃)₄]²⁺',atoms:{Cu:1,N:4,H:12},charge:2},Cl2:{formula:'Cl₂',atoms:{Cl:2}},N2:{formula:'N₂',atoms:{N:2}},Na:{formula:'Na',atoms:{Na:1}},Na2O:{formula:'Na₂O',atoms:{Na:2,O:1}},CaO:{formula:'CaO',atoms:{Ca:1,O:1}},CO:{formula:'CO',atoms:{C:1,O:1}},BaO2:{formula:'BaO₂',atoms:{Ba:1,O:2}},BaCl2:{formula:'BaCl₂',atoms:{Ba:1,Cl:2}}
  };
  const catalog={
  water:{reactants:['H2','O2'],products:['H2O'],solution:[2,1,2],kind:'chemical'},
@@ -30,6 +30,21 @@
  silver:{reactants:['AgIon','ClIon'],products:['AgCl'],solution:[1,1,1],kind:'chemical',condition:'aqueous'},
  complex:{reactants:['CuIon','NH3'],products:['CuAmine'],solution:[1,4,1],kind:'chemical',condition:'aqueous'}
  };
+ const craftReactions={
+ H2O:'water',CO2:'carbon',O2:'peroxide',
+ H2:'make_hydrogen',NaOH:'make_naoh',HCl:'make_hcl',NH3:'make_ammonia',
+ NaCl:'make_nacl',CaOH2:'make_lime',H2O2:'make_peroxide',CH4:'make_methane'
+ };
+ Object.assign(catalog,{
+ make_hydrogen:{reactants:['H2O'],products:['H2','O2'],solution:[2,2,1],kind:'chemical',condition:'electrolysis'},
+ make_naoh:{reactants:['Na2O','H2O'],products:['NaOH'],solution:[1,1,2],kind:'chemical',condition:'exothermic'},
+ make_hcl:{reactants:['H2','Cl2'],products:['HCl'],solution:[1,1,2],kind:'chemical',condition:'hydrogen-chlorine reaction; HCl aqueous only after dissolution'},
+ make_ammonia:{reactants:['N2','H2'],products:['NH3'],solution:[1,3,2],kind:'chemical',condition:'industrial catalyst, pressure and temperature'},
+ make_nacl:{reactants:['Na','Cl2'],products:['NaCl'],solution:[2,1,2],kind:'chemical',condition:'violent synthesis; illustration only'},
+ make_lime:{reactants:['CaO','H2O'],products:['CaOH2'],solution:[1,1,1],kind:'chemical',condition:'strongly exothermic slaking of lime'},
+ make_peroxide:{reactants:['BaO2','HCl'],products:['BaCl2','H2O2'],solution:[1,2,1,1],kind:'chemical',condition:'historical preparation; not a safe classroom experiment'},
+ make_methane:{reactants:['CO','H2'],products:['CH4','H2O'],solution:[1,3,1,1],kind:'chemical',condition:'catalytic methanation'}
+ });
  const wrongSides={
  reactants:[['H2O','CO2'],['HCl','CO2'],['O2','NaCl']],
  products:[['H2','O2'],['NaOH','H2O'],['CH4','O2']]
@@ -56,5 +71,5 @@
   return{...check(id,coeffs),rows:elements.map(sym=>({sym,l:left?.atoms?.[sym]||0,r:right?.atoms?.[sym]||0,ok:!!left&&!!right&&(left.atoms[sym]||0)===(right.atoms[sym]||0)})),valid:!!left&&!!right,balanced:check(id,coeffs).ok,charge:{l:left?.charge,r:right?.charge}};
  }
  function sideOptions(id,side){const c=catalog[id];if(!c)return[];const correct=c[side];const options=[correct,...wrongSides[side].filter(x=>!sameItems(x,correct))];return options.map(keys=>({keys:keys.slice(),label:keys.map(k=>species[k].formula).join(' + ')}));}
- return Object.freeze({species,catalog,model,check,analyze,sideOptions});
+ return Object.freeze({species,catalog,craftReactions,model,check,analyze,sideOptions});
 });
