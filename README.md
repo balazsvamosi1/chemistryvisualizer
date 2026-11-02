@@ -1,4 +1,4 @@
-# 3D Chemistry Lab — Beta 2.1.6
+# 3D Chemistry Lab — Beta 2.1.7
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
 
@@ -217,3 +217,12 @@ The calculation implementation is `assets/js/stoichiometry.js` and is usable off
 A standalone, offline-capable **Acid–Base Lab** tab provides a calculated pH, an interactive titration curve, indicator color changes (methyl orange, bromothymol blue and phenolphthalein) and an equivalence-point button. It supports HCl, HNO₃, NaOH, KOH, acetic acid and ammonia in acid–base pairs. Strong electrolytes and monoprotic weak acid/base equilibria are modeled at 25 °C via charge balance and water autoionization; weak-acid/base conjugate species are included. The interface is available in HU/DE/EN. The ideal-model assumptions are explained on screen.
 
 **GitHub Actions CI was intentionally removed** at the user's request. Unit tests remain in the repository for optional manual execution. New static labs do not require the Python API, but the scientific data sync / locally hosted backend features continue to require `python3 server.py`. GitHub Pages deployment is not automatically configured.
+
+
+## Beta 2.1.7 — Bunsen Flame Visualisation Update
+
+The Bunsen flame is now dynamically generated from the air-control slider: a broad, taller yellow luminous flame at low air supply transitions to a narrower, shorter blue non-luminous flame as air intake rises. Animated flame flicker, colored glow and distinct metal-burning effects replace the former static flame paths.
+
+The sample library now includes rubidium, caesium, indium, zinc, boron compounds, magnesium, aluminium and iron, in addition to lithium, sodium, potassium, calcium, strontium, barium and copper. **Magnesium/aluminium burning and iron sparks are not conventional metal-ion flame tests**; the interface explicitly distinguishes their combustion emission from the metal-salt flame-colour test. All explanations remain HU/DE/EN. Scientific colors and flame geometry are illustrative rather than calibrated spectra or CFD.
+
+GitHub Pages assets are cache-busted with the `v=2.1.7` script and stylesheet suffix. No CI workflow was reintroduced.
