@@ -1,10 +1,10 @@
-# 3D Chemistry Lab — Beta 2.1.5
+# 3D Chemistry Lab — Beta 2.1.6
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
 
 ## Current release
 
-**Beta 2.1.5** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
+**Beta 2.1.6** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
 
 ```sh
 python3 server.py
@@ -210,3 +210,10 @@ Adds a standalone **Stoichiometry Lab** tab, independent of Chemistry Quest, loc
 - Computing theoretical product amount and mass from eight curated balanced reactions using the shared `ReactionEngine`, assuming complete conversion and other reagents in excess.
 
 The calculation implementation is `assets/js/stoichiometry.js` and is usable offline in the browser. For classroom interpretation, the computed yields are theoretical, not experimentally measured; the user interface explicitly states model assumptions.
+
+
+## Beta 2.1.6 — Acid–Base and Titration Laboratory
+
+A standalone, offline-capable **Acid–Base Lab** tab provides a calculated pH, an interactive titration curve, indicator color changes (methyl orange, bromothymol blue and phenolphthalein) and an equivalence-point button. It supports HCl, HNO₃, NaOH, KOH, acetic acid and ammonia in acid–base pairs. Strong electrolytes and monoprotic weak acid/base equilibria are modeled at 25 °C via charge balance and water autoionization; weak-acid/base conjugate species are included. The interface is available in HU/DE/EN. The ideal-model assumptions are explained on screen.
+
+**GitHub Actions CI was intentionally removed** at the user's request. Unit tests remain in the repository for optional manual execution. New static labs do not require the Python API, but the scientific data sync / locally hosted backend features continue to require `python3 server.py`. GitHub Pages deployment is not automatically configured.
