@@ -148,12 +148,12 @@
  en:{tube:'The gas and incoming air mixture travels upward through the barrel.',collar:'Rotating the collar adjusts how much air enters the burner.',holes:'Oxygen-containing air enters through these openings.',inlet:'The gas inlet connects the burner to its gas supply.',base:'The heavy base keeps the burner upright.'}
  };
  const state={gas:false,gasFlow:65,air:60,sample:'none'};let selectedPart='tube';
- let mode='flame',ignited=false,loopLoaded=false,concentration=75,contamination=0;
+ let mode='flame',ignited=false,loopLoaded=false,concentration=75,contamination=0,contaminationEnabled=false;
  const quizSamples=['Li','Na','K','Ca','Sr','Ba','Cu','In'],quizState={id:'Na',revealed:false};
  const extraText={
- hu:{flame:'Lángfestés',metal:'Fémek égése',ignite:'Gyújtás',extinguish:'Láng eloltása',load:'Mintahurok a lángba',clean:'Hurok tisztítása',loaded:'A minta a lángban van.',unloaded:'Tiszta mintahurok – válassz mintát, majd helyezd a lángba.',concentration:'Mintakoncentráció',contamination:'Nátriumszennyezés',metalNote:'Magnézium: intenzív fehér égés. Alumínium: oxidrétege gátolja az égést, finom por másképp viselkedik. Vas: szemcséi izzó szikrákat adhatnak. A modell nem gyakorlati kísérleti útmutató.',spectrum:'Szemléltető vonalspektrum',unknown:'Ismeretlen minta azonosítása',check:'Ellenőrzés',newSample:'Új minta',right:'Helyes azonosítás.',wrong:'Nem egyezik. Vizsgáld meg újra a vonalakat.',ready:'Gyújtás előtt nyisd a gázcsapot és a levegőnyílásokat mérsékelten.',safety:'A gázcsap nyitott, de a láng nincs meggyújtva. A valós laborban ez veszélyes állapot!'},
- de:{flame:'Flammenprobe',metal:'Metallverbrennung',ignite:'Zünden',extinguish:'Flamme löschen',load:'Probenöse in die Flamme',clean:'Öse reinigen',loaded:'Die Probe befindet sich in der Flamme.',unloaded:'Saubere Öse: Probe auswählen und in die Flamme führen.',concentration:'Probenkonzentration',contamination:'Natriumverunreinigung',metalNote:'Magnesium: intensive weiße Verbrennung. Aluminium: die Oxidschicht hemmt die Verbrennung; feines Pulver verhält sich anders. Eisen: glühende Partikel können Funken erzeugen. Kein praktisches Experimentierprotokoll.',spectrum:'Illustratives Linienspektrum',unknown:'Unbekannte Probe erkennen',check:'Prüfen',newSample:'Neue Probe',right:'Richtig erkannt.',wrong:'Stimmt nicht. Betrachte die Linien erneut.',ready:'Vor dem Zünden Gaszufuhr und Luftzufuhr passend einstellen.',safety:'Gaszufuhr ist offen, aber die Flamme brennt nicht. Im echten Labor ist das gefährlich!'},
- en:{flame:'Flame tests',metal:'Metal combustion',ignite:'Ignite',extinguish:'Extinguish',load:'Place test loop in flame',clean:'Clean test loop',loaded:'The sample is in the flame.',unloaded:'Clean test loop: select a sample and place it in the flame.',concentration:'Sample concentration',contamination:'Sodium contamination',metalNote:'Magnesium: intense white combustion. Aluminium: its oxide layer inhibits burning; fine powder behaves differently. Iron particles can produce incandescent sparks. Not a practical experimental procedure.',spectrum:'Illustrative line spectrum',unknown:'Identify an unknown sample',check:'Check',newSample:'New sample',right:'Correct identification.',wrong:'Not quite. Inspect the lines again.',ready:'Set gas and air supply appropriately before ignition.',safety:'Gas is open but the burner is unlit. This is dangerous in a real laboratory!'}
+ hu:{contaminationToggle:'Szennyeződés szimulálása (opcionális)',cleanDone:'A szennyeződést eltávolítottad. A kiválasztott minta tiszta lángszíne látható.',flame:'Lángfestés',metal:'Fémek égése',ignite:'Gyújtás',extinguish:'Láng eloltása',load:'Mintahurok a lángba',clean:'Hurok tisztítása',loaded:'A minta a lángban van.',unloaded:'Tiszta mintahurok – válassz mintát, majd helyezd a lángba.',concentration:'Mintakoncentráció',contamination:'Nátriumszennyezés',metalNote:'Magnézium: intenzív fehér égés. Alumínium: oxidrétege gátolja az égést, finom por másképp viselkedik. Vas: szemcséi izzó szikrákat adhatnak. A modell nem gyakorlati kísérleti útmutató.',spectrum:'Szemléltető vonalspektrum',unknown:'Ismeretlen minta azonosítása',check:'Ellenőrzés',newSample:'Új minta',right:'Helyes azonosítás.',wrong:'Nem egyezik. Vizsgáld meg újra a vonalakat.',ready:'Gyújtás előtt nyisd a gázcsapot és a levegőnyílásokat mérsékelten.',safety:'A gázcsap nyitott, de a láng nincs meggyújtva. A valós laborban ez veszélyes állapot!'},
+ de:{contaminationToggle:'Verunreinigung simulieren (optional)',cleanDone:'Verunreinigung entfernt. Die reine Flammenfarbe der Probe ist sichtbar.',flame:'Flammenprobe',metal:'Metallverbrennung',ignite:'Zünden',extinguish:'Flamme löschen',load:'Probenöse in die Flamme',clean:'Öse reinigen',loaded:'Die Probe befindet sich in der Flamme.',unloaded:'Saubere Öse: Probe auswählen und in die Flamme führen.',concentration:'Probenkonzentration',contamination:'Natriumverunreinigung',metalNote:'Magnesium: intensive weiße Verbrennung. Aluminium: die Oxidschicht hemmt die Verbrennung; feines Pulver verhält sich anders. Eisen: glühende Partikel können Funken erzeugen. Kein praktisches Experimentierprotokoll.',spectrum:'Illustratives Linienspektrum',unknown:'Unbekannte Probe erkennen',check:'Prüfen',newSample:'Neue Probe',right:'Richtig erkannt.',wrong:'Stimmt nicht. Betrachte die Linien erneut.',ready:'Vor dem Zünden Gaszufuhr und Luftzufuhr passend einstellen.',safety:'Gaszufuhr ist offen, aber die Flamme brennt nicht. Im echten Labor ist das gefährlich!'},
+ en:{contaminationToggle:'Simulate contamination (optional)',cleanDone:'Contamination removed. The pure flame colour of the selected sample is visible.',flame:'Flame tests',metal:'Metal combustion',ignite:'Ignite',extinguish:'Extinguish',load:'Place test loop in flame',clean:'Clean test loop',loaded:'The sample is in the flame.',unloaded:'Clean test loop: select a sample and place it in the flame.',concentration:'Sample concentration',contamination:'Sodium contamination',metalNote:'Magnesium: intense white combustion. Aluminium: its oxide layer inhibits burning; fine powder behaves differently. Iron particles can produce incandescent sparks. Not a practical experimental procedure.',spectrum:'Illustrative line spectrum',unknown:'Identify an unknown sample',check:'Check',newSample:'New sample',right:'Correct identification.',wrong:'Not quite. Inspect the lines again.',ready:'Set gas and air supply appropriately before ignition.',safety:'Gas is open but the burner is unlit. This is dangerous in a real laboratory!'}
  };
  const ex=k=>extraText[lang()][k];
  function chooseSample(id){const allowed=mode==='metal'?science.metalIds:science.flameTestIds;return allowed.includes(id)?id:'none'}
@@ -168,18 +168,21 @@
  const lang=()=>['hu','de','en'].find(id=>$(id)?.classList.contains('active'))||'hu';
  const tr=k=>labels[lang()][k]||k;
  function update(){
-  const flame=science.flameTest({sample:state.sample,concentration,contamination});
-  const selected=mode==='metal'?state.sample:loopLoaded?flame.dominant:'none';
+  const flame=science.flameTest({sample:state.sample,concentration,contamination:contaminationEnabled?contamination:0});
+  const selected=mode==='metal'?state.sample:flame.dominant;
   const a=science.appearance({...state,gas:state.gas&&ignited,sample:selected,sampleStrength:flame.dominant==='Na'&&selected==='Na'?Math.max(flame.visibility,flame.sodiumMask):flame.visibility}),svg=$('bunsenSvg');
   $('bunsenModeFlame').textContent=ex('flame');$('bunsenModeMetal').textContent=ex('metal');
   $('bunsenModeFlame').setAttribute('aria-pressed',String(mode==='flame'));$('bunsenModeMetal').setAttribute('aria-pressed',String(mode==='metal'));
   $('bunsenIgnite').textContent=ex(ignited?'extinguish':'ignite');
   $('bunsenFlameTestControls').hidden=mode!=='flame';$('bunsenMetalControls').hidden=mode!=='metal';
   $('bunsenConcentrationLabel').textContent=ex('concentration')+': '+concentration+'%';
+  $('bunsenContaminationToggleLabel').textContent=ex('contaminationToggle');
+  $('bunsenContaminationToggle').checked=contaminationEnabled;
+  $('bunsenContaminationSettings').hidden=!contaminationEnabled;
   $('bunsenContaminationLabel').textContent=ex('contamination')+': '+contamination+'%';
-  $('bunsenLoop').textContent=ex(loopLoaded?'clean':'load');
-  $('bunsenLoop').disabled=mode!=='flame'||state.sample==='none';
-  $('bunsenLoopStatus').textContent=mode==='metal'?ex('metalNote'):ex(loopLoaded?'loaded':'unloaded');
+  $('bunsenLoop').textContent=ex('clean');
+  $('bunsenLoop').hidden=!contaminationEnabled||contamination===0||state.sample==='none';
+  $('bunsenLoopStatus').textContent=mode==='metal'?ex('metalNote'):contaminationEnabled&&contamination>0?ex('contamination')+': '+contamination+'%':'';
   $('bunsenMetalNote').textContent=ex('metalNote');
   $('bunsenSpectrumHeading').textContent=ex('spectrum');$('bunsenUnknownLabel').textContent=ex('unknown');
   $('bunsenUnknownCheck').textContent=ex('check');$('bunsenUnknownNew').textContent=ex('newSample');
@@ -257,14 +260,15 @@
  $('bunsenModeMetal').onclick=()=>{mode='metal';loopLoaded=false;rebuildSamples();update()};
  $('bunsenIgnite').onclick=()=>{if(ignited){ignited=false}else if(state.gas&&state.gasFlow>0){ignited=true}update()};
  $('bunsenConcentration').oninput=e=>{concentration=Number(e.target.value);update()};
+ $('bunsenContaminationToggle').onchange=e=>{contaminationEnabled=e.target.checked;contamination=0;$('bunsenContamination').value='0';update()};
  $('bunsenContamination').oninput=e=>{contamination=Number(e.target.value);update()};
- $('bunsenLoop').onclick=()=>{if(mode!=='flame'||state.sample==='none')return;loopLoaded=!loopLoaded;update()};
+ $('bunsenLoop').onclick=()=>{if(!contaminationEnabled)return;contamination=0;$('bunsenContamination').value='0';update();$('bunsenLoopStatus').textContent=ex('cleanDone')};
  $('bunsenUnknownNew').onclick=()=>{quizState.id=quizSamples[(quizSamples.indexOf(quizState.id)+1)%quizSamples.length];quizState.revealed=false;renderSpectrum();$('bunsenUnknownResult').textContent=''};
  $('bunsenUnknownCheck').onclick=()=>{$('bunsenUnknownResult').textContent=ex($('bunsenUnknownAnswer').value===quizState.id?'right':'wrong')};
  for(const key of quizSamples){const opt=document.createElement('option');opt.value=key;opt.textContent=science.samples[key][lang()];$('bunsenUnknownAnswer').append(opt)}
  $('bunsenGas').addEventListener('click',()=>{if(!state.gas)ignited=false});
  window.BunsenLabControls={
-  snapshot:()=>({gas:state.gas,ignited,air:state.air,gasFlow:state.gasFlow,mode,sample:state.sample,loopLoaded,concentration,contamination}),
+  snapshot:()=>({gas:state.gas,ignited,air:state.air,gasFlow:state.gasFlow,mode,sample:state.sample,loopLoaded,concentration,contamination:contaminationEnabled?contamination:0,contaminationEnabled}),
   // Classroom task evaluation consumes the actual student-operated controls.
   refresh:()=>update()
  };
