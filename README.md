@@ -1,10 +1,10 @@
-# 3D Chemistry Lab — Beta 2.1.2
+# 3D Chemistry Lab — Beta 2.1.3
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
 
 ## Current release
 
-**Beta 2.1.2** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
+**Beta 2.1.3** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
 
 ```sh
 python3 server.py
@@ -178,3 +178,12 @@ The existing five laboratory balance exercises now use the reusable `assets/js/r
 From Quest level 4, a successful chemical hit on an applicable enemy opens a HU/DE/EN equation challenge: select reactants, select products, and supply stoichiometric coefficients. A correct equation allows the target to be defeated; incorrect choices do not silently pass. Physical interactions such as fire extinguishing do not incorrectly require chemical equations. Some reactions have additional physical conditions and remain educational simplifications.
 
 Check `node --test tests/*.test.cjs`, including `tests/reaction_engine.test.cjs`; the game and laboratory still require browser-level integration verification.
+
+
+## Beta 2.1.3 — Escape the Burning Laboratory
+
+Chemistry Quest is now an escape adventure set in a laboratory after a fire breaks out. Its ten stages are numbered 1-1 to 1-5 and 2-1 to 2-5, with localized mission text in HU/DE/EN.
+
+From level four, crafting ammunition requires a correctly balanced, curated preparation reaction in addition to molecular bonding where relevant. This is a teaching model, not a safe or literal synthesis method. The shared ReactionEngine supports all eleven ammo recipes.
+
+From the fifth stage, smaller chemical enemies patrol, attack, and use the same reaction-based defeat mechanic as main enemies. All smaller enemies and main targets must be cleared before the exit opens.
