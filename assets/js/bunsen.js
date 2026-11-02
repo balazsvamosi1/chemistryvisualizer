@@ -25,6 +25,7 @@
 });
 (function(){
  'use strict';
+ if(typeof document==='undefined')return;
  const $=id=>document.getElementById(id),tab=$('bunsenTab'),section=$('bunsenSection');
  if(!tab||!section||!window.BunsenScience)return;
  const science=window.BunsenScience;
