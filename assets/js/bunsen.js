@@ -182,6 +182,7 @@
   $('bunsenMetalNote').textContent=ex('metalNote');
   $('bunsenSpectrumHeading').textContent=ex('spectrum');$('bunsenUnknownLabel').textContent=ex('unknown');
   $('bunsenUnknownCheck').textContent=ex('check');$('bunsenUnknownNew').textContent=ex('newSample');
+  for(const opt of $('bunsenUnknownAnswer').options){opt.textContent=science.samples[opt.value]?.[lang()]||opt.value}
   $('bunsenUnknownResult').textContent=state.gas&&!ignited?ex('safety'):'';
 
   $('bunsenGas').textContent=tr('gas')+': '+tr(state.gas?'on':'off');
