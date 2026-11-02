@@ -70,7 +70,8 @@ const topics=[
  ]}
 ];
 const locales=['hu','de','en'];
-for(const topic of topics){topic.lesson=topic.lessons.map(x=>Object.fromEntries(locales.map((l,i)=>[l,x[i]])));topic.bank=topic.questions.map((x,i)=>({id:topic.id+'-'+i,lessonIndex:({atoms:[0,0,1,2],bonds:[1,1,2,2],stoich:[0,0,1,2],acids:[0,1,2,1],bunsen:[1,1,2,0],quest:[0,1,1,2]})[topic.id][i],q:Object.fromEntries(locales.map((l,j)=>[l,x[j]])),choices:Object.fromEntries(locales.map((l,j)=>[l,[x[3][j],x[4][j],x[5][j]]])),answer:x[6]}))}
+// In the authored question bank the first option is always correct; session() randomizes both choice order and the answer index.
+for(const topic of topics){topic.lesson=topic.lessons.map(x=>Object.fromEntries(locales.map((l,i)=>[l,x[i]])));topic.bank=topic.questions.map((x,i)=>({id:topic.id+'-'+i,lessonIndex:({atoms:[0,0,1,2],bonds:[1,1,2,2],stoich:[0,0,1,2],acids:[0,1,2,1],bunsen:[1,1,2,0],quest:[0,1,1,2]})[topic.id][i],q:Object.fromEntries(locales.map((l,j)=>[l,x[j]])),choices:Object.fromEntries(locales.map((l,j)=>[l,[x[3][j],x[4][j],x[5][j]]])),answer:0}))}
 function academyTopic(id,tab,titles,lessonText,questions){
  const l=['hu','de','en'];const title=Object.fromEntries(l.map((k,i)=>[k,titles[i]]));
  const lesson=lessonText.map(row=>Object.fromEntries(l.map((k,i)=>[k,row[i]])));
