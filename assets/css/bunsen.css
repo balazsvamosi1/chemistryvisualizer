@@ -72,3 +72,9 @@
 #bunsenEducationReport li{margin:9px 0}
 #bunsenSection .bunsen-progress{font-weight:700;color:#b7e5f5}
 @media(max-width:620px){#bunsenSection .bunsen-learning-nav button{flex:1 0 calc(50% - 9px)}#bunsenSection .bunsen-education-panel{padding:13px}#bunsenDifficulty{max-width:100%}}
+
+/* Clean sample is the default: contamination controls appear only on request. */
+#bunsenContaminationSettings[hidden],#bunsenLoop[hidden]{display:none!important}
+#bunsenContaminationSettings{display:grid;gap:8px}
+#bunsenSection .bunsen-contamination-option{display:flex;gap:10px;align-items:center;cursor:pointer;margin-top:8px}
+#bunsenSection .bunsen-contamination-option input{width:18px;height:18px}
