@@ -178,6 +178,7 @@
   $('bunsenConcentrationLabel').textContent=ex('concentration')+': '+concentration+'%';
   $('bunsenContaminationLabel').textContent=ex('contamination')+': '+contamination+'%';
   $('bunsenLoop').textContent=ex(loopLoaded?'clean':'load');
+  $('bunsenLoop').disabled=mode!=='flame'||state.sample==='none';
   $('bunsenLoopStatus').textContent=mode==='metal'?ex('metalNote'):ex(loopLoaded?'loaded':'unloaded');
   $('bunsenMetalNote').textContent=ex('metalNote');
   $('bunsenSpectrumHeading').textContent=ex('spectrum');$('bunsenUnknownLabel').textContent=ex('unknown');
@@ -248,16 +249,16 @@
  $('bunsenGas').addEventListener('click',()=>{state.gas=!state.gas;if(!state.gas)ignited=false;update()});
  $('bunsenAir').addEventListener('input',e=>{state.air=Number(e.target.value);update()});
  $('bunsenGasFlow').addEventListener('input',e=>{state.gasFlow=Number(e.target.value);if(state.gasFlow===0)ignited=false;update()});
- $('bunsenSample').addEventListener('change',e=>{state.sample=e.target.value;loopLoaded=false;update()});
+ $('bunsenSample').addEventListener('change',e=>{state.sample=e.target.value;loopLoaded=mode==='flame'&&state.sample!=='none';update()});
  ['hu','de','en'].forEach(id=>$(id)?.addEventListener('click',()=>update()));
  for(const name of ['tube','collar','holes','inlet','base']){const item=$('bunsenPart'+name);const select=()=>{selectedPart=name;update()};item.addEventListener('click',select);item.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();select()}})}
  
- $('bunsenModeFlame').onclick=()=>{mode='flame';loopLoaded=false;rebuildSamples();update()};
+ $('bunsenModeFlame').onclick=()=>{mode='flame';rebuildSamples();loopLoaded=state.sample!=='none';update()};
  $('bunsenModeMetal').onclick=()=>{mode='metal';loopLoaded=false;rebuildSamples();update()};
  $('bunsenIgnite').onclick=()=>{if(ignited){ignited=false}else if(state.gas&&state.gasFlow>0){ignited=true}update()};
  $('bunsenConcentration').oninput=e=>{concentration=Number(e.target.value);update()};
  $('bunsenContamination').oninput=e=>{contamination=Number(e.target.value);update()};
- $('bunsenLoop').onclick=()=>{if(!loopLoaded&&state.sample!=='none'&&mode==='flame')loopLoaded=true;else loopLoaded=false;update()};
+ $('bunsenLoop').onclick=()=>{if(mode!=='flame'||state.sample==='none')return;loopLoaded=!loopLoaded;update()};
  $('bunsenUnknownNew').onclick=()=>{quizState.id=quizSamples[(quizSamples.indexOf(quizState.id)+1)%quizSamples.length];quizState.revealed=false;renderSpectrum();$('bunsenUnknownResult').textContent=''};
  $('bunsenUnknownCheck').onclick=()=>{$('bunsenUnknownResult').textContent=ex($('bunsenUnknownAnswer').value===quizState.id?'right':'wrong')};
  for(const key of quizSamples){const opt=document.createElement('option');opt.value=key;opt.textContent=science.samples[key][lang()];$('bunsenUnknownAnswer').append(opt)}
