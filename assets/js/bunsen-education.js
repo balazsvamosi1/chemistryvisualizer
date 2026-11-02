@@ -82,7 +82,7 @@ function render(){
  const group=el('div',undefined,'bunsen-choice-group');group.setAttribute('role','radiogroup');group.setAttribute('aria-label',q.q[lang()]);
  q.choices[lang()].forEach((choice,i)=>{const label=el('label');const input=document.createElement('input');input.type='radio';input.name='bunsenEduAnswer';input.value=String(i);input.checked=answers[index]===i;input.disabled=checked;input.addEventListener('change',()=>{answers[index]=i});label.append(input,document.createTextNode(' '+choice));group.append(label)});task.append(group);
  $('bunsenEduNext').hidden=!checked;
- if(checked){feedback.textContent=answers[index]===q.answer?t('correct'):t('wrong')+' '+(q.why?.[lang()]||q.choices[lang()][q.answer]);$('bunsenEduCheck').hidden=true}
+ if(checked){feedback.textContent=view==='exam'?'':(answers[index]===q.answer?t('correct'):t('wrong')+' '+(q.why?.[lang()]||q.choices[lang()][q.answer]));$('bunsenEduCheck').hidden=true}
 }
 function reset(){index=0;answers=[];checked=false;completed=false;render()}
 for(const [name,id] of [['lab','bunsenViewLab'],['learn','bunsenViewLearn'],['practice','bunsenViewPractice'],['exam','bunsenViewExam']])$(id).addEventListener('click',()=>{view=name;reset()});
