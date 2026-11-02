@@ -264,3 +264,12 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - **Spectroscopy**: calibrated illustrative wavelength labels plus a zoomed 586–592 nm view for resolving the sodium D doublet; randomized unknown sample selection.
 - **Contamination**: still OFF by default. When enabled, sodium tint blends smoothly according to its slider, and cleaning resets contamination without removing the chosen sample. The colour is pedagogical RGB, not calibrated spectral radiometry.
 - **Tests**: 22 targeted headless Bunsen and education checks passed. End-to-end browser operation and classroom usability have not been independently verified.
+
+
+## Bunsen Lab 2.4.0 — education update (2026-11-02)
+- Each of the three levels has 6 structured lessons plus 16 linked questions (48 total).
+- Practice selects 6 randomized questions; exams select 10, with randomized answer ordering and final-only answer reveal.
+- Wrong answers link back to the relevant lesson, and the summary recommends relevant lessons rather than untranslated topic codes.
+- The Bunsen spectrum illustration has a wavelength scale, optional 586–592 nm sodium D-doublet zoom, and randomized unknown samples.
+- Sodium contamination is a continuously blended, optional visual approximation rather than an abrupt species switch.
+- All 22 targeted model/education tests passed locally in a headless JavaScript harness. Full GUI/browser testing was not performed.
