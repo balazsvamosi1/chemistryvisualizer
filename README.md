@@ -273,3 +273,12 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - The Bunsen spectrum illustration has a wavelength scale, optional 586–592 nm sodium D-doublet zoom, and randomized unknown samples.
 - Sodium contamination is a continuously blended, optional visual approximation rather than an abrupt species switch.
 - All 22 targeted model/education tests passed locally in a headless JavaScript harness. Full GUI/browser testing was not performed.
+
+
+## Chemistry Academy — whole-application P0 teaching improvements (2026-11-02)
+- A new **Kémia Akadémia / Chemie-Akademie / Chemistry Academy** top-level tab provides a common **Learn → Practice → Exam** workflow.
+- Coverage: **10 topics, 30 linked lessons, 40 questions** spanning atomic structure, bonding, stoichiometry, acids/bases, Bunsen flames, Chemistry Quest, Element Hunt, materials, molecular physics, and interpreting speculative models.
+- Each topic offers 3 lessons, 3 practice questions and 4 exam questions. A mixed exam contains **12 questions**, covering all ten topics at least once. Question order and choices are randomized. Exam answers appear only in the report; mistakes link to the relevant source lesson.
+- Mode-specific scientific fidelity notices clarify Bohr vs quantum models, screened hydrogenic multielectron approximations, limited valence/VSEPR heuristics, reference vs estimated molecular geometry, and Chemistry Quest's fictional atom-crafting, reagent weapons and fire rules. Quest includes a direct comparison with real chemistry.
+- Current limitation: this is a self-directed learning and assessment layer, **not** a certified school assessment or laboratory safety qualification. No login, grading upload, or cross-session score storage is added.
+- **26/26 targeted headless checks passed** across Academy and previously existing Bunsen education. Live visual/browser verification and the full repo test suite were not performed. GitHub Actions remains intentionally disabled.
