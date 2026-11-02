@@ -22,6 +22,21 @@
  Al:{hex:'#f6faff',intensity:.93,nm:null,kind:'combustion',hu:'Alumínium égése',de:'Aluminiumverbrennung',en:'Burning aluminium'},
  Fe:{hex:'#f8bd57',intensity:.92,nm:null,kind:'sparks',hu:'Vas szikrái',de:'Eisenfunken',en:'Iron sparks'}
  };
+ const equations={
+ none:{type:'base',lines:['CH₄ + 2 O₂ → CO₂ + 2 H₂O'],explain:{hu:'Egyszerűsített példa földgázra: a metán teljes égése. A tényleges égőgáz összetétele eltérhet.',de:'Vereinfachtes Erdgasbeispiel: vollständige Methanverbrennung. Das tatsächliche Brenngas kann anders zusammengesetzt sein.',en:'Simplified natural gas example: complete combustion of methane. Actual burner fuel may differ.'}},
+ Mg:{type:'combustion',lines:['2 Mg + O₂ → 2 MgO']},
+ Al:{type:'combustion',lines:['4 Al + 3 O₂ → 2 Al₂O₃']},
+ Fe:{type:'combustion',lines:['3 Fe + 2 O₂ → Fe₃O₄'],explain:{hu:'Egyszerűsített termékmodell; vas égésekor többféle oxid is keletkezhet.',de:'Vereinfachtes Produktmodell; bei der Eisenverbrennung können verschiedene Oxide entstehen.',en:'Simplified product model; burning iron can produce several different oxides.'}},
+ B:{type:'compound',lines:['B-tartalmú részecske + energia → gerjesztett részecske','Gerjesztett részecske → alapállapotú részecske + hν'],explain:{hu:'A zöld emissziót egyes bórtartalmú gázfázisú specieszek okozzák; nem egyszerűen szabad B-atomok.',de:'Die grüne Emission stammt von bestimmten borhaltigen Gasphasenspezies, nicht einfach von freien Boratomen.',en:'Green emission arises from particular boron-containing gas-phase species, not simply free boron atoms.'}}
+ };
+ for(const id of ['Li','Na','K','Rb','Cs','Ca','Sr','Ba','Cu','In','Zn']){
+  const nm=samples[id].nm;
+  equations[id]={type:'emission',lines:[id+' + energia → '+id+'*',id+'* → '+id+' + hν'+(nm?' (≈ '+nm+' nm)':'')],explain:{
+   hu:'Sematikus gerjesztési és fénykibocsátási egyenlet: nem égési vagy sztöchiometriai reakció. A sókból képződő fényt kibocsátó részecskék összetétele változhat.',
+   de:'Schematische Anregungs- und Emissionsgleichung, keine Verbrennungs- oder stöchiometrische Reaktion. Die emittierenden Spezies aus Salzen können variieren.',
+   en:'Schematic excitation and light-emission equations, not combustion or stoichiometric reactions. Emitting species formed from salts can vary.'
+  }};
+ }
  function appearance({gas=false,air=50,sample='none'}={}){
   const airLevel=Math.max(0,Math.min(100,Number(air)||0));
   const key=Object.hasOwn(samples,sample)?sample:'none',s=samples[key],burning=s.kind==='combustion',sparks=s.kind==='sparks';
@@ -32,13 +47,13 @@
   const width=Math.round(47-25*airFraction);
   const base=luminous?'#ffbe29':'#408fff',inner=luminous?'#ffec91':'#b5eaff';
   const special=key!=='none';
-  return{lit:true,mode:luminous?'luminous':'nonluminous',color:special?s.hex:base,
-   inner:burning?'#ffffff':sparks?'#ffe09c':special?(luminous?'#ffdd8a':'#c2eaff'):inner,
-   height:burning?Math.max(height,160):height,width:burning?Math.max(width,47):width,
-   glow:burning?1:special?(.40+.52*s.intensity):(luminous?.68:.23),
+  return{lit:true,mode:luminous?'luminous':'nonluminous',color:(burning||sparks)?base:special?s.hex:base,
+   inner:(burning||sparks)?inner:special?(luminous?'#ffdd8a':'#c2eaff'):inner,
+   height,width,
+   glow:(burning||sparks)?(luminous?.68:.23):special?(.40+.52*s.intensity):(luminous?.68:.23),
    sparks:burning||sparks,sample:key,air:airLevel,kind:s.kind||'flame'};
  }
- return Object.freeze({samples,appearance});
+ return Object.freeze({samples,equations,appearance});
 });
 (function(){
  'use strict';
@@ -55,6 +70,11 @@
  hu:{normal:'A színpróba egy kiválasztott vegyület közelítő emissziós színe; a mintát rendszerint tiszta, kék lángban vizsgálják.',compound:'Bórvegyületek (például borátok) zöld emissziója; a szín a vegyület típusától függ.',faint:'Cinknél a lángszín gyakran gyenge, nehezen különíthető el.',combustion:'Ez NEM hagyományos lángfestési próba: a fém égése rendkívül intenzív, széles spektrumú fehér fényt ad. Az égő magnéziumba nem szabad közvetlenül belenézni.',sparks:'Ez NEM szokványos fémion-lángfestés: a fémszemcsék izzása és oxidációja sárgás-narancs szikrákat eredményez.'},
  de:{normal:'Die Flammenprobe zeigt näherungsweise die Emission einer ausgewählten Verbindung; gewöhnlich wird in der sauberen blauen Flamme geprüft.',compound:'Borverbindungen (etwa Borate) emittieren grün; die Farbe hängt von der Verbindung ab.',faint:'Bei Zink ist die Flammenfärbung häufig schwach und schwer zu erkennen.',combustion:'KEINE klassische Flammenprobe: Das verbrennende Metall emittiert sehr intensives, breitbandiges weißes Licht. Nicht direkt in brennendes Magnesium blicken.',sparks:'KEINE übliche Ionen-Flammenprobe: Glühende und oxidierende Metallpartikel erzeugen gelb-orange Funken.'},
  en:{normal:'The flame test approximates emission from a selected compound; tests are generally performed in a clean blue flame.',compound:'Boron compounds (such as borates) give green emission; colour depends on the compound.',faint:'Zinc flame colour is often faint and difficult to distinguish.',combustion:'NOT a conventional flame test: burning metal emits extremely intense broadband white light. Do not look directly at burning magnesium.',sparks:'NOT a conventional metal-ion flame test: incandescent oxidizing metal particles produce yellow-orange sparks.'}
+ };
+ const equationLabels={
+ hu:{equationTitle:'Kapcsolódó kémiai egyenlet',combustionType:'Égés / oxidáció',emissionType:'Gerjesztés és fénykibocsátás',compoundType:'Vegyület emissziója',fuelType:'Alapláng – gáz égése',combustionInfo:'Ez valódi kémiai átalakulás; a fém és az oxigén oxidot képez.',emissionInfo:'A színpróbánál az energiafelvételt és a fénykibocsátást szemléltetjük, nem kémiai égést.'},
+ de:{equationTitle:'Zugehörige chemische Gleichung',combustionType:'Verbrennung / Oxidation',emissionType:'Anregung und Lichtemission',compoundType:'Emission einer Verbindung',fuelType:'Grundflamme – Brenngasverbrennung',combustionInfo:'Dies ist eine chemische Reaktion: Metall und Sauerstoff bilden ein Oxid.',emissionInfo:'Bei der Flammenprobe geht es um Anregung und Lichtemission, nicht um Verbrennung.'},
+ en:{equationTitle:'Related chemical equation',combustionType:'Combustion / oxidation',emissionType:'Excitation and light emission',compoundType:'Emission from a compound',fuelType:'Base flame – fuel combustion',combustionInfo:'This is a chemical reaction: metal and oxygen form an oxide.',emissionInfo:'Flame tests illustrate excitation and photon emission, not combustion.'}
  };
  const partDetails={
  hu:{tube:'Az égőcsőben a gáz és a beáramló levegő keveréke felfelé halad.',collar:'A forgatható gyűrű szabályozza, mennyi levegő jut az égőcsőbe.',holes:'A levegőnyílásokon keresztül jut be az égéshez szükséges oxigént tartalmazó levegő.',inlet:'A gázbevezető csonk csatlakozik a gázellátáshoz.',base:'A nehéz talp tartja stabilan az égőt.'},
@@ -97,7 +117,18 @@
   outer.style.opacity=a.lit?'1':'0';inner.style.opacity=a.lit?(a.mode==='luminous'?'0.75':'0.95'):'0';
   const glow=$('bunsenDynamicGlow');if(glow){glow.setAttribute('fill',a.color);glow.style.opacity=a.lit?String(a.glow):'0';glow.setAttribute('ry',String(a.height*.78));glow.setAttribute('cy',String(baseY-a.height*.47))}
   const sparks=$('bunsenSparks');if(sparks)sparks.style.display=a.lit&&a.sparks?'':'none';
+  const metalGlow=$('bunsenMetalGlow'),metalFlame=$('bunsenMetalFlame'),metalSample=$('bunsenMetalSample');
+  const separate=a.lit&&['Mg','Al','Fe'].includes(state.sample);
+  if(metalGlow)metalGlow.style.display=separate?'':'none';
+  if(metalFlame){metalFlame.style.display=separate?'':'none';metalFlame.setAttribute('fill',state.sample==='Fe'?'#ffba55':state.sample==='Mg'?'#ffffff':'#f0f5ff')}
+  if(metalSample)metalSample.style.display=separate?'':'none';
   const warning=$('bunsenSampleNote');if(warning)warning.textContent=sampleNotes[lang()][a.kind==='combustion'?'combustion':a.kind==='sparks'?'sparks':a.kind==='compound'?'compound':a.kind==='faint'?'faint':'normal'];
+  const equation=science.equations[state.sample]||science.equations.none;
+  $('bunsenEquationTitle').textContent=equationLabels[lang()].equationTitle;
+  $('bunsenEquationType').textContent=equationLabels[lang()][equation.type==='combustion'?'combustionType':equation.type==='base'?'fuelType':equation.type==='compound'?'compoundType':'emissionType'];
+  $('bunsenEquations').replaceChildren();
+  for(const line of equation.lines){const item=document.createElement('div');item.textContent=line;$('bunsenEquations').append(item)}
+  $('bunsenEquationNote').textContent=equation.explain?.[lang()]||equationLabels[lang()][equation.type==='combustion'?'combustionInfo':'emissionInfo'];
   svg.classList.toggle('bunsen-burning',a.lit);
   svg.classList.toggle('bunsen-metal',a.lit&&a.sparks);
   svg.setAttribute('aria-label',tr('title'));
