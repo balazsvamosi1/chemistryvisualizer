@@ -1,10 +1,10 @@
-# 3D Chemistry Lab — Beta 2.1.1
+# 3D Chemistry Lab — Beta 2.1.2
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
 
 ## Current release
 
-**Beta 2.1.1** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
+**Beta 2.1.2** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
 
 ```sh
 python3 server.py
@@ -169,3 +169,12 @@ In Chemistry Quest, levels 1–2 retain the simpler recipe-based crafting. From 
 ## Beta 2.1.1 — Three-language Chemistry Quest
 
 All ten Quest stages now provide Hungarian, German and English scientific stage facts, target names, messages, crafting interface, ammunition controls and science explanations. Every collectible element (H, O, C, N, Na, Cl, Ca, S, Mg, Cu, Ag) now has seven quiz question types with translated prompts and, where applicable, answer choices. Quiz state and wrong-answer disabling survive language changes. The game's language follows the existing HU/DE/EN controls; no additional language switch is required. Run `node --test tests/*.test.cjs` for localization regressions.
+
+
+## Beta 2.1.2 — Shared Reaction Engine & Quest Equation Workbench
+
+The existing five laboratory balance exercises now use the reusable `assets/js/reaction-engine.js` module. The module provides explicitly curated reaction models, stoichiometric atom/charge conservation checks, and composition data for additional reactions. It is loaded before `app-core.js` and `quest.js`.
+
+From Quest level 4, a successful chemical hit on an applicable enemy opens a HU/DE/EN equation challenge: select reactants, select products, and supply stoichiometric coefficients. A correct equation allows the target to be defeated; incorrect choices do not silently pass. Physical interactions such as fire extinguishing do not incorrectly require chemical equations. Some reactions have additional physical conditions and remain educational simplifications.
+
+Check `node --test tests/*.test.cjs`, including `tests/reaction_engine.test.cjs`; the game and laboratory still require browser-level integration verification.
