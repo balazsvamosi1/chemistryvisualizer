@@ -1,0 +1,26 @@
+# Python caches and bytecode
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+
+# Local scientific cache; retain empty directory markers
+/cache/models/*
+!/cache/models/.gitkeep
+/cache/pubchem/*
+!/cache/pubchem/.gitkeep
+/cache/nist/*
+!/cache/nist/.gitkeep
+
+# Local environments and tooling
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+node_modules/
+*.log
