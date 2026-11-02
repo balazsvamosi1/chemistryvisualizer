@@ -21,3 +21,14 @@
 @keyframes bunsenCore{0%{transform:scaleX(.94)}100%{transform:scaleX(1.04)}}
 @keyframes bunsenSpark{0%{opacity:.45;transform:translateY(5px)}100%{opacity:1;transform:translateY(-11px)}}
 @media(prefers-reduced-motion:reduce){#bunsenSvg *{animation:none!important;transition:none!important}}
+
+/* Scientific reaction and excitation explanation */
+#bunsenSection .bunsen-equation-panel{border:1px solid #416b80;border-radius:10px;background:#10283d;padding:12px;display:grid;gap:7px}
+#bunsenSection .bunsen-equation-panel h3{margin:0;font-size:1.04rem}
+#bunsenSection .bunsen-equation-panel p{margin:0}
+#bunsenEquationType{font-weight:600;color:#a6ddf5}
+#bunsenEquations{display:grid;gap:5px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:1rem;overflow-wrap:anywhere;color:#d8f8ed}
+#bunsenMetalFlame{animation:bunsenMetalPulse .6s ease-in-out infinite alternate}
+#bunsenMetalGlow{animation:bunsenMetalPulse .65s ease-in-out infinite alternate}
+@keyframes bunsenMetalPulse{from{opacity:.78;transform:translateY(2px)}to{opacity:1;transform:translateY(-2px)}}
+@media(prefers-reduced-motion:reduce){#bunsenMetalFlame,#bunsenMetalGlow{animation:none}}
