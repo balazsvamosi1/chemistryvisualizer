@@ -262,6 +262,11 @@
  $('bunsenUnknownCheck').onclick=()=>{$('bunsenUnknownResult').textContent=ex($('bunsenUnknownAnswer').value===quizState.id?'right':'wrong')};
  for(const key of quizSamples){const opt=document.createElement('option');opt.value=key;opt.textContent=science.samples[key][lang()];$('bunsenUnknownAnswer').append(opt)}
  $('bunsenGas').addEventListener('click',()=>{if(!state.gas)ignited=false});
- $('bunsenAir').value=state.air;$('bunsenGasFlow').value=state.gasFlow;
+ window.BunsenLabControls={
+  snapshot:()=>({gas:state.gas,ignited,air:state.air,gasFlow:state.gasFlow,mode,sample:state.sample,loopLoaded,concentration,contamination}),
+  // Classroom task evaluation consumes the actual student-operated controls.
+  refresh:()=>update()
+ };
+  $('bunsenAir').value=state.air;$('bunsenGasFlow').value=state.gasFlow;
  rebuildSamples();renderSpectrum();update();
 })();
