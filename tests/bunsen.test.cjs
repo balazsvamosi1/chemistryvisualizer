@@ -95,10 +95,19 @@ test('P1: concentration and sodium contamination change observations',()=>{
  const strong=flameTest({sample:'Li',concentration:90,contamination:0});
  assert(strong.visibility>faint.visibility);
  const tainted=flameTest({sample:'K',concentration:80,contamination:80});
- assert.equal(tainted.dominant,'Na');
+ assert.equal(tainted.dominant,'K');assert(tainted.contaminationBlend>0.9);
 });
 test('P1: spectroscopic identification exposes multiple sodium lines',()=>{
  const {identifySpectrum}=require('../assets/js/bunsen.js');
  assert.deepEqual(identifySpectrum('Na').wavelengths,[589,589.6]);
  assert.equal(identifySpectrum('missing'),null);
+});
+
+test('contamination blends smoothly rather than switching element identity',()=>{
+ const {flameTest,mixColor,samples}=require('../assets/js/bunsen.js');
+ const clean=flameTest({sample:'K',contamination:0}),mid=flameTest({sample:'K',contamination:20}),dirty=flameTest({sample:'K',contamination:80});
+ assert.equal(clean.contaminationBlend,0);
+ assert(mid.contaminationBlend>0&&mid.contaminationBlend<dirty.contaminationBlend);
+ assert.equal(dirty.contaminationBlend,1);
+ assert.notEqual(mixColor(samples.K.hex,samples.Na.hex,mid.contaminationBlend),samples.K.hex);
 });
