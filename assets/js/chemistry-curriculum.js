@@ -148,7 +148,8 @@ function render(){
 }
 function show(){document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden'));document.querySelectorAll('.tabs > button').forEach(b=>b.classList.remove('active'));sec.classList.remove('hidden');tab.classList.add('active');render()}
 tab.addEventListener('click',show);$('curriculumTopic').addEventListener('change',e=>{topic=e.target.value;reset()});for(const v of ['learn','practice','exam'])$('curriculum'+v).addEventListener('click',()=>{mode=v;reset()});
-$('curriculumOpen').addEventListener('click',()=>jump(api.topics.find(x=>x.id===topic)?.tab==='periodTab'?'periodSection':api.topics.find(x=>x.id===topic)?.tab==='moleculeTab'?'moleculeSection':api.topics.find(x=>x.id===topic)?.tab==='stoichTab'?'stoichSection':api.topics.find(x=>x.id===topic)?.tab==='acidBaseTab'?'acidBaseSection':api.topics.find(x=>x.id===topic)?.tab==='bunsenTab'?'bunsenSection':'gameSection'));
+const topicSections={atoms:'periodSection',bonds:'moleculeSection',stoich:'stoichSection',acids:'acidBaseSection',bunsen:'bunsenSection',quest:'gameSection',hunt:'huntSection',materials:'materialsSection',physics:'physicsSection',speculative:'specSection'};
+$('curriculumOpen').addEventListener('click',()=>{if(topicSections[topic])jump(topicSections[topic])});
 $('curriculumCheck').addEventListener('click',()=>{if(!Number.isInteger(answers[index])){$('curriculumFeedback').textContent=t('choose');return}checked=true;render()});
 $('curriculumNext').addEventListener('click',()=>{if(mode==='learn'){index=(index+1)%api.topics.find(x=>x.id===topic).lesson.length;render();return}if(!checked)return;if(index+1===qs.length)completed=true;else{index++;checked=false}render()});
 $('curriculumRestart').addEventListener('click',reset);
