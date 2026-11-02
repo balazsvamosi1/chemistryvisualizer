@@ -53,7 +53,7 @@
   const m=model(id);if(!m)return null;
   const c=catalog[id],coeffs=values||m.parts.map(()=>1),left=counts(c.reactants,coeffs.slice(0,c.reactants.length)),right=counts(c.products,coeffs.slice(c.reactants.length));
   const elements=[...new Set(Object.keys({...left?.atoms,...right?.atoms}))].sort();
-  return{...check(id,coeffs),rows:elements.map(sym=>({sym,l:left.atoms[sym]||0,r:right.atoms[sym]||0,ok:(left.atoms[sym]||0)===(right.atoms[sym]||0)})),valid:!!left&&!!right,balanced:check(id,coeffs).ok,charge:{l:left?.charge,r:right?.charge}};
+  return{...check(id,coeffs),rows:elements.map(sym=>({sym,l:left?.atoms?.[sym]||0,r:right?.atoms?.[sym]||0,ok:!!left&&!!right&&(left.atoms[sym]||0)===(right.atoms[sym]||0)})),valid:!!left&&!!right,balanced:check(id,coeffs).ok,charge:{l:left?.charge,r:right?.charge}};
  }
  function sideOptions(id,side){const c=catalog[id];if(!c)return[];const correct=c[side];const options=[correct,...wrongSides[side].filter(x=>!sameItems(x,correct))];return options.map(keys=>({keys:keys.slice(),label:keys.map(k=>species[k].formula).join(' + ')}));}
  return Object.freeze({species,catalog,model,check,analyze,sideOptions});
