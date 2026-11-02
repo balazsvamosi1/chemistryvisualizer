@@ -1,0 +1,27 @@
+/* Acid–base laboratory: responsive classroom titration UI */
+#abCanvas{display:block;width:100%;height:300px;max-width:100%;background:#0a2031;border:1px solid #35566c;border-radius:10px}
+#abGraphLabel{margin:0 0 12px}
+#abIndicatorColor{width:100%;height:46px;border-radius:9px;border:1px solid #506a7a;background:#f4cd40}
+#abStatus[data-state="error"]{color:#ffb6a7}
+#abPH{font-size:1.3rem;color:#a9f4d5}
+#abEq{font-variant-numeric:tabular-nums}
+#abStatus{font-size:.95rem}
+#abLabelindicator{font-weight:600}
+#abEqButton{margin-top:5px}
+#abNotice{line-height:1.65}
+#abTitle{margin-bottom:8px}
+#abIntro{margin-bottom:18px}
+#abControls label{display:grid;gap:5px}
+#abIndicatorColor[role="img"]{margin-top:5px}
+#abNotice{max-width:740px}
+#abGraph{min-width:0}
+#abCanvas{touch-action:pan-y}
+#abStatus,#abEq{display:block}
+.ab-layout{display:grid;grid-template-columns:minmax(250px,360px) minmax(300px,1fr);gap:24px;align-items:start}
+.ab-controls{display:grid;gap:12px;background:#112b40;padding:16px;border-radius:12px;border:1px solid #3c6078}
+.ab-controls label{display:grid;gap:6px;font-size:.95rem}
+.ab-controls input,.ab-controls select{width:100%;min-width:0;border:1px solid #52788f;border-radius:7px;padding:9px;background:#0b2032;color:#e9f6ff;font:inherit}
+.ab-controls button{justify-self:start;padding:10px 16px;border-radius:8px}
+.ab-results{display:grid;gap:10px;margin-top:7px;border-top:1px solid #385a70;padding-top:12px}
+.ab-graph{min-width:0}
+@media(max-width:760px){.ab-layout{grid-template-columns:1fr}.ab-controls{padding:12px}}
