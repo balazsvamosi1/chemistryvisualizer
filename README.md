@@ -226,3 +226,11 @@ The Bunsen flame is now dynamically generated from the air-control slider: a bro
 The sample library now includes rubidium, caesium, indium, zinc, boron compounds, magnesium, aluminium and iron, in addition to lithium, sodium, potassium, calcium, strontium, barium and copper. **Magnesium/aluminium burning and iron sparks are not conventional metal-ion flame tests**; the interface explicitly distinguishes their combustion emission from the metal-salt flame-colour test. All explanations remain HU/DE/EN. Scientific colors and flame geometry are illustrative rather than calibrated spectra or CFD.
 
 GitHub Pages assets are cache-busted with the `v=2.1.7` script and stylesheet suffix. No CI workflow was reintroduced.
+
+
+## Bunsen Lab P0 scientific corrections (2026-11-02)
+
+- **Air/fuel decoupling:** Air collar adjustment now continuously blends the luminous yellow and non-luminous blue flame characteristics instead of abruptly switching at 38%. A separate **gas flow** slider chiefly controls flame height/size. Both remain schematic; neither is a CFD simulation or calibrated temperature model.
+- **Spectroscopy:** Emission displays a deliberately schematic excitation/relaxation equation `X + energy → X*; X* → X + hν`, where X can represent an atom, ion or molecular species. An explanatory species label and multiple illustrative spectral lines appear for relevant samples, including the sodium D doublet and potassium's violet/near-infrared features. Calcium, barium and copper also flag possible molecular or ionic contributors. Colour is not inferred from one wavelength alone.
+- The existing metal-combustion equations and separate combustion visualisations are preserved; GitHub Actions is not re-enabled.
+- Verification: 11 targeted headless Bunsen regression tests passed; full browser integration not established.
