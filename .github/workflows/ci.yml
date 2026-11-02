@@ -1,0 +1,29 @@
+name: Chemistry Lab CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: JavaScript syntax
+        run: find assets/js -type f -name '*.js' -print0 | xargs -0 -r -n1 node --check
+      - name: JavaScript unit and Quest regression tests
+        run: node --test tests/*.test.cjs
+      - name: Python syntax
+        run: python3 -m compileall -q server.py physics tests
+      - name: Python unit tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py'
