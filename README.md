@@ -255,3 +255,12 @@ The existing experimental Lab is retained. Three **new, built-in classroom views
 - The existing Bunsen Lab warns that the simulation is no substitute for supervised practical laboratory work.
 
 Automated checks: **20/20 targeted headless Bunsen and education tests passed**. Full browser visual and interaction testing is still needed. No CI workflow was added.
+
+## Bunsen Lab education 2.4.0 (2026-11-02)
+
+- **Learn**: six explanatory lessons per level (Basic, Advanced, Oberstufe), deliberately covering the corresponding exam question topics.
+- **Practice**: six random questions drawn from a 16-question level-specific bank, immediate correctness feedback and one-click link to the relevant lesson.
+- **Exam**: ten questions, randomized question/answer order, no answer disclosure before finishing; scores and missed-topic links to relevant lessons afterwards. Grade summaries remain local to the browser.
+- **Spectroscopy**: calibrated illustrative wavelength labels plus a zoomed 586–592 nm view for resolving the sodium D doublet; randomized unknown sample selection.
+- **Contamination**: still OFF by default. When enabled, sodium tint blends smoothly according to its slider, and cleaning resets contamination without removing the chosen sample. The colour is pedagogical RGB, not calibrated spectral radiometry.
+- **Tests**: 22 targeted headless Bunsen and education checks passed. End-to-end browser operation and classroom usability have not been independently verified.
