@@ -1,10 +1,10 @@
-# 3D Chemistry Lab — Beta 2.1.4
+# 3D Chemistry Lab — Beta 2.1.5
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
 
 ## Current release
 
-**Beta 2.1.4** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
+**Beta 2.1.5** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
 
 ```sh
 python3 server.py
@@ -198,3 +198,15 @@ From the fifth stage, smaller chemical enemies patrol, attack, and use the same 
 - Added `tests/bunsen.test.cjs` for headless scientific-model regression tests.
 
 Future work: stoichiometric quantity calculations, acid-base titration, chemical equilibrium and kinetics, electrochemistry and organic chemistry, retaining the same teaching-model caveats.
+
+
+## Beta 2.1.5 — Mole and Stoichiometry Lab
+
+Adds a standalone **Stoichiometry Lab** tab, independent of Chemistry Quest, localized in Hungarian, German and English. It teaches:
+
+- Molar mass (g/mol) for formulas, including nested parentheses, using the complete set of 118 periodic-table atomic-mass entries in `index.html`.
+- Converting mass in grams to amount of substance in mol.
+- Calculating solution molarity in mol/L from solute mass and final solution volume.
+- Computing theoretical product amount and mass from eight curated balanced reactions using the shared `ReactionEngine`, assuming complete conversion and other reagents in excess.
+
+The calculation implementation is `assets/js/stoichiometry.js` and is usable offline in the browser. For classroom interpretation, the computed yields are theoretical, not experimentally measured; the user interface explicitly states model assumptions.
