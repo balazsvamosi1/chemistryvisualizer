@@ -23,7 +23,7 @@ test('eleven ammunition types have curated balanced preparation equations',()=>{
   const id=engine.craftReactions[recipe];assert(id,recipe);
   const m=engine.model(id);assert(m,recipe);
   assert.equal(engine.check(id,m.solution).ok,true,recipe);
-  assert.equal(engine.check(id,m.solution.map(x=>x+1)).ok,false,'invalid coefficients '+recipe);
+  assert.equal(engine.check(id,m.solution.map((x,i)=>i===0?x+1:x)).ok,false,'invalid coefficients '+recipe);
  }
 });
 test('level four crafting presents a reaction challenge before consuming ingredients',()=>{
