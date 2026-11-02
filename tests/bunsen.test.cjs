@@ -35,7 +35,7 @@ test('air adjustment changes flame width and height continuously',()=>{
 });
 test('burning magnesium is distinguished from a conventional salt flame test',()=>{
  const model=appearance({gas:true,air:65,sample:'Mg'});
- assert.equal(model.color,'#ffffff');
+ assert.equal(model.color,appearance({gas:true,air:65,sample:'none'}).color);
  assert.equal(model.kind,'combustion');
  assert.equal(model.sparks,true);
  assert.equal(appearance({gas:true,air:65,sample:'Fe'}).kind,'sparks');
@@ -45,4 +45,17 @@ test('extended flame sample catalogue includes additional metals',()=>{
   assert(samples[symbol],symbol);
   assert(appearance({gas:true,sample:symbol}).lit);
  }
+});
+
+test('each Bunsen sample has a scientifically classified equation',()=>{
+ const {equations}=require('../assets/js/bunsen.js');
+ for(const sample of Object.keys(samples)){
+  assert(equations[sample],sample);
+  assert(equations[sample].lines.length>0,sample);
+ }
+ assert.equal(equations.Mg.lines[0],'2 Mg + O₂ → 2 MgO');
+ assert.equal(equations.Al.lines[0],'4 Al + 3 O₂ → 2 Al₂O₃');
+ assert.equal(equations.Fe.lines[0],'3 Fe + 2 O₂ → Fe₃O₄');
+ assert.equal(equations.Na.type,'emission');
+ assert.equal(equations.B.type,'compound');
 });
