@@ -78,7 +78,113 @@ const lessonExtra={
  {hu:'A spektroszkópiai elemzésnél a hullámhosszak, intenzitások, spektrális felbontás és az eszköz érzékenysége számít. Az egymáshoz közeli 589,0 és 589,6 nm-es Na-vonalak szétválasztásához nagyítás vagy megfelelő felbontás szükséges.',de:'Spektroskopie hängt von Wellenlängen, Intensitäten, Auflösung und Empfindlichkeit ab. Das Na-Dublett bei 589,0 und 589,6 nm benötigt zum Trennen geeignete Auflösung oder Zoom.',en:'Spectroscopy depends on wavelengths, intensities, resolution and instrument sensitivity. The sodium 589.0/589.6 nm doublet requires sufficient resolution or zoom to separate.'}
  ]
 };
-function questions(level,exam){const src=bank[levels.includes(level)?level:'basic'];return exam?src:src.slice(0,4)}
+
+function addQ(level,topic,lessonIndex,prompt,correct,distractor1,distractor2){
+ const locales=['hu','de','en'],q={},choices={};
+ for(let i=0;i<3;i++){q[locales[i]]=prompt[i];choices[locales[i]]=[correct[i],distractor1[i],distractor2[i]]}
+ bank[level].push({topic,lessonIndex,q,choices,answer:0});
+}
+addQ('basic','burner',0,
+ ['Melyik rész tartja stabilan az égőt?','Welches Teil hält den Brenner stabil?','Which part keeps the burner stable?'],
+ ['A talp','Der Standfuß','The base'],['A láng belső kúpja','Der innere Flammenkegel','The inner flame cone'],['A fém sója','Das Metallsalz','The metal salt']);
+addQ('basic','burner',0,
+ ['Mi szabályozza elsősorban a láng méretét?','Was regelt vor allem die Flammengröße?','What mainly controls flame size?'],
+ ['A gázáramlás','Der Gasdurchfluss','Gas flow'],['A só színe','Die Salzfarbe','Salt colour'],['A foton energiája','Die Photonenenergie','Photon energy']);
+addQ('basic','flame',1,
+ ['Milyen láng alkalmas általában fűtésre?','Welche Flamme eignet sich meist zum Erhitzen?','Which flame is generally used for heating?'],
+ ['A megfelelően beállított kék láng','Eine richtig eingestellte blaue Flamme','A properly adjusted blue flame'],['Csak a sárga világító láng','Nur die gelbe Leuchtflamme','Only the yellow luminous flame'],['A láng nélküli égő','Ein Brenner ohne Flamme','An unlit burner']);
+addQ('basic','flame',1,
+ ['Miért sárgás a kevés levegős világító láng?','Warum ist eine Leuchtflamme bei wenig Luft gelblich?','Why is a low-air luminous flame yellowish?'],
+ ['Részben izzó koromrészecskék miatt','Zum Teil wegen glühender Rußpartikel','Partly due to incandescent soot'],['Csak a réz miatt','Nur wegen Kupfer','Only because of copper'],['Mert nincs benne energia','Weil sie keine Energie hat','Because it has no energy']);
+addQ('basic','colour',2,
+ ['Melyik lángfestési szín jellemző a lítiumra?','Welche Flammenfarbe ist typisch für Lithium?','Which flame colour is typical for lithium?'],
+ ['Vörös','Rot','Red'],['Intenzív sárga','Intensiv gelb','Bright yellow'],['Sárgászöld','Gelbgrün','Yellow-green']);
+addQ('basic','colour',2,
+ ['Melyik lángfestési szín jellemző a báriumra?','Welche Flammenfarbe ist typisch für Barium?','Which flame colour is typical for barium?'],
+ ['Sárgászöld','Gelbgrün','Yellow-green'],['Kárminvörös','Karminrot','Carmine red'],['Hófehér','Schneeweiß','Snow white']);
+addQ('basic','colour',2,
+ ['A kálium lángszíne általában milyen?','Welche Flammenfarbe hat Kalium typischerweise?','What is potassium’s typical flame colour?'],
+ ['Halványlila','Blassviolett','Pale lilac'],['Élénk narancssárga','Leuchtend orange','Bright orange'],['Fehér','Weiß','White']);
+addQ('basic','chemistry',3,
+ ['A vas égő szemcséinél mi figyelhető meg?','Was ist bei brennenden Eisenpartikeln sichtbar?','What can burning iron particles produce?'],
+ ['Izzó szikrák','Glühende Funken','Incandescent sparks'],['Jellegzetes neonlila láng','Eine neonviolette Flamme','A neon-purple flame'],['Sötét fotonok','Dunkle Photonen','Dark photons']);
+addQ('basic','safety',4,
+ ['Ki felügyelje a valódi Bunsen-égős iskolai kísérletet?','Wer soll echte Bunsenversuche in der Schule beaufsichtigen?','Who should supervise a real school Bunsen burner experiment?'],
+ ['A tanár','Die Lehrkraft','The teacher'],['Senki','Niemand','Nobody'],['Csak a szimuláció','Nur die Simulation','Only the simulation']);
+addQ('basic','model',5,
+ ['Miért nem pontosan ugyanilyen egy valódi láng színe?','Warum kann die echte Flammenfarbe anders aussehen?','Why can real flame colour differ?'],
+ ['A vegyület és körülmények hatnak rá','Verbindung und Bedingungen beeinflussen sie','Compound and conditions affect it'],['Mert a programban nincs gázcsap','Weil das Programm kein Ventil hat','Because the app has no gas valve'],['Mert minden fém ugyanazt bocsátja ki','Weil alle Metalle gleich emittieren','All metals emit identically']);
+addQ('advanced','emission',0,
+ ['Mit jelöl a hν a kibocsátási sémában?','Was bedeutet hν im Emissionsschema?','What does hν represent in an emission schematic?'],
+ ['A kibocsátott foton energiáját','Die Energie des emittierten Photons','Energy of the emitted photon'],['Egy új atommagot','Einen neuen Atomkern','A new nucleus'],['A gáz térfogatát','Das Gasvolumen','Gas volume']);
+addQ('advanced','emission',0,
+ ['Milyen részecske lehet az X egy emissziós sémában?','Welche Spezies kann X im Emissionsschema sein?','What can X represent in an emission diagram?'],
+ ['Atom, ion vagy molekula','Atom, Ion oder Molekül','Atom, ion or molecule'],['Csak szabad elektron','Nur freies Elektron','Only a free electron'],['Csak proton','Nur Proton','Only a proton']);
+addQ('advanced','chemistry',1,
+ ['Melyik az alumínium oxidációjának rendezett egyenlete?','Welche Gleichung ist für die Oxidation von Aluminium ausgeglichen?','Which equation balances aluminium oxidation?'],
+ ['4 Al + 3 O₂ → 2 Al₂O₃','4 Al + 3 O₂ → 2 Al₂O₃','4 Al + 3 O₂ → 2 Al₂O₃'],['Al + O₂ → AlO','Al + O₂ → AlO','Al + O₂ → AlO'],['2 Al + O₂ → 2 Al₂O₃','2 Al + O₂ → 2 Al₂O₃','2 Al + O₂ → 2 Al₂O₃']);
+addQ('advanced','metal',1,
+ ['Mi gátolhatja a tömör alumínium meggyulladását?','Was erschwert das Entzünden von massivem Aluminium?','What can hinder ignition of bulk aluminium?'],
+ ['A felszíni oxidréteg','Die Oberflächenoxidschicht','Surface oxide layer'],['A nátrium D-kettőse','Das Natrium-D-Dublett','Sodium D doublet'],['A bárium színe','Die Bariumfarbe','Barium colour']);
+addQ('advanced','contamination',2,
+ ['Miért érdemes tiszta mintahurkot használni?','Warum eine saubere Probenöse verwenden?','Why use a clean sample loop?'],
+ ['Szennyezés miatti téves szín elkerülésére','Um falsche Farben durch Verunreinigung zu vermeiden','To avoid contamination-induced false colours'],['Hogy nagyobb legyen a láng','Damit die Flamme größer wird','To enlarge the flame'],['Hogy csökkenjen a gravitáció','Damit die Schwerkraft sinkt','To reduce gravity']);
+addQ('advanced','contamination',2,
+ ['Mit változtathat a mintakoncentráció?','Was kann die Probenkonzentration verändern?','What can sample concentration change?'],
+ ['A kibocsátott fény erősségét','Die Intensität des emittierten Lichts','Intensity of emitted light'],['A periódusos rendszer elemeit','Die Elemente im Periodensystem','Elements in the periodic table'],['A Planck-állandót','Die Planck-Konstante','Planck’s constant']);
+addQ('advanced','flame',3,
+ ['Mi a levegőszabályozó fő hatása?','Was bewirkt der Luftregulierring hauptsächlich?','What is the air collar’s primary effect?'],
+ ['Az égés jellegét változtatja','Er verändert den Verbrennungscharakter','It changes flame combustion characteristics'],['Csak a gáz molekulatömegét','Nur die molare Masse des Gases','Only gas molecular mass'],['Az elem rendszámát','Die Ordnungszahl','Atomic number']);
+addQ('advanced','spectrum',4,
+ ['Mit jelent egy emissziós spektrumvonal?','Was zeigt eine Emissionsspektrallinie?','What does an emission line represent?'],
+ ['Adott hullámhosszú kibocsátott fényt','Emittiertes Licht einer bestimmten Wellenlänge','Emitted light at a specific wavelength'],['A láng pontos térfogatát','Das genaue Flammenvolumen','Exact flame volume'],['Mindig a gáz összetételét teljesen','Immer die vollständige Gaszusammensetzung','Always full gas composition']);
+addQ('advanced','spectrum',4,
+ ['A nátrium D-kettőse hány közeli vonalból áll?','Aus wie vielen nahen Linien besteht das Natrium-D-Dublett?','How many closely spaced lines form the sodium D doublet?'],
+ ['Kettőből','Aus zwei','Two'],['Egyből','Aus einer','One'],['Tízből','Aus zehn','Ten']);
+addQ('advanced','model',5,
+ ['Az oxidáció és a fényemisszió viszonya milyen?','Wie verhalten sich Oxidation und Lichtemission zueinander?','How do oxidation and light emission relate?'],
+ ['Külön jelenségek, de együtt is lehetnek','Verschiedene Vorgänge, die gemeinsam auftreten können','Different processes that can coexist'],['Mindig pontosan ugyanaz','Sie sind immer exakt gleich','They are always identical'],['Soha nem lehetnek együtt','Sie können nie zusammen auftreten','They cannot coexist']);
+addQ('upper','photons',0,
+ ['Mi történik a foton energiájával kisebb hullámhosszon?','Wie ändert sich die Photonenenergie bei kürzerer Wellenlänge?','What happens to photon energy at shorter wavelength?'],
+ ['Nő','Sie steigt','It increases'],['Csökken','Sie sinkt','It decreases'],['Mindig nulla','Sie ist immer null','It is always zero']);
+addQ('upper','photons',0,
+ ['Melyik jelölés a Planck-állandó?','Welches Symbol steht für das Plancksche Wirkungsquantum?','Which symbol represents Planck’s constant?'],
+ ['h','h','h'],['λ','λ','λ'],['c','c','c']);
+addQ('upper','spectra',1,
+ ['A nátrium erős D-kettőse nagyjából milyen hullámhosszú?','Bei welchen Wellenlängen liegt das Natrium-D-Dublett?','Near which wavelengths is the sodium D doublet?'],
+ ['589,0 és 589,6 nm','589,0 und 589,6 nm','589.0 and 589.6 nm'],['400 és 410 nm','400 und 410 nm','400 and 410 nm'],['100 és 110 nm','100 und 110 nm','100 and 110 nm']);
+addQ('upper','spectra',1,
+ ['Miért fontos a különböző vonalak intenzitása?','Warum sind die Intensitäten verschiedener Linien wichtig?','Why do different line intensities matter?'],
+ ['Befolyásolják az észlelt összszínt','Sie beeinflussen die wahrgenommene Gesamtfarbe','They influence the perceived combined colour'],['Egyenlők a gravitációval','Sie entsprechen der Schwerkraft','They equal gravity'],['Kizárólag a cső hosszát adják','Sie geben nur die Rohrlänge an','They only specify barrel length']);
+addQ('upper','chemistry',2,
+ ['Melyik molekula járulhat hozzá rézvegyület lángszínéhez?','Welches Molekül kann zur Kupfer-Flammenfarbe beitragen?','Which molecule may contribute to copper flame colour?'],
+ ['CuCl','CuCl','CuCl'],['H₂','H₂','H₂'],['N₂','N₂','N₂']);
+addQ('upper','chemistry',2,
+ ['Mi járulhat hozzá a stroncium lángszínéhez?', 'Was kann zur Strontium-Flammenfarbe beitragen?','What may contribute to strontium flame colour?'],
+ ['SrOH molekuláris emisszió','SrOH-Molekülemission','SrOH molecular emission'],['Kizárólag neutronok','Nur Neutronen','Only neutrons'],['Csak feketesugárzás','Nur Schwarzkörperstrahlung','Only blackbody radiation']);
+addQ('upper','model',3,
+ ['A közel infravörös káliumvonalak láthatók-e a 380–780 nm-es ábrán?', 'Sind Kaliumlinien im nahen Infrarot im 380–780-nm-Diagramm sichtbar?','Are near-infrared potassium lines shown on a 380–780 nm plot?'],
+ ['Csak a tartományba esők; a többi kimarad','Nur Linien innerhalb des Bereichs','Only lines within the plotted range'],['Igen, minden UV-vonal is','Ja, auch alle UV-Linien','Yes, including all UV lines'],['Egyáltalán nincsenek vonalak','Es gibt überhaupt keine Linien','No lines exist at all']);
+addQ('upper','model',3,
+ ['Mi hiányzik az RGB-lángból a teljes spektrummodellhez?', 'Was fehlt dem RGB-Flammenmodell?','What is absent from the RGB flame model?'],
+ ['Mért vonal- és sáverősségek','Gemessene Linien- und Bandenintensitäten','Measured line and band intensities'],['A kémiai elemek neve','Die Elementnamen','Element names'],['A számítógép kijelzője','Der Bildschirm','Computer display']);
+addQ('upper','safety',4,
+ ['Miért nem elég a virtuális gyújtás oktatása?', 'Warum genügt virtuelle Zündung nicht?', 'Why is virtual ignition instruction insufficient?'],
+ ['Nem gyakoroltat valódi biztonsági készségeket','Sie trainiert keine echten Sicherheitsfertigkeiten','It does not train real-world safety skills'],['Nem tartalmaz fotonokat','Sie enthält keine Photonen','It contains no photons'],['Mert a fénysebesség változó','Weil die Lichtgeschwindigkeit variabel ist','Because the speed of light varies']);
+addQ('upper','spectra',5,
+ ['Mi szükséges a két közeli Na-vonal felbontásához?', 'Was benötigt man zum Trennen der nahen Na-Linien?', 'What is needed to resolve two nearby Na lines?'],
+ ['Megfelelő spektrális felbontás','Ausreichende spektrale Auflösung','Sufficient spectral resolution'],['Sokkal több korom','Deutlich mehr Ruß','Much more soot'],['Zárt gázcsap','Geschlossenes Gasventil','A closed gas valve']);
+for(const level of levels){for(const q of bank[level])if(!Number.isInteger(q.lessonIndex))q.lessonIndex=topicMap[level][q.topic]??5}
+for(const level of levels)lesson[level]=lessonExtra[level];
+function shuffle(list,rng=Math.random){const arr=list.slice();for(let i=arr.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+function questions(level,exam,rng=Math.random){
+ const source=bank[levels.includes(level)?level:'basic'],count=exam?10:6;
+ return shuffle(source,rng).slice(0,count).map(item=>{
+  const order=shuffle([0,1,2],rng),choices={};
+  for(const lang of ['hu','de','en'])choices[lang]=order.map(i=>item.choices[lang][i]);
+  return {...item,choices,answer:order.indexOf(item.answer)};
+ });
+}
 function grade(questions,answers){return {correct:questions.reduce((n,q,i)=>n+(answers[i]===q.answer?1:0),0),total:questions.length,percent:questions.length?Math.round(100*questions.reduce((n,q,i)=>n+(answers[i]===q.answer?1:0),0)/questions.length):0,errors:questions.filter((q,i)=>answers[i]!==q.answer).map(q=>q.topic)}}
 return Object.freeze({levels,bank,lesson,questions,grade});
 });
