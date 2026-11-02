@@ -1,8 +1,8 @@
-# 3D Chemistry Lab — Beta 2.0.3
+# 3D Chemistry Lab — Beta 2.1.0
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
 
-## Current release\n\n**Beta 2.0.3** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
+## Current release\n\n**Beta 2.1.0** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
 
 ```sh
 python3 server.py
@@ -158,3 +158,7 @@ This is a gameplay update, not a guarantee of laboratory-grade chemistry or fire
 
 The molecule arsenal is displayed above the game canvas. Unlocked recipes have selectable slots with formula, available charge count, and active selection. Select by mouse/touch or keyboard (1–9, 0, Q/Tab). The additional O₂ slot can be selected by click or Q/Tab cycling. C opens crafting and E fires the selected molecule. Slots update after crafting, shooting, changing level and switching weapons. On narrow screens, the weapon bar scrolls horizontally.
 \n\n## Open-source maintenance\n\nThe repository includes `.gitignore` for local scientific-data caches, Python bytecode, and editor files. Ignore rules do not automatically untrack files previously committed; use `git rm --cached` when required. `.github/workflows/ci.yml` runs JS syntax checks, Node test suites, Python compilation, and Python unit tests. GitHub Pages is not automatically enabled.\n
+
+## Beta 2.1.0 — Interactive bond construction
+
+In Chemistry Quest, levels 1–2 retain the simpler recipe-based crafting. From level 3, covalent recipes require the player to select pairs of atoms and their bond order (single/double/triple) in a new interactive workbench. The resulting labelled molecular graph is compared with the expected structure, treating equivalent atoms as interchangeable. Incorrect structures do not consume atom resources. Ionic compounds remain formula-unit recipes instead of misleading covalent models. This is a structural teaching model, not a realistic chemical synthesis simulator.
