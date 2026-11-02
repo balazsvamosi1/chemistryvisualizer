@@ -1,8 +1,10 @@
-# 3D Chemistry Lab — Beta 2.1.0
+# 3D Chemistry Lab — Beta 2.1.1
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
 
-## Current release\n\n**Beta 2.1.0** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
+## Current release
+
+**Beta 2.1.1** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
 
 ```sh
 python3 server.py
@@ -162,3 +164,8 @@ The molecule arsenal is displayed above the game canvas. Unlocked recipes have s
 ## Beta 2.1.0 — Interactive bond construction
 
 In Chemistry Quest, levels 1–2 retain the simpler recipe-based crafting. From level 3, covalent recipes require the player to select pairs of atoms and their bond order (single/double/triple) in a new interactive workbench. The resulting labelled molecular graph is compared with the expected structure, treating equivalent atoms as interchangeable. Incorrect structures do not consume atom resources. Ionic compounds remain formula-unit recipes instead of misleading covalent models. This is a structural teaching model, not a realistic chemical synthesis simulator.
+
+
+## Beta 2.1.1 — Three-language Chemistry Quest
+
+All ten Quest stages now provide Hungarian, German and English scientific stage facts, target names, messages, crafting interface, ammunition controls and science explanations. Every collectible element (H, O, C, N, Na, Cl, Ca, S, Mg, Cu, Ag) now has seven quiz question types with translated prompts and, where applicable, answer choices. Quiz state and wrong-answer disabling survive language changes. The game's language follows the existing HU/DE/EN controls; no additional language switch is required. Run `node --test tests/*.test.cjs` for localization regressions.
