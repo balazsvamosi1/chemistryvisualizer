@@ -1,0 +1,23 @@
+/* Chemistry Academy: cross-module learning, grading and model-fidelity notices. */
+#curriculumSection{max-width:1120px;margin-inline:auto}
+.curriculum-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0}
+.curriculum-toolbar>label{font-weight:700}
+#curriculumTopic{min-width:220px;max-width:100%;padding:9px}
+.curriculum-modes{display:flex;gap:7px;flex-wrap:wrap}
+.curriculum-modes button[aria-pressed="true"]{border:2px solid #70d0eb;background:#174961;color:#effcff}
+.curriculum-content{max-width:880px;padding:22px;border:1px solid #3d6278;border-radius:12px;background:#102b42;min-height:220px}
+.curriculum-content h3{font-size:1.15rem;margin:6px 0 17px}
+.academy-lesson{line-height:1.8;max-width:80ch;white-space:normal}
+.academy-count{font-weight:700;color:#b5dcf0}
+.academy-choices{display:grid;gap:10px}
+.academy-choices label{padding:12px;display:flex;gap:10px;align-items:center;border:1px solid #49687d;border-radius:8px;cursor:pointer}
+.academy-choices label:has(input:checked){border-color:#78d3e7;background:#19405b}
+.academy-choices input{width:18px;height:18px;flex-shrink:0}
+.curriculum-actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+#curriculumFeedback{min-height:1.5em;font-weight:600}
+.curriculum-content>button{display:block;margin:9px 0;text-align:left;max-width:100%}
+.science-model-warning{background:#18334a;color:#dbedf8;border-left:4px solid #e5b46f;border-radius:6px;padding:11px 13px;margin:12px 0;line-height:1.6;font-size:.88rem}
+.quest-reality{margin:10px 0 16px}
+.quest-reality summary{cursor:pointer;font-weight:700}
+.quest-reality p{margin:11px 0}
+@media(max-width:640px){.curriculum-toolbar{align-items:stretch;flex-direction:column}.curriculum-modes button{flex:1}.curriculum-content{padding:13px}#curriculumTopic{width:100%}}
