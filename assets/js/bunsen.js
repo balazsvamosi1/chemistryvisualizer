@@ -78,7 +78,16 @@
   $('bunsenColour').textContent=tr('color')+': '+(state.sample==='none'?tr('noSample'):science.samples[state.sample][lang()]);
   const line=science.samples[state.sample]?.nm;
   $('bunsenSpectrum').textContent=line?tr('wavelength')+': ≈ '+line+' nm':'';
-  const outer=$('bunsenFlameOuter'),inner=$('bunsenFlameInner');
+  // The two visible ports open progressively as the collar rotates.
+  // SVG is a frontal projection of a cylindrical ring: the moving ticks and
+  // shutters illustrate rotation rather than claiming a literal 3D cutaway.
+  const openness=Math.max(0,Math.min(1,state.air/100));
+  const shift=openness*11;
+  $('bunsenAirShutterLeft')?.setAttribute('transform',`translate(${-shift} 0)`);
+  $('bunsenAirShutterRight')?.setAttribute('transform',`translate(${shift} 0)`);
+  $('bunsenCollarMarkings')?.setAttribute('transform',`translate(${(openness-.5)*11} 0)`);
+  $('bunsenCollarIndicator')?.setAttribute('transform',`translate(${openness*34} 0)`);
+    const outer=$('bunsenFlameOuter'),inner=$('bunsenFlameInner');
   const tipY=195-a.height,half=a.width,baseY=199,center=218;
   // Dynamic paths: broad turbulent yellow safety flame vs narrow pointed blue flame.
   outer.setAttribute('d',`M ${center},${tipY} C ${center-half*.42},${tipY+a.height*.28} ${center-half*1.15},${tipY+a.height*.61} ${center-half},${baseY-21} Q ${center-half*.9},${baseY+8} ${center},${baseY+6} Q ${center+half*.9},${baseY+8} ${center+half},${baseY-21} C ${center+half*1.15},${tipY+a.height*.60} ${center+half*.42},${tipY+a.height*.28} ${center},${tipY} Z`);
