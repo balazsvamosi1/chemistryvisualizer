@@ -148,10 +148,42 @@
  en:{tube:'The gas and incoming air mixture travels upward through the barrel.',collar:'Rotating the collar adjusts how much air enters the burner.',holes:'Oxygen-containing air enters through these openings.',inlet:'The gas inlet connects the burner to its gas supply.',base:'The heavy base keeps the burner upright.'}
  };
  const state={gas:false,gasFlow:65,air:60,sample:'none'};let selectedPart='tube';
+ let mode='flame',ignited=false,loopLoaded=false,concentration=75,contamination=0;
+ const quizSamples=['Li','Na','K','Ca','Sr','Ba','Cu','In'],quizState={id:'Na',revealed:false};
+ const extraText={
+ hu:{flame:'Lángfestés',metal:'Fémek égése',ignite:'Gyújtás',extinguish:'Láng eloltása',load:'Mintahurok a lángba',clean:'Hurok tisztítása',loaded:'A minta a lángban van.',unloaded:'Tiszta mintahurok – válassz mintát, majd helyezd a lángba.',concentration:'Mintakoncentráció',contamination:'Nátriumszennyezés',metalNote:'Magnézium: intenzív fehér égés. Alumínium: oxidrétege gátolja az égést, finom por másképp viselkedik. Vas: szemcséi izzó szikrákat adhatnak. A modell nem gyakorlati kísérleti útmutató.',spectrum:'Szemléltető vonalspektrum',unknown:'Ismeretlen minta azonosítása',check:'Ellenőrzés',newSample:'Új minta',right:'Helyes azonosítás.',wrong:'Nem egyezik. Vizsgáld meg újra a vonalakat.',ready:'Gyújtás előtt nyisd a gázcsapot és a levegőnyílásokat mérsékelten.',safety:'A gázcsap nyitott, de a láng nincs meggyújtva. A valós laborban ez veszélyes állapot!'},
+ de:{flame:'Flammenprobe',metal:'Metallverbrennung',ignite:'Zünden',extinguish:'Flamme löschen',load:'Probenöse in die Flamme',clean:'Öse reinigen',loaded:'Die Probe befindet sich in der Flamme.',unloaded:'Saubere Öse: Probe auswählen und in die Flamme führen.',concentration:'Probenkonzentration',contamination:'Natriumverunreinigung',metalNote:'Magnesium: intensive weiße Verbrennung. Aluminium: die Oxidschicht hemmt die Verbrennung; feines Pulver verhält sich anders. Eisen: glühende Partikel können Funken erzeugen. Kein praktisches Experimentierprotokoll.',spectrum:'Illustratives Linienspektrum',unknown:'Unbekannte Probe erkennen',check:'Prüfen',newSample:'Neue Probe',right:'Richtig erkannt.',wrong:'Stimmt nicht. Betrachte die Linien erneut.',ready:'Vor dem Zünden Gaszufuhr und Luftzufuhr passend einstellen.',safety:'Gaszufuhr ist offen, aber die Flamme brennt nicht. Im echten Labor ist das gefährlich!'},
+ en:{flame:'Flame tests',metal:'Metal combustion',ignite:'Ignite',extinguish:'Extinguish',load:'Place test loop in flame',clean:'Clean test loop',loaded:'The sample is in the flame.',unloaded:'Clean test loop: select a sample and place it in the flame.',concentration:'Sample concentration',contamination:'Sodium contamination',metalNote:'Magnesium: intense white combustion. Aluminium: its oxide layer inhibits burning; fine powder behaves differently. Iron particles can produce incandescent sparks. Not a practical experimental procedure.',spectrum:'Illustrative line spectrum',unknown:'Identify an unknown sample',check:'Check',newSample:'New sample',right:'Correct identification.',wrong:'Not quite. Inspect the lines again.',ready:'Set gas and air supply appropriately before ignition.',safety:'Gas is open but the burner is unlit. This is dangerous in a real laboratory!'}
+ };
+ const ex=k=>extraText[lang()][k];
+ function chooseSample(id){const allowed=mode==='metal'?science.metalIds:science.flameTestIds;return allowed.includes(id)?id:'none'}
+ function rebuildSamples(){const sel=$('bunsenSample'),selected=chooseSample(state.sample);sel.replaceChildren();const ids=mode==='metal'?science.metalIds:['none',...science.flameTestIds];for(const key of ids){const opt=document.createElement('option');opt.value=key;opt.textContent=science.samples[key][lang()];sel.append(opt)}state.sample=ids.includes(selected)?selected:ids[0];sel.value=state.sample}
+ function renderSpectrum(){
+  const svg=$('bunsenSpectrumSvg');while(svg.lastChild&&svg.lastChild.tagName.toLowerCase()==='line')svg.removeChild(svg.lastChild);
+  const target=quizState.id;const spec=science.identifySpectrum(target);if(!spec)return;
+  const ns='http://www.w3.org/2000/svg';
+  for(const nm of spec.wavelengths.filter(n=>n>=380&&n<=780)){const line=document.createElementNS(ns,'line');const x=10+(nm-380)/400*380;line.setAttribute('x1',x);line.setAttribute('x2',x);line.setAttribute('y1','12');line.setAttribute('y2','73');line.setAttribute('stroke',nm<450?'#a084ff':nm<490?'#75adff':nm<530?'#40e9d0':nm<575?'#a7ee6b':nm<605?'#ffe65b':nm<645?'#ffa851':'#ff5b69');line.setAttribute('stroke-width','3');svg.append(line)}
+ }
+
  const lang=()=>['hu','de','en'].find(id=>$(id)?.classList.contains('active'))||'hu';
  const tr=k=>labels[lang()][k]||k;
  function update(){
-  const a=science.appearance(state),svg=$('bunsenSvg');
+  const flame=science.flameTest({sample:state.sample,concentration,contamination});
+  const selected=mode==='metal'?state.sample:loopLoaded?flame.dominant:'none';
+  const a=science.appearance({...state,gas:state.gas&&ignited,sample:selected}),svg=$('bunsenSvg');
+  $('bunsenModeFlame').textContent=ex('flame');$('bunsenModeMetal').textContent=ex('metal');
+  $('bunsenModeFlame').setAttribute('aria-pressed',String(mode==='flame'));$('bunsenModeMetal').setAttribute('aria-pressed',String(mode==='metal'));
+  $('bunsenIgnite').textContent=ex(ignited?'extinguish':'ignite');
+  $('bunsenFlameTestControls').hidden=mode!=='flame';$('bunsenMetalControls').hidden=mode!=='metal';
+  $('bunsenConcentrationLabel').textContent=ex('concentration')+': '+concentration+'%';
+  $('bunsenContaminationLabel').textContent=ex('contamination')+': '+contamination+'%';
+  $('bunsenLoop').textContent=ex(loopLoaded?'clean':'load');
+  $('bunsenLoopStatus').textContent=mode==='metal'?ex('metalNote'):ex(loopLoaded?'loaded':'unloaded');
+  $('bunsenMetalNote').textContent=ex('metalNote');
+  $('bunsenSpectrumHeading').textContent=ex('spectrum');$('bunsenUnknownLabel').textContent=ex('unknown');
+  $('bunsenUnknownCheck').textContent=ex('check');$('bunsenUnknownNew').textContent=ex('newSample');
+  $('bunsenUnknownResult').textContent=state.gas&&!ignited?ex('safety'):'';
+
   $('bunsenGas').textContent=tr('gas')+': '+tr(state.gas?'on':'off');
   $('bunsenAirLabel').textContent=tr('air')+': '+state.air+'%';
   $('bunsenGasFlowLabel').textContent=tr('gasFlow')+': '+state.gasFlow+'%';
@@ -162,8 +194,8 @@
   const opts=$('bunsenSample').options;
   for(const option of opts){option.textContent=science.samples[option.value]?.[lang()]||option.value}
   $('bunsenMode').textContent=tr('mode')+': '+tr(!a.lit?'unlit':a.mode==='luminous'?'bright':a.mode==='nonluminous'?'blue':'transition');
-  $('bunsenColour').textContent=tr('color')+': '+(state.sample==='none'?tr('noSample'):(sampleColors[lang()][state.sample]||science.samples[state.sample][lang()]));
-  const data=science.emissionData[state.sample];
+  $('bunsenColour').textContent=tr('color')+': '+(selected==='none'?tr('noSample'):(sampleColors[lang()][selected]||science.samples[selected][lang()]));
+  const data=science.emissionData[selected];
   $('bunsenSpectrum').textContent=data?(tr('emitter')+': '+data.emitter+' | '+tr('spectrum')+': '+(data.lines.length?data.lines.join(', ')+' nm':'—')):'';
   // The two visible ports open progressively as the collar rotates.
   // SVG is a frontal projection of a cylindrical ring: the moving ticks and
@@ -180,7 +212,7 @@
   outer.setAttribute('d',`M ${center},${tipY} C ${center-half*.42},${tipY+a.height*.28} ${center-half*1.15},${tipY+a.height*.61} ${center-half},${baseY-21} Q ${center-half*.9},${baseY+8} ${center},${baseY+6} Q ${center+half*.9},${baseY+8} ${center+half},${baseY-21} C ${center+half*1.15},${tipY+a.height*.60} ${center+half*.42},${tipY+a.height*.28} ${center},${tipY} Z`);
   const innerH=Math.round(a.height*(.22+.34*a.blueShare)),innerW=Math.round(half*(.74-.06*a.blueShare));
   const hotMarker=$('bunsenHotSpot'),hotLine=$('bunsenHotSpotLine');
-  const showHotSpot=a.lit&&a.blueShare>.65&&state.sample==='none';
+  const showHotSpot=a.lit&&a.blueShare>.65&&selected==='none';
   const hotY=baseY-innerH-9;
   if(hotMarker){hotMarker.style.display=showHotSpot?'':'none';hotMarker.setAttribute('cy',String(hotY));}
   if(hotLine){hotLine.style.display=showHotSpot?'':'none';hotLine.setAttribute('d',`M ${center+7} ${hotY} L ${center+75} ${hotY-14}`);}
@@ -191,19 +223,19 @@
   const glow=$('bunsenDynamicGlow');if(glow){glow.setAttribute('fill',a.color);glow.style.opacity=a.lit?String(a.glow):'0';glow.setAttribute('ry',String(a.height*.78));glow.setAttribute('cy',String(baseY-a.height*.47))}
   const sparks=$('bunsenSparks');if(sparks)sparks.style.display=a.lit&&a.sparks?'':'none';
   const metalGlow=$('bunsenMetalGlow'),metalFlame=$('bunsenMetalFlame'),metalSample=$('bunsenMetalSample');
-  const separate=a.lit&&['Mg','Al','Fe'].includes(state.sample);
+  const separate=a.lit&&mode==='metal'&&['Mg','Al','Fe'].includes(state.sample);
   if(metalGlow)metalGlow.style.display=separate?'':'none';
   if(metalFlame){metalFlame.style.display=separate?'':'none';metalFlame.setAttribute('fill',state.sample==='Fe'?'#ffba55':state.sample==='Mg'?'#ffffff':'#f0f5ff')}
   if(metalSample)metalSample.style.display=separate?'':'none';
   const warning=$('bunsenSampleNote');if(warning)warning.textContent=sampleNotes[lang()][a.kind==='combustion'?'combustion':a.kind==='sparks'?'sparks':a.kind==='compound'?'compound':a.kind==='faint'?'faint':'normal'];
-  const equation=science.equations[state.sample]||science.equations.none;
+  const equation=science.equations[selected]||science.equations.none;
   $('bunsenEquationTitle').textContent=equationLabels[lang()].equationTitle;
   $('bunsenEquationType').textContent=equationLabels[lang()][equation.type==='combustion'?'combustionType':equation.type==='base'?'fuelType':equation.type==='compound'?'compoundType':'emissionType'];
   $('bunsenEquations').replaceChildren();
   for(const line of equation.lines){const item=document.createElement('div');item.textContent=line;$('bunsenEquations').append(item)}
   $('bunsenEquationNote').textContent=equation.explain?.[lang()]||equationLabels[lang()][equation.type==='combustion'?'combustionInfo':'emissionInfo'];
   $('bunsenEmitterExplanation').textContent=equation.type==='emission'||equation.type==='compound'?auditText[lang()].x:'';
-  $('bunsenSpectrumCaveat').textContent=state.sample!=='none'&&!['Mg','Al','Fe'].includes(state.sample)?auditText[lang()].spectrum:'';
+  $('bunsenSpectrumCaveat').textContent=selected!=='none'&&!['Mg','Al','Fe'].includes(selected)?auditText[lang()].spectrum:'';
   $('bunsenPracticeWarning').textContent=auditText[lang()].safety;
   $('bunsenHotSpotCaption').textContent=showHotSpot?auditText[lang()].hot:auditText[lang()].noZone;
   svg.classList.toggle('bunsen-burning',a.lit);
@@ -212,12 +244,23 @@
  }
  const open=()=>{document.querySelectorAll('main > section').forEach(n=>n.classList.add('hidden'));document.querySelectorAll('.tabs > button').forEach(n=>n.classList.remove('active'));section.classList.remove('hidden');tab.classList.add('active');update()};
  tab.addEventListener('click',open);
- $('bunsenGas').addEventListener('click',()=>{state.gas=!state.gas;update()});
+ $('bunsenGas').addEventListener('click',()=>{state.gas=!state.gas;if(!state.gas)ignited=false;update()});
  $('bunsenAir').addEventListener('input',e=>{state.air=Number(e.target.value);update()});
  $('bunsenGasFlow').addEventListener('input',e=>{state.gasFlow=Number(e.target.value);update()});
- $('bunsenSample').addEventListener('change',e=>{state.sample=e.target.value;update()});
+ $('bunsenSample').addEventListener('change',e=>{state.sample=e.target.value;loopLoaded=false;update()});
  ['hu','de','en'].forEach(id=>$(id)?.addEventListener('click',()=>update()));
  for(const name of ['tube','collar','holes','inlet','base']){const item=$('bunsenPart'+name);const select=()=>{selectedPart=name;update()};item.addEventListener('click',select);item.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();select()}})}
- Object.keys(science.samples).forEach(key=>{const option=document.createElement('option');option.value=key;$('bunsenSample').append(option)});
- $('bunsenAir').value=state.air;$('bunsenGasFlow').value=state.gasFlow;$('bunsenSample').value=state.sample;update();
+ 
+ $('bunsenModeFlame').onclick=()=>{mode='flame';loopLoaded=false;rebuildSamples();update()};
+ $('bunsenModeMetal').onclick=()=>{mode='metal';loopLoaded=false;rebuildSamples();update()};
+ $('bunsenIgnite').onclick=()=>{if(ignited){ignited=false}else if(state.gas&&state.gasFlow>0){ignited=true}update()};
+ $('bunsenConcentration').oninput=e=>{concentration=Number(e.target.value);update()};
+ $('bunsenContamination').oninput=e=>{contamination=Number(e.target.value);update()};
+ $('bunsenLoop').onclick=()=>{if(!loopLoaded&&state.sample!=='none'&&mode==='flame')loopLoaded=true;else loopLoaded=false;update()};
+ $('bunsenUnknownNew').onclick=()=>{quizState.id=quizSamples[(quizSamples.indexOf(quizState.id)+1)%quizSamples.length];quizState.revealed=false;renderSpectrum();$('bunsenUnknownResult').textContent=''};
+ $('bunsenUnknownCheck').onclick=()=>{$('bunsenUnknownResult').textContent=ex($('bunsenUnknownAnswer').value===quizState.id?'right':'wrong')};
+ for(const key of quizSamples){const opt=document.createElement('option');opt.value=key;opt.textContent=science.samples[key][lang()];$('bunsenUnknownAnswer').append(opt)}
+ $('bunsenGas').addEventListener('click',()=>{if(!state.gas)ignited=false});
+ $('bunsenAir').value=state.air;$('bunsenGasFlow').value=state.gasFlow;
+ rebuildSamples();renderSpectrum();update();
 })();
