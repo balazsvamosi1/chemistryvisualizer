@@ -24,3 +24,25 @@ test('air and unknown sample values do not break the model',()=>{
  assert.equal(appearance({gas:true,air:-50}).air,0);
  assert.equal(appearance({gas:true,sample:'unlisted'}).sample,'none');
 });
+
+test('air adjustment changes flame width and height continuously',()=>{
+ const low=appearance({gas:true,air:0});
+ const middle=appearance({gas:true,air:50});
+ const high=appearance({gas:true,air:100});
+ assert(low.width>middle.width&&middle.width>high.width);
+ assert(low.height>middle.height&&middle.height>high.height);
+ assert.notEqual(low.color,high.color);
+});
+test('burning magnesium is distinguished from a conventional salt flame test',()=>{
+ const model=appearance({gas:true,air:65,sample:'Mg'});
+ assert.equal(model.color,'#ffffff');
+ assert.equal(model.kind,'combustion');
+ assert.equal(model.sparks,true);
+ assert.equal(appearance({gas:true,air:65,sample:'Fe'}).kind,'sparks');
+});
+test('extended flame sample catalogue includes additional metals',()=>{
+ for(const symbol of ['Rb','Cs','B','In','Zn','Mg','Al','Fe']){
+  assert(samples[symbol],symbol);
+  assert(appearance({gas:true,sample:symbol}).lit);
+ }
+});
