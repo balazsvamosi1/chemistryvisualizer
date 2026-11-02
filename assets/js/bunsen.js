@@ -98,6 +98,29 @@
  de:{Li:'karminrot',Na:'intensiv gelb',K:'blassviolett',Rb:'rötlich-violett',Cs:'blauviolett',Ca:'ziegelrot / orangerot',Sr:'kräftig rot',Ba:'gelbgrün',Cu:'blaugrün',B:'grün',In:'indigoblau',Zn:'schwach blaugrün',Mg:'separate weiße Verbrennung',Al:'separate weiße Verbrennung',Fe:'orangegelbe Funken'},
  en:{Li:'carmine red',Na:'intense yellow',K:'pale violet',Rb:'reddish violet',Cs:'blue violet',Ca:'brick red / orange-red',Sr:'bright red',Ba:'yellow-green',Cu:'blue-green',B:'green',In:'indigo blue',Zn:'faint blue-green',Mg:'separate white combustion',Al:'separate white combustion',Fe:'orange-yellow sparks'}
  };
+ const auditText={
+ hu:{
+  safety:'Ez a szimuláció NEM helyettesíti a valódi Bunsen-égővel, tanári felügyelettel végzett laboratóriumi gyakorlást. A színek szemléltető RGB-közelítések: a látható szín függ a sótól, a kibocsátó atomoktól/ionoktól/molekuláktól, a koncentrációtól, a hőmérséklettől, a szennyeződéstől és a megfigyelési körülményektől. Az égő kezelése, a gyújtás és a biztonságos munkavégzés csak valós gyakorlatban sajátítható el.',
+  hot:'A legforróbb terület közelítő helye: a kék láng belső kúpjának csúcsa fölött. Nem hőmérsékletmérés.',
+  spectrum:'Az RGB-lángszín illusztráció; NEM a felsorolt spektrumvonalakból számított szín. A vonalintenzitások és a molekuláris sávok nincsenek modellezve.',
+  x:'A gerjesztési séma X jelölése itt az emissziót okozó részecskét jelenti, amely atom, ion vagy molekula is lehet. A felsorolt részecskék lehetséges hozzájárulók, nem minden mintában kizárólagos kibocsátók.',
+  noZone:'A jelölés csak kialakult, kék jellegű láng esetén értelmezhető.'
+ },
+ de:{
+  safety:'Diese Simulation ersetzt NICHT das praktische Arbeiten mit einem echten Bunsenbrenner unter Aufsicht einer Lehrkraft. Die Farben sind illustrative RGB-Näherungen: Sie hängen vom Salz, den emittierenden Atomen/Ionen/Molekülen, Konzentration, Temperatur, Verunreinigungen und Beobachtungsbedingungen ab. Anzünden, Handhabung und sichere Laborarbeit lassen sich nur praktisch erlernen.',
+  hot:'Ungefähre heißeste Zone: knapp oberhalb der Spitze des inneren blauen Kegels. Keine Temperaturmessung.',
+  spectrum:'Die RGB-Flammenfarbe ist illustrativ und wird NICHT aus den angezeigten Spektrallinien berechnet. Linienintensitäten und Molekülbanden werden nicht modelliert.',
+  x:'X im Anregungsschema bezeichnet die emittierende Spezies: Atom, Ion oder Molekül. Die genannten Spezies sind mögliche Beiträge, nicht zwangsläufig die einzigen.',
+  noZone:'Diese Markierung ist nur bei einer ausgeprägten blauen Flamme sinnvoll.'
+ },
+ en:{
+  safety:'This simulation does NOT replace hands-on practice with a real Bunsen burner under teacher supervision. Colours are illustrative RGB approximations: they depend on the salt, emitting atoms/ions/molecules, concentration, temperature, contamination and viewing conditions. Ignition, handling and safe laboratory practice require real instruction.',
+  hot:'Approximate hottest region: just above the tip of the inner blue cone. Not a temperature measurement.',
+  spectrum:'The RGB flame colour is illustrative, NOT calculated from the listed spectral lines. Line intensities and molecular bands are not modelled.',
+  x:'X in the excitation schematic means an emitting species, which may be an atom, ion or molecule. Listed species are possible contributors, not necessarily the only emitters.',
+  noZone:'This marker applies only when a distinct blue flame cone is present.'
+ }
+ };
  const partDetails={
  hu:{tube:'Az égőcsőben a gáz és a beáramló levegő keveréke felfelé halad.',collar:'A forgatható gyűrű szabályozza, mennyi levegő jut az égőcsőbe.',holes:'A levegőnyílásokon keresztül jut be az égéshez szükséges oxigént tartalmazó levegő.',inlet:'A gázbevezető csonk csatlakozik a gázellátáshoz.',base:'A nehéz talp tartja stabilan az égőt.'},
  de:{tube:'Im Brennerrohr strömt das Gemisch aus Gas und zugeführter Luft nach oben.',collar:'Der drehbare Ring regelt die Luftzufuhr in das Brennerrohr.',holes:'Durch die Luftöffnungen strömt sauerstoffhaltige Luft ein.',inlet:'Der Gasanschluss verbindet den Brenner mit der Gasversorgung.',base:'Der schwere Standfuß sorgt für Stabilität.'},
@@ -135,6 +158,11 @@
   // Dynamic paths: broad turbulent yellow safety flame vs narrow pointed blue flame.
   outer.setAttribute('d',`M ${center},${tipY} C ${center-half*.42},${tipY+a.height*.28} ${center-half*1.15},${tipY+a.height*.61} ${center-half},${baseY-21} Q ${center-half*.9},${baseY+8} ${center},${baseY+6} Q ${center+half*.9},${baseY+8} ${center+half},${baseY-21} C ${center+half*1.15},${tipY+a.height*.60} ${center+half*.42},${tipY+a.height*.28} ${center},${tipY} Z`);
   const innerH=Math.round(a.height*(.22+.34*a.blueShare)),innerW=Math.round(half*(.74-.06*a.blueShare));
+  const hotMarker=$('bunsenHotSpot'),hotLine=$('bunsenHotSpotLine');
+  const showHotSpot=a.lit&&a.blueShare>.65&&state.sample==='none';
+  const hotY=baseY-innerH-9;
+  if(hotMarker){hotMarker.style.display=showHotSpot?'':'none';hotMarker.setAttribute('cy',String(hotY));}
+  if(hotLine){hotLine.style.display=showHotSpot?'':'none';hotLine.setAttribute('d',`M ${center+7} ${hotY} L ${center+75} ${hotY-14}`);}
   inner.setAttribute('d',`M ${center},${baseY-innerH} Q ${center-innerW*.8},${baseY-innerH*.65} ${center-innerW},${baseY-10} Q ${center},${baseY+4} ${center+innerW},${baseY-10} Q ${center+innerW*.8},${baseY-innerH*.65} ${center},${baseY-innerH} Z`);
   outer.setAttribute('fill',a.color);
   inner.setAttribute('fill',a.inner);
@@ -153,6 +181,10 @@
   $('bunsenEquations').replaceChildren();
   for(const line of equation.lines){const item=document.createElement('div');item.textContent=line;$('bunsenEquations').append(item)}
   $('bunsenEquationNote').textContent=equation.explain?.[lang()]||equationLabels[lang()][equation.type==='combustion'?'combustionInfo':'emissionInfo'];
+  $('bunsenEmitterExplanation').textContent=equation.type==='emission'||equation.type==='compound'?auditText[lang()].x:'';
+  $('bunsenSpectrumCaveat').textContent=state.sample!=='none'&&!['Mg','Al','Fe'].includes(state.sample)?auditText[lang()].spectrum:'';
+  $('bunsenPracticeWarning').textContent=auditText[lang()].safety;
+  $('bunsenHotSpotCaption').textContent=showHotSpot?auditText[lang()].hot:auditText[lang()].noZone;
   svg.classList.toggle('bunsen-burning',a.lit);
   svg.classList.toggle('bunsen-metal',a.lit&&a.sparks);
   svg.setAttribute('aria-label',tr('title'));
