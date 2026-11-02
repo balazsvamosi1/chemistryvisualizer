@@ -81,3 +81,24 @@ test('emission is species-aware and avoids misleading one-line color assignments
  assert(emissionData.K.lines.includes(766.5));
  assert.deepEqual(equations.Na.lines,['X + energia → X*','X* → X + hν']);
 });
+
+test('P1: samples are separated by flame test and metal combustion',()=>{
+ const {flameTestIds,metalIds,combustionProfile}=require('../assets/js/bunsen.js');
+ assert(flameTestIds.includes('Na')&&!flameTestIds.includes('Mg'));
+ assert(metalIds.includes('Mg')&&!metalIds.includes('Na'));
+ assert.equal(combustionProfile('Al').barrier,true);
+ assert.equal(combustionProfile('Mg').kind,'bright');
+});
+test('P1: concentration and sodium contamination change observations',()=>{
+ const {flameTest}=require('../assets/js/bunsen.js');
+ const faint=flameTest({sample:'Li',concentration:10,contamination:0});
+ const strong=flameTest({sample:'Li',concentration:90,contamination:0});
+ assert(strong.visibility>faint.visibility);
+ const tainted=flameTest({sample:'K',concentration:80,contamination:80});
+ assert.equal(tainted.dominant,'Na');
+});
+test('P1: spectroscopic identification exposes multiple sodium lines',()=>{
+ const {identifySpectrum}=require('../assets/js/bunsen.js');
+ assert.deepEqual(identifySpectrum('Na').wavelengths,[589,589.6]);
+ assert.equal(identifySpectrum('missing'),null);
+});
