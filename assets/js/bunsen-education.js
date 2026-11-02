@@ -192,14 +192,14 @@ return Object.freeze({levels,bank,lesson,questions,grade});
 'use strict';if(typeof document==='undefined'||!window.BunsenEducation)return;
 const api=window.BunsenEducation, $=id=>document.getElementById(id);
 if(!$('bunsenEducationPanel'))return;
-let view='lab',level='basic',index=0,answers=[],checked=false,completed=false;
+let view='lab',level='basic',index=0,answers=[],checked=false,completed=false,session=[];
 const langs=['hu','de','en'],lang=()=>langs.find(x=>$(x)?.classList.contains('active'))||'hu';
 const ui={
- hu:{lab:'Labor',learn:'Tanulás',practice:'Gyakorlás',exam:'Vizsga',difficulty:'Nehézségi szint',check:'Ellenőrzés',next:'Következő',restart:'Újrakezdés',learnIntro:'Rövid, egymásra épülő leckék. Válassz szintet, majd olvasd el a kártyákat.',practiceIntro:'4 gyakorló kérdés. Minden válasz után magyarázatot kapsz.',examIntro:'6 kérdésből álló önellenőrző teszt. A helyes válaszok a végén jelennek meg.',correct:'Helyes válasz.',wrong:'Hibás válasz.',choose:'Válassz egy lehetőséget.',complete:'A feladatsor véget ért.',score:'Eredmény',weak:'Ismétlendő témák',excellent:'Biztos tudás.',review:'Ismételd át a jelzett témaköröket.',lesson:'Lecke',of:'/',hint:'Ez oktatási szemléltetés, nem helyettesíti a valódi laboratóriumi gyakorlást.',lessonNext:'Következő lecke'},
- de:{lab:'Labor',learn:'Lernen',practice:'Üben',exam:'Prüfung',difficulty:'Schwierigkeitsgrad',check:'Prüfen',next:'Weiter',restart:'Neustart',learnIntro:'Kurze aufeinander aufbauende Lektionen.',practiceIntro:'4 Übungsfragen mit Erklärung nach jeder Antwort.',examIntro:'Selbsttest mit 6 Fragen. Lösungen erscheinen am Ende.',correct:'Richtig.',wrong:'Nicht richtig.',choose:'Bitte wähle eine Antwort.',complete:'Aufgaben abgeschlossen.',score:'Ergebnis',weak:'Wiederholen',excellent:'Sicheres Wissen.',review:'Bitte die genannten Themen wiederholen.',lesson:'Lektion',of:'/',hint:'Didaktische Simulation, kein Ersatz für echte Laborpraxis.',lessonNext:'Nächste Lektion'},
- en:{lab:'Lab',learn:'Learn',practice:'Practice',exam:'Exam',difficulty:'Difficulty level',check:'Check answer',next:'Next',restart:'Restart',learnIntro:'Short progressive lessons. Select a level and read through the cards.',practiceIntro:'Four practice questions with feedback after each answer.',examIntro:'Six-question self-assessment. Correct answers appear at the end.',correct:'Correct answer.',wrong:'Incorrect answer.',choose:'Select an option.',complete:'You have finished.',score:'Result',weak:'Topics to review',excellent:'Strong understanding.',review:'Review the listed topics.',lesson:'Lesson',of:'/',hint:'Educational simulation; not a substitute for real laboratory practice.',lessonNext:'Next lesson'}
+ hu:{lab:'Labor',learn:'Tanulás',practice:'Gyakorlás',exam:'Vizsga',difficulty:'Nehézségi szint',check:'Ellenőrzés',next:'Következő',restart:'Újrakezdés',learnIntro:'Rövid, egymásra épülő leckék. Válassz szintet, majd olvasd el a kártyákat.',practiceIntro:'6 változó gyakorlókérdés magyarázattal és leckeajánlással.',examIntro:'10 véletlenszerű kérdés. A megoldások a végén jelennek meg.',correct:'Helyes válasz.',wrong:'Hibás válasz.',choose:'Válassz egy lehetőséget.',complete:'A feladatsor véget ért.',score:'Eredmény',weak:'Ismétlendő témák',excellent:'Biztos tudás.',review:'Ismételd át a jelzett témaköröket.',lesson:'Lecke',of:'/',hint:'Ez oktatási szemléltetés, nem helyettesíti a valódi laboratóriumi gyakorlást.',lessonNext:'Következő lecke',goLesson:'Kapcsolódó lecke megnyitása',teacher:'Tanári összegzés'},
+ de:{lab:'Labor',learn:'Lernen',practice:'Üben',exam:'Prüfung',difficulty:'Schwierigkeitsgrad',check:'Prüfen',next:'Weiter',restart:'Neustart',learnIntro:'Kurze aufeinander aufbauende Lektionen.',practiceIntro:'6 wechselnde Übungsfragen mit Erklärungen und Lektionsempfehlungen.',examIntro:'10 zufällige Fragen. Lösungen erscheinen am Ende.',correct:'Richtig.',wrong:'Nicht richtig.',choose:'Bitte wähle eine Antwort.',complete:'Aufgaben abgeschlossen.',score:'Ergebnis',weak:'Wiederholen',excellent:'Sicheres Wissen.',review:'Bitte die genannten Themen wiederholen.',lesson:'Lektion',of:'/',hint:'Didaktische Simulation, kein Ersatz für echte Laborpraxis.',lessonNext:'Nächste Lektion',goLesson:'Zugehörige Lektion öffnen',teacher:'Lehrkraft-Zusammenfassung'},
+ en:{lab:'Lab',learn:'Learn',practice:'Practice',exam:'Exam',difficulty:'Difficulty level',check:'Check answer',next:'Next',restart:'Restart',learnIntro:'Short progressive lessons. Select a level and read through the cards.',practiceIntro:'Six varied practice questions with explanations and lesson links.',examIntro:'Ten randomized questions. Answers appear at the end.',correct:'Correct answer.',wrong:'Incorrect answer.',choose:'Select an option.',complete:'You have finished.',score:'Result',weak:'Topics to review',excellent:'Strong understanding.',review:'Review the listed topics.',lesson:'Lesson',of:'/',hint:'Educational simulation; not a substitute for real laboratory practice.',lessonNext:'Next lesson',goLesson:'Open related lesson',teacher:'Teacher summary'}
 };
-const t=x=>ui[lang()][x],current=()=>api.questions(level,view==='exam'),clear=node=>node.replaceChildren(),el=(tag,txt,cl)=>{const n=document.createElement(tag);if(txt!==undefined)n.textContent=txt;if(cl)n.className=cl;return n};
+const t=x=>ui[lang()][x],current=()=>session,clear=node=>node.replaceChildren(),el=(tag,txt,cl)=>{const n=document.createElement(tag);if(txt!==undefined)n.textContent=txt;if(cl)n.className=cl;return n};
 function render(){
  for(const [name,id] of [['lab','bunsenViewLab'],['learn','bunsenViewLearn'],['practice','bunsenViewPractice'],['exam','bunsenViewExam']]){$(id).textContent=t(name);$(id).setAttribute('aria-pressed',String(view===name))}
  $('bunsenDifficultyLabel').textContent=t('difficulty');$('bunsenEducationPanel').hidden=view==='lab';$('bunsenLabWorkspace').hidden=view!=='lab';
@@ -213,7 +213,11 @@ function render(){
  }
  const qs=current();if(completed){$('bunsenEduCheck').hidden=true;$('bunsenEduNext').hidden=true;
   const result=api.grade(qs,answers);report.append(el('h4',t('score')+': '+result.correct+'/'+result.total+' ('+result.percent+'%)'),el('p',result.percent>=80?t('excellent'):t('review')));
-  if(result.errors.length)report.append(el('p',t('weak')+': '+[...new Set(result.errors)].join(', ')));
+  if(result.errors.length){
+   const missed=[...new Set(qs.filter((q,i)=>answers[i]!==q.answer).map(q=>q.lessonIndex))].sort((a,b)=>a-b);
+   report.append(el('h4',t('weak')));
+   for(const number of missed){const link=el('button',t('lesson')+' '+(number+1)+' — '+api.lesson[level][number][lang()].slice(0,76)+'…');link.type='button';link.addEventListener('click',()=>{view='learn';index=number;render()});report.append(link)}
+  }
   const list=el('ol');qs.forEach((q,i)=>{const li=el('li',q.q[lang()]+' — '+(answers[i]===q.answer?t('correct'):t('wrong')+' '+q.choices[lang()][q.answer]));list.append(li)});report.append(list);feedback.textContent=t('complete');return;
  }
  const q=qs[index];content.append(el('p',(index+1)+' '+t('of')+' '+qs.length,'bunsen-progress'));
@@ -221,9 +225,9 @@ function render(){
  const group=el('div',undefined,'bunsen-choice-group');group.setAttribute('role','radiogroup');group.setAttribute('aria-label',q.q[lang()]);
  q.choices[lang()].forEach((choice,i)=>{const label=el('label');const input=document.createElement('input');input.type='radio';input.name='bunsenEduAnswer';input.value=String(i);input.checked=answers[index]===i;input.disabled=checked;input.addEventListener('change',()=>{answers[index]=i});label.append(input,document.createTextNode(' '+choice));group.append(label)});task.append(group);
  $('bunsenEduNext').hidden=!checked;
- if(checked){feedback.textContent=view==='exam'?'':(answers[index]===q.answer?t('correct'):t('wrong')+' '+(q.why?.[lang()]||q.choices[lang()][q.answer]));$('bunsenEduCheck').hidden=true}
+ if(checked){feedback.textContent=view==='exam'?'':(answers[index]===q.answer?t('correct'):t('wrong')+' '+(q.why?.[lang()]||q.choices[lang()][q.answer]));$('bunsenEduCheck').hidden=true;if(view==='practice'){const related=el('button',t('goLesson')+' '+(q.lessonIndex+1));related.type='button';related.addEventListener('click',()=>{view='learn';index=q.lessonIndex;render()});task.append(related)}}
 }
-function reset(){index=0;answers=[];checked=false;completed=false;render()}
+function reset(){index=0;answers=[];checked=false;completed=false;session=api.questions(level,view==='exam');render()}
 for(const [name,id] of [['lab','bunsenViewLab'],['learn','bunsenViewLearn'],['practice','bunsenViewPractice'],['exam','bunsenViewExam']])$(id).addEventListener('click',()=>{view=name;reset()});
 $('bunsenDifficulty').addEventListener('change',e=>{level=e.target.value;reset()});
 $('bunsenEduCheck').addEventListener('click',()=>{if(!Number.isInteger(answers[index])){$('bunsenEducationFeedback').textContent=t('choose');return}checked=true;render()});
