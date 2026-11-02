@@ -9,3 +9,15 @@
 #bunsenSection .bunsen-parts{padding-inline-start:25px;margin:0;line-height:1.8}
 #bunsenSection p{line-height:1.55}
 @media(max-width:700px){#bunsenSection .bunsen-layout{grid-template-columns:minmax(0,1fr)}#bunsenSvg{max-height:310px}}
+
+/* Dynamic flame: shape changes are computed from the actual air-control value. */
+#bunsenFlameOuter,#bunsenFlameInner,#bunsenDynamicGlow{transform-origin:218px 197px;transition:d .18s ease,opacity .23s ease,fill .2s ease,ry .2s ease,cy .2s ease}
+#bunsenSvg.bunsen-burning #bunsenFlameOuter{animation:bunsenFlicker 1.05s ease-in-out infinite alternate}
+#bunsenSvg.bunsen-burning #bunsenFlameInner{animation:bunsenCore .85s ease-in-out infinite alternate}
+#bunsenSvg.bunsen-metal #bunsenDynamicGlow{filter:blur(34px)}
+#bunsenSvg.bunsen-metal #bunsenSparks{animation:bunsenSpark 1.2s ease-in-out infinite alternate}
+#bunsenSampleNote{font-size:.9rem;line-height:1.5;border-left:3px solid #64a4c8;padding-left:10px}
+@keyframes bunsenFlicker{0%{transform:scaleX(.96) skewX(-1deg)}100%{transform:scaleX(1.04) skewX(1deg)}}
+@keyframes bunsenCore{0%{transform:scaleX(.94)}100%{transform:scaleX(1.04)}}
+@keyframes bunsenSpark{0%{opacity:.45;transform:translateY(5px)}100%{opacity:1;transform:translateY(-11px)}}
+@media(prefers-reduced-motion:reduce){#bunsenSvg *{animation:none!important;transition:none!important}}
