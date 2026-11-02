@@ -47,6 +47,27 @@
    lines:['X + energia → X*','X* → X + hν'],
    explain:entry.note};
  }
+ const flameTestIds=['Li','Na','K','Rb','Cs','Ca','Sr','Ba','Cu','B','In','Zn'];
+ const metalIds=['Mg','Al','Fe'];
+ function combustionProfile(id){
+  if(id==='Mg')return{kind:'bright',oxidation:'2 Mg + O₂ → 2 MgO',barrier:false};
+  if(id==='Al')return{kind:'passivated',oxidation:'4 Al + 3 O₂ → 2 Al₂O₃',barrier:true};
+  if(id==='Fe')return{kind:'sparks',oxidation:'3 Fe + 2 O₂ → Fe₃O₄',barrier:false};
+  return null;
+ }
+ function flameTest({sample='none',concentration=75,contamination=0}={}){
+  const id=flameTestIds.includes(sample)?sample:'none';
+  const amount=Math.max(0,Math.min(100,Number(concentration)||0))/100;
+  const pollution=Math.max(0,Math.min(100,Number(contamination)||0))/100;
+  // Deliberately qualitative RGB visibility model; no spectral radiance calculation.
+  const intensity=id==='none'?0:Math.min(1,amount*(samples[id].intensity||.5));
+  const sodiumMask=Math.min(1,pollution*2.2);
+  return{sample:id,visibility:intensity,sodiumMask,dominant:sodiumMask>.65?'Na':id};
+ }
+ function identifySpectrum(id){
+  const entry=emissionData[id];
+  return entry?{id,emitter:entry.emitter,wavelengths:entry.lines.slice()}:null;
+ }
  function interpolate(a,b,t){return Math.round(a+(b-a)*t)}
  function mixColor(a,b,t){
   const aa=a.slice(1).match(/../g).map(v=>parseInt(v,16)),bb=b.slice(1).match(/../g).map(v=>parseInt(v,16));
@@ -70,7 +91,7 @@
    sparks:burning||sparks,sample:key,air:airLevel,gasFlow:flow,blueShare,
    coreOpacity:.15+.78*blueShare,kind:entry.kind||'flame'};
  }
- return Object.freeze({samples,equations,emissionData,appearance});
+ return Object.freeze({samples,equations,emissionData,flameTestIds,metalIds,combustionProfile,flameTest,identifySpectrum,appearance});
 });
 (function(){
  'use strict';
