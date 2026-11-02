@@ -1,0 +1,11 @@
+/* Stoichiometry Lab — independent responsive teaching panel */
+#stoichSection .stoich-layout{display:grid;gap:14px;max-width:650px;border:1px solid #395d73;border-radius:12px;padding:18px;background:#112b40}
+#stoichSection .stoich-layout label{display:grid;gap:7px}
+#stoichSection input,#stoichSection select{width:100%;padding:10px;border:1px solid #52788f;border-radius:7px;background:#0b2032;color:#e9f6ff;font:inherit}
+#stoichSection #stoichReactionFields{display:grid;gap:12px}
+#stoichSection #stoichReactionFields[hidden],#stoichSection #stoichFormulaFields[hidden],#stoichSection #stoichVolumeFields[hidden]{display:none}
+#stoichSection #stoichCalculate{justify-self:start;padding:10px 20px;border-radius:8px}
+#stoichSection .stoich-output{display:grid;gap:7px;padding:13px;margin:0;border-radius:8px;background:#0b2032;overflow-wrap:anywhere}
+#stoichOutput{display:block;min-height:1.5em;font-variant-numeric:tabular-nums;color:#b8f5db}
+#stoichOutput[data-status="error"]{color:#ffbbad}
+@media(max-width:600px){#stoichSection .stoich-layout{padding:12px}}
