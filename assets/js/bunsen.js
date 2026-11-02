@@ -29,31 +29,48 @@
  Fe:{type:'combustion',lines:['3 Fe + 2 O₂ → Fe₃O₄'],explain:{hu:'Egyszerűsített termékmodell; vas égésekor többféle oxid is keletkezhet.',de:'Vereinfachtes Produktmodell; bei der Eisenverbrennung können verschiedene Oxide entstehen.',en:'Simplified product model; burning iron can produce several different oxides.'}},
  B:{type:'compound',lines:['B-tartalmú részecske + energia → gerjesztett részecske','Gerjesztett részecske → alapállapotú részecske + hν'],explain:{hu:'A zöld emissziót egyes bórtartalmú gázfázisú specieszek okozzák; nem egyszerűen szabad B-atomok.',de:'Die grüne Emission stammt von bestimmten borhaltigen Gasphasenspezies, nicht einfach von freien Boratomen.',en:'Green emission arises from particular boron-containing gas-phase species, not simply free boron atoms.'}}
  };
- for(const id of ['Li','Na','K','Rb','Cs','Ca','Sr','Ba','Cu','In','Zn']){
-  const nm=samples[id].nm;
-  equations[id]={type:'emission',lines:[id+' + energia → '+id+'*',id+'* → '+id+' + hν'+(nm?' (≈ '+nm+' nm)':'')],explain:{
-   hu:'Sematikus gerjesztési és fénykibocsátási egyenlet: nem égési vagy sztöchiometriai reakció. A sókból képződő fényt kibocsátó részecskék összetétele változhat.',
-   de:'Schematische Anregungs- und Emissionsgleichung, keine Verbrennungs- oder stöchiometrische Reaktion. Die emittierenden Spezies aus Salzen können variieren.',
-   en:'Schematic excitation and light-emission equations, not combustion or stoichiometric reactions. Emitting species formed from salts can vary.'
-  }};
+ const emissionData={
+ Li:{emitter:'Li (atom)',lines:[670.8],note:{hu:'A vörös 670,8 nm-es Li-atomvonal jellegzetes.',de:'Die rote Li-Atomlinie bei 670,8 nm ist charakteristisch.',en:'The red 670.8 nm Li atomic line is characteristic.'}},
+ Na:{emitter:'Na (atom)',lines:[589.0,589.6],note:{hu:'A nátrium erős sárga D-kettőse; a nyomnyi nátrium is elfedhet más lángszíneket.',de:'Das starke gelbe Natrium-D-Dublett; selbst Spuren können andere Farben überdecken.',en:'The intense yellow sodium D doublet; traces can mask other flame colours.'}},
+ K:{emitter:'K (atom)',lines:[404.4,766.5,769.9],note:{hu:'A 404,4 nm-es ibolya vonal látható; a 766,5 és 769,9 nm-es vonalak a látható vörös szélén/közeli infravörösben vannak, nem ezek adják közvetlenül a lila szín teljes magyarázatát.',de:'404,4 nm liegt im Violett. Die Linien bei 766,5 und 769,9 nm liegen am Rand des sichtbaren Rots/im nahen Infrarot; sie erklären die Gesamtfarbe nicht allein.',en:'404.4 nm lies in violet; the strong 766.5 and 769.9 nm lines are at the edge of visible red/in the near infrared and do not alone explain the observed lilac colour.'}},
+ Rb:{emitter:'Rb (atom)',lines:[420.2],note:{hu:'Példa látható rubídium-atomvonalra; a láng több vonalat bocsát ki.',de:'Beispiel einer sichtbaren Rubidium-Atomlinie; das Flammenspektrum enthält weitere Linien.',en:'Example visible rubidium atomic line; the flame emits multiple lines.'}},
+ Cs:{emitter:'Cs (atom)',lines:[455.5],note:{hu:'Példa látható cézium-atomvonalra, nem teljes színmodell.',de:'Beispiel einer sichtbaren Cäsium-Atomlinie, kein vollständiges Farbmodell.',en:'Example visible caesium atomic line, not a complete colour model.'}},
+ Ca:{emitter:'Ca / CaOH (atom és molekuláris komponensek)',lines:[643.9,646.3,649.4],note:{hu:'A kalciumatom vörös vonalai mellett CaOH molekuláris emisszió is hozzájárulhat a narancsvörös lánghoz.',de:'Neben roten Ca-Atomlinien kann die molekulare Emission von CaOH zur orangeroten Flamme beitragen.',en:'Alongside red Ca atomic lines, molecular CaOH emission may contribute to the orange-red flame.'}},
+ Sr:{emitter:'Sr / SrOH (atom és molekuláris komponensek)',lines:[640.8,650.4,661.7],note:{hu:'Több stroncium-atomvonal és molekuláris emisszió is közrejátszhat.',de:'Mehrere Sr-Atomlinien und molekulare Emissionen können zur Farbe beitragen.',en:'Multiple Sr atomic lines and molecular emission may contribute to the colour.'}},
+ Ba:{emitter:'Ba⁺ / Ba-tartalmú molekulák',lines:[455.4,493.4],note:{hu:'A Ba⁺ kék spektrumvonalai nem magyarázzák önmagukban a sárgászöld lángot; a vegyületfüggő molekuláris emisszió is fontos.',de:'Die blauen Ba⁺-Linien erklären die gelbgrüne Flamme nicht allein; verbindungsabhängige molekulare Emissionen sind wichtig.',en:'Blue Ba⁺ lines do not alone explain the yellow-green flame; compound-dependent molecular emission matters.'}},
+ Cu:{emitter:'Cu / CuCl és más rézvegyületek',lines:[510.6,515.3,521.8],note:{hu:'A réz színe erősen vegyületfüggő; CuCl és más rézvegyületek molekuláris emissziója jelentős lehet.',de:'Kupferfarben sind stark verbindungsabhängig; CuCl und andere Kupferverbindungen können molekular emittieren.',en:'Copper colour strongly depends on the compound; CuCl and other copper species may emit molecular bands.'}},
+ In:{emitter:'In (atom)',lines:[451.1],note:{hu:'Egy jellegzetes kék indium-atomvonal példája.',de:'Beispiel einer charakteristischen blauen Indium-Atomlinie.',en:'Example characteristic blue indium atomic line.'}},
+ Zn:{emitter:'Zn és vegyületfüggő emisszió',lines:[],note:{hu:'A cink lángszíne gyenge vagy bizonytalan; nem állítunk egyetlen meghatározó spektrumvonalat.',de:'Die Zink-Flammenfärbung ist schwach oder unsicher; keine einzelne dominante Linie wird behauptet.',en:'Zinc flame colour is faint or uncertain; no single dominant line is asserted.'}}
+ };
+ for(const [id,entry] of Object.entries(emissionData)){
+  equations[id]={type:'emission',emitter:entry.emitter,spectrum:entry.lines,
+   lines:['X + energia → X*','X* → X + hν'],
+   explain:entry.note};
  }
- function appearance({gas=false,air=50,sample='none'}={}){
-  const airLevel=Math.max(0,Math.min(100,Number(air)||0));
-  const key=Object.hasOwn(samples,sample)?sample:'none',s=samples[key],burning=s.kind==='combustion',sparks=s.kind==='sparks';
-  if(!gas)return{lit:false,mode:'off',color:'#465464',inner:'#465464',height:0,width:0,glow:0,sparks:false,sample:key,air:airLevel};
-  const luminous=airLevel<38,airFraction=airLevel/100;
-  // The collar controls geometry and combustion characteristics continuously.
-  const height=Math.round(105+69*airFraction);
-  const width=Math.round(47-25*airFraction);
-  const base=luminous?'#ffbe29':'#408fff',inner=luminous?'#ffec91':'#b5eaff';
-  const special=key!=='none';
-  return{lit:true,mode:luminous?'luminous':'nonluminous',color:(burning||sparks)?base:special?s.hex:base,
-   inner:(burning||sparks)?inner:special?(luminous?'#ffdd8a':'#c2eaff'):inner,
-   height,width,
-   glow:(burning||sparks)?(luminous?.68:.23):special?(.40+.52*s.intensity):(luminous?.68:.23),
-   sparks:burning||sparks,sample:key,air:airLevel,kind:s.kind||'flame'};
+ function interpolate(a,b,t){return Math.round(a+(b-a)*t)}
+ function mixColor(a,b,t){
+  const aa=a.slice(1).match(/../g).map(v=>parseInt(v,16)),bb=b.slice(1).match(/../g).map(v=>parseInt(v,16));
+  return '#'+aa.map((v,i)=>interpolate(v,bb[i],t).toString(16).padStart(2,'0')).join('');
  }
- return Object.freeze({samples,equations,appearance});
+ function appearance({gas=false,gasFlow=65,air=50,sample='none'}={}){
+  const airLevel=Math.max(0,Math.min(100,Number(air)||0)),flow=Math.max(0,Math.min(100,Number(gasFlow)||0));
+  const key=Object.hasOwn(samples,sample)?sample:'none',entry=samples[key],burning=entry.kind==='combustion',sparks=entry.kind==='sparks';
+  const fraction=airLevel/100,flowFraction=flow/100;
+  const blueShare=Math.max(0,Math.min(1,(fraction-.10)/.70));
+  // Smooth combustion transition; fuel flow is the primary flame-size control.
+  const base=mixColor('#ffc230','#398fff',blueShare),core=mixColor('#ffe9a0','#67baff',blueShare);
+  if(!gas||flow===0)return{lit:false,mode:'off',color:'#465464',inner:'#465464',height:0,width:0,glow:0,sparks:false,sample:key,air:airLevel,gasFlow:flow,blueShare:0,coreOpacity:0};
+  const showSample=key!=='none'&&!burning&&!sparks;
+  const color=showSample?mixColor(base,entry.hex,.45+.55*blueShare):base;
+  const height=Math.round(42+118*flowFraction-15*fraction);
+  const width=Math.round(16+37*flowFraction-17*fraction);
+  const mode=blueShare<.15?'luminous':blueShare>.85?'nonluminous':'transition';
+  return{lit:true,mode,color,inner:showSample?mixColor(core,'#70c7ff',.5):core,height,width,
+   glow:showSample?(.26+.45*entry.intensity):(.55-.30*blueShare),
+   sparks:burning||sparks,sample:key,air:airLevel,gasFlow:flow,blueShare,
+   coreOpacity:.15+.78*blueShare,kind:entry.kind||'flame'};
+ }
+ return Object.freeze({samples,equations,emissionData,appearance});
 });
 (function(){
  'use strict';
@@ -86,7 +103,7 @@
  de:{tube:'Im Brennerrohr strömt das Gemisch aus Gas und zugeführter Luft nach oben.',collar:'Der drehbare Ring regelt die Luftzufuhr in das Brennerrohr.',holes:'Durch die Luftöffnungen strömt sauerstoffhaltige Luft ein.',inlet:'Der Gasanschluss verbindet den Brenner mit der Gasversorgung.',base:'Der schwere Standfuß sorgt für Stabilität.'},
  en:{tube:'The gas and incoming air mixture travels upward through the barrel.',collar:'Rotating the collar adjusts how much air enters the burner.',holes:'Oxygen-containing air enters through these openings.',inlet:'The gas inlet connects the burner to its gas supply.',base:'The heavy base keeps the burner upright.'}
  };
- const state={gas:false,air:60,sample:'none'};let selectedPart='tube';
+ const state={gas:false,gasFlow:65,air:60,sample:'none'};let selectedPart='tube';
  const lang=()=>['hu','de','en'].find(id=>$(id)?.classList.contains('active'))||'hu';
  const tr=k=>labels[lang()][k]||k;
  function update(){
