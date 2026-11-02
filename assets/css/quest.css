@@ -25,3 +25,12 @@
 .quest-arsenal .quest-weapon-slot.active .slot-count{color:#fff}
 @media(max-width:580px){.quest-arsenal{gap:6px;margin:8px 0;padding:8px}.quest-arsenal .quest-weapon-slot{min-width:62px;min-height:62px;padding:7px}}
 @media(prefers-reduced-motion:reduce){.quest-arsenal .quest-weapon-slot{transition:none}}
+
+/* Molecular bonding workbench unlocked from level 3 */
+.quest-builder{display:grid;gap:10px;margin:12px 0;padding:12px;border:1px solid #315369;border-radius:9px;background:#0c2335}
+.quest-builder-atoms{display:flex;flex-wrap:wrap;gap:9px}
+.quest-builder-atom{border:2px solid #3b7183;background:#183752;color:#e5faff;padding:10px 14px;border-radius:50%;min-width:46px;min-height:46px;font-weight:700;cursor:pointer}
+.quest-builder-atom.selected{border-color:#81f6d8;box-shadow:0 0 0 3px #2bbcb34d}
+.quest-builder-bonds{font-family:ui-monospace,monospace;min-height:23px;color:#a9e6ff;overflow-wrap:anywhere}
+.quest-builder-feedback{min-height:20px;color:#ffe2aa;font-size:13px}
+.quest-builder select{background:#183752;color:#fff;padding:6px;border-radius:5px}
