@@ -73,7 +73,7 @@
   const aa=a.slice(1).match(/../g).map(v=>parseInt(v,16)),bb=b.slice(1).match(/../g).map(v=>parseInt(v,16));
   return '#'+aa.map((v,i)=>interpolate(v,bb[i],t).toString(16).padStart(2,'0')).join('');
  }
- function appearance({gas=false,gasFlow=65,air=50,sample='none'}={}){
+ function appearance({gas=false,gasFlow=65,air=50,sample='none',sampleStrength=1}={}){
   const airLevel=Math.max(0,Math.min(100,Number(air)||0)),flow=Math.max(0,Math.min(100,Number(gasFlow)||0));
   const key=Object.hasOwn(samples,sample)?sample:'none',entry=samples[key],burning=entry.kind==='combustion',sparks=entry.kind==='sparks';
   const fraction=airLevel/100,flowFraction=flow/100;
@@ -82,7 +82,7 @@
   const base=mixColor('#ffc230','#398fff',blueShare),core=mixColor('#ffe9a0','#67baff',blueShare);
   if(!gas||flow===0)return{lit:false,mode:'off',color:'#465464',inner:'#465464',height:0,width:0,glow:0,sparks:false,sample:key,air:airLevel,gasFlow:flow,blueShare:0,coreOpacity:0};
   const showSample=key!=='none'&&!burning&&!sparks;
-  const color=showSample?mixColor(base,entry.hex,.45+.55*blueShare):base;
+  const color=showSample?mixColor(base,entry.hex,(.45+.55*blueShare)*Math.max(0,Math.min(1,Number(sampleStrength)||0))):base;
   const height=Math.round(42+118*flowFraction-15*fraction);
   const width=Math.round(16+37*flowFraction-17*fraction);
   const mode=blueShare<.15?'luminous':blueShare>.85?'nonluminous':'transition';
@@ -170,7 +170,7 @@
  function update(){
   const flame=science.flameTest({sample:state.sample,concentration,contamination});
   const selected=mode==='metal'?state.sample:loopLoaded?flame.dominant:'none';
-  const a=science.appearance({...state,gas:state.gas&&ignited,sample:selected}),svg=$('bunsenSvg');
+  const a=science.appearance({...state,gas:state.gas&&ignited,sample:selected,sampleStrength:flame.dominant==='Na'&&selected==='Na'?Math.max(flame.visibility,flame.sodiumMask):flame.visibility}),svg=$('bunsenSvg');
   $('bunsenModeFlame').textContent=ex('flame');$('bunsenModeMetal').textContent=ex('metal');
   $('bunsenModeFlame').setAttribute('aria-pressed',String(mode==='flame'));$('bunsenModeMetal').setAttribute('aria-pressed',String(mode==='metal'));
   $('bunsenIgnite').textContent=ex(ignited?'extinguish':'ignite');
