@@ -34,7 +34,7 @@
  en:{title:'Bunsen Burner and Flame Tests',intro:'Explore the burner components and observe characteristic flame-test colours of metal ions.',gas:'Gas valve',air:'Adjustable air collar',sample:'Metal ion sample',off:'Closed',on:'Open',mode:'Flame type',bright:'Luminous yellowish flame – low air supply',blue:'Non-luminous blue flame – greater air supply',unlit:'No flame',color:'Observed flame colour',note:'Educational simulation: no chemicals are actually burned. In flame tests, excited atoms/ions from metal salts emit light. Colour and intensity also depend on concentration, temperature, counterion and contamination. Trace sodium can mask other colours.',parts:'Burner parts',tube:'Barrel',collar:'Adjustable collar',holes:'Air holes',inlet:'Gas inlet',base:'Base',tip:'Flame zones: combustion remains incomplete in the inner cone; the outer region has greater oxygen availability.',noSample:'Base flame',wavelength:'Characteristic spectral line'}
  };
  const state={gas:false,air:60,sample:'none'};
- const lang=()=>typeof window.lang==='string'&&labels[window.lang]?window.lang:(typeof globalThis.lang==='string'&&labels[globalThis.lang]?globalThis.lang:'hu');
+ const lang=()=>['hu','de','en'].find(id=>$(id)?.classList.contains('active'))||'hu';
  const tr=k=>labels[lang()][k]||k;
  function update(){
   const a=science.appearance(state),svg=$('bunsenSvg');
