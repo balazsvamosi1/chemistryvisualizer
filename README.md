@@ -1,10 +1,10 @@
-# 3D Chemistry Lab — Beta 2.1.3
+# 3D Chemistry Lab — Beta 2.1.4
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
 
 ## Current release
 
-**Beta 2.1.3** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
+**Beta 2.1.4** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
 
 ```sh
 python3 server.py
@@ -187,3 +187,14 @@ Chemistry Quest is now an escape adventure set in a laboratory after a fire brea
 From level four, crafting ammunition requires a correctly balanced, curated preparation reaction in addition to molecular bonding where relevant. This is a teaching model, not a safe or literal synthesis method. The shared ReactionEngine supports all eleven ammo recipes.
 
 From the fifth stage, smaller chemical enemies patrol, attack, and use the same reaction-based defeat mechanic as main enemies. All smaller enemies and main targets must be cleared before the exit opens.
+
+
+## Beta 2.1.4 — Chemistry Science Corrections and Bunsen Lab
+
+- Corrected sulfur's boiling-point field in `assets/js/app-core.js` to approximately 444.6 °C at standard pressure, retaining the melting-point value 115.21 °C as a representative value.
+- Added an independent, responsive **Bunsen Lab** tab, with an annotated burner (base, gas inlet, barrel, adjustable collar, air openings), gas on/off, adjustable air supply, and seven illustrative flame tests: lithium, sodium, potassium, calcium, strontium, barium and copper.
+- The selected HU/DE/EN language is used for Bunsen controls and teaching explanations.
+- Distinguishes the gas/air-mixture effect (yellow luminous or blue non-luminous flame) from metal-ion emission colour. The values are approximate classroom observations, not a calibrated emission spectrum or real burning chemical simulation; colours also depend on contamination and experimental conditions.
+- Added `tests/bunsen.test.cjs` for headless scientific-model regression tests.
+
+Future work: stoichiometric quantity calculations, acid-base titration, chemical equilibrium and kinetics, electrochemistry and organic chemistry, retaining the same teaching-model caveats.
