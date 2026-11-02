@@ -224,8 +224,8 @@
   const sparks=$('bunsenSparks');if(sparks)sparks.style.display=a.lit&&a.sparks?'':'none';
   const metalGlow=$('bunsenMetalGlow'),metalFlame=$('bunsenMetalFlame'),metalSample=$('bunsenMetalSample');
   const separate=a.lit&&mode==='metal'&&['Mg','Al','Fe'].includes(state.sample);
-  if(metalGlow)metalGlow.style.display=separate?'':'none';
-  if(metalFlame){metalFlame.style.display=separate?'':'none';metalFlame.setAttribute('fill',state.sample==='Fe'?'#ffba55':state.sample==='Mg'?'#ffffff':'#f0f5ff')}
+  if(metalGlow){metalGlow.style.display=separate?'':'none';metalGlow.style.opacity=state.sample==='Al'?'0.25':'1'}
+  if(metalFlame){metalFlame.style.display=separate?'':'none';metalFlame.style.opacity=state.sample==='Al'?'0.28':'1';metalFlame.setAttribute('fill',state.sample==='Fe'?'#ffba55':state.sample==='Mg'?'#ffffff':'#f0f5ff')}
   if(metalSample)metalSample.style.display=separate?'':'none';
   const warning=$('bunsenSampleNote');if(warning)warning.textContent=sampleNotes[lang()][a.kind==='combustion'?'combustion':a.kind==='sparks'?'sparks':a.kind==='compound'?'compound':a.kind==='faint'?'faint':'normal'];
   const equation=science.equations[selected]||science.equations.none;
@@ -246,7 +246,7 @@
  tab.addEventListener('click',open);
  $('bunsenGas').addEventListener('click',()=>{state.gas=!state.gas;if(!state.gas)ignited=false;update()});
  $('bunsenAir').addEventListener('input',e=>{state.air=Number(e.target.value);update()});
- $('bunsenGasFlow').addEventListener('input',e=>{state.gasFlow=Number(e.target.value);update()});
+ $('bunsenGasFlow').addEventListener('input',e=>{state.gasFlow=Number(e.target.value);if(state.gasFlow===0)ignited=false;update()});
  $('bunsenSample').addEventListener('change',e=>{state.sample=e.target.value;loopLoaded=false;update()});
  ['hu','de','en'].forEach(id=>$(id)?.addEventListener('click',()=>update()));
  for(const name of ['tube','collar','holes','inlet','base']){const item=$('bunsenPart'+name);const select=()=>{selectedPart=name;update()};item.addEventListener('click',select);item.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();select()}})}
