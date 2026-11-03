@@ -354,107 +354,96 @@ const gases=new Set(['Szén-dioxid','Metán','Hidrogén','Oxigén','Nitrogén','
 const liquids=new Set(['Víz','Ecet (ecetsav)','Etanol','Hidrogén-peroxid','Kénsav','Salétromsav','Tejsav','Hangyasav','Metanol','Glicerin','Aceton','Benzol']);
 function phaseFor(m){return m.hu==='Szénsav'||m.hu==='Sósav'?3:gases.has(m.hu)?2:liquids.has(m.hu)?1:0}
 const catInfo={molecule:['Önálló molekulákból álló anyag.','Besteht aus einzelnen Molekülen.'],gaz:['Gázként ismert anyag (közönséges körülmények között).','Unter gewöhnlichen Bedingungen als Gas bekannt.'],sav:['Savas kémhatású anyag vagy savképző vegyület.','Sauer reagierender oder säurebildender Stoff.'],bazis:['Bázis; a képlet többnyire összetételi arányt jelöl.','Base; die Formel beschreibt meist ein Teilchenverhältnis.'],so:['Rácsszerkezetű ionos vegyület, nem különálló molekula.','Ionische Gitterverbindung, kein einzelnes Molekül.'],fem:['Fémes kötésű kiterjedt kristályrács.','Ausgedehntes Kristallgitter mit Metallbindung.'],szerves:['Széntartalmú szerves vegyület.','Organische Kohlenstoffverbindung.'],halozat:['Kiterjedt kovalens atomrács.','Ausgedehntes kovalentes Atomnetzwerk.'],nemfem:['Nemfémes elemi anyag.','Elementarer nichtmetallischer Stoff.'],polimer:['Ismétlődő egységekből álló makromolekula; az n változó.','Makromolekül aus wiederkehrenden Einheiten; n ist variabel.'],keverek:['Több összetevőből álló elegy vagy oldat.','Gemisch oder Lösung aus mehreren Bestandteilen.']};
-let materialCategory='all';
-function ensureMaterialFilters(){let dest=$('materialFilters');if(!dest)return;dest.replaceChildren();const counts={};for(const m of materials)counts[m.category]=(counts[m.category]||0)+1;let labels=['all',...Object.keys(catNames.hu).filter(c=>counts[c])];labels.forEach(c=>{const b=document.createElement('button');b.className='materialFilter'+(c===materialCategory?' active':'');b.textContent=(c==='all'?bilingual('Összes','Alle'):catNames[lang][c])+' ('+(c==='all'?materials.length:counts[c])+')';b.onclick=()=>{materialCategory=c;renderMaterials()};dest.appendChild(b)})}
-// The family view starts collapsed. Material details appear inside the selected family,
-// directly below its molecule cards rather than at the bottom of the entire library.
-const materialOpenFamilies=new Set();
+// Periodic-table-inspired MATERIAL FAMILY GRID. Family cells replace redundant category filters.
+let activeMaterialFamily=null;
 let materialDetailVisible=false;
 function renderMaterials(){
- const texts={
-  hu:['Válassz egy anyagcsaládot, majd fedezz fel egy anyagot!','Szűrés anyagcsoport szerint','Adatkezelés és JSON-importálás','Anyag vagy képlet keresése…'],
-  de:['Wähle eine Stofffamilie und entdecke ihre Stoffe!','Nach Stoffgruppen filtern','Datenverwaltung und JSON-Import','Stoff oder Formel suchen…'],
-  en:['Choose a material family, then explore a substance!','Filter by material type','Data management and JSON import','Find a material or formula…']
- };
- const ui=texts[lang]||texts.hu;
+ const ui={
+ hu:['Válassz egy négyzetes anyagcsaládot, majd egy anyagot!','Adatkezelés és JSON-importálás','Anyag vagy képlet keresése…','Nincs találat.'],
+ de:['Wähle eine quadratische Stofffamilie, dann einen Stoff!','Datenverwaltung und JSON-Import','Stoff oder Formel suchen…','Keine Treffer.'],
+ en:['Choose a square material family, then a substance!','Data management and JSON import','Find a material or formula…','No matches.']
+ }[lang]||['Válassz egy anyagcsaládot!','Adatkezelés és JSON-importálás','Anyag vagy képlet keresése…','Nincs találat.'];
  $('materialInstructions').textContent=ui[0];
- $('materialFilterSummary').textContent=ui[1];
- $('materialImportSummary').textContent=ui[2];
- $('materialSearch').placeholder=ui[3];
- $('materialSearch').setAttribute('aria-label',ui[3]);
- const query=$('materialSearch').value.toLocaleLowerCase().trim();
- ensureMaterialFilters();
- const container=$('materialCards'),detail=$('materialDetail'),api=window.ChemistryMaterialFamilies;
- container.replaceChildren();
+ $('materialImportSummary').textContent=ui[1];
+ const search=$('materialSearch');search.placeholder=ui[2];search.setAttribute('aria-label',ui[2]);
+ const query=search.value.toLocaleLowerCase().trim();
+ const grid=$('materialCards'),detail=$('materialDetail'),api=window.ChemistryMaterialFamilies;
+ grid.replaceChildren();
  detail.hidden=true;
- const visible=materials.map((m,i)=>({m,i})).filter(({m})=>
-  (materialCategory==='all'||m.category===materialCategory)&&
-  (`${m.hu} ${m.de} ${m.en||''} ${m.f} ${catNames.hu[m.category]||''} ${catNames.de[m.category]||''} ${api?.detail(m,'hu').title||''}`.toLocaleLowerCase().includes(query)));
- const sorted=api?api.sort(visible):visible;
+ const filtered=materials.map((m,i)=>({m,i})).filter(({m})=>
+  `${m.hu} ${m.de} ${m.en||''} ${m.f} ${catNames.hu[m.category]||''} ${catNames.de[m.category]||''} ${api?.detail(m,'hu').title||''}`.toLocaleLowerCase().includes(query));
+ const sorted=api?api.sort(filtered):filtered;
  const families=new Map();
  for(const entry of sorted){
   const key=api?.family(entry.m)||entry.m.category;
   if(!families.has(key))families.set(key,[]);
   families.get(key).push(entry);
  }
- const groupLabel=(m)=>api?api.detail(m,lang).title:(catNames[lang]?.[m.category]||m.category);
- for(const [key,items] of families){
-  const family=document.createElement('details');
-  family.className='material-family-group';
-  family.dataset.family=key;
-  family.open=Boolean(query)||materialOpenFamilies.has(key);
-  const summary=document.createElement('summary');
-  summary.className='material-family-heading';
-  const heading=document.createElement('span');heading.textContent=groupLabel(items[0].m);
-  const count=document.createElement('small');count.textContent=String(items.length);
-  summary.append(heading,count);
-  family.append(summary);
+ if(!families.has(activeMaterialFamily)){
+  activeMaterialFamily=query&&families.size?families.keys().next().value:null;
+  materialDetailVisible=false;
+ }
+ if(query&&families.size===1)activeMaterialFamily=families.keys().next().value;
+ const names=api?.familyNames||{};
+ for(const [key,entries] of families){
+  const chosen=activeMaterialFamily===key;
+  const familyName=names[key]?.[lang==='hu'?0:lang==='de'?1:2]||
+    (api?api.detail(entries[0].m,lang).title:key);
+  const cell=document.createElement('button');cell.type='button';
+  cell.className='material-family-cell'+(chosen?' active':'');
+  cell.dataset.family=key;cell.setAttribute('aria-expanded',String(chosen));
+  cell.style.setProperty('--familyAccent',catColors[entries[0].m.category]||'#77d9d0');
+  const short=document.createElement('strong');short.textContent=familyName;
+  const count=document.createElement('small');count.textContent=String(entries.length);
+  cell.append(short,count);
+  cell.addEventListener('click',()=>{
+   const wasOpen=activeMaterialFamily===key;
+   activeMaterialFamily=wasOpen?null:key;
+   materialDetailVisible=false;
+   renderMaterials();
+  });
+  grid.append(cell);
+  if(!chosen)continue;
+  const area=document.createElement('section');area.className='material-family-expanded';
+  area.dataset.family=key;
+  const header=document.createElement('h3');header.textContent=familyName;
+  const description=document.createElement('p');
+  description.className='material-family-intro';
+  description.textContent=api?.detail(entries[0].m,lang).general||'';
   const tiles=document.createElement('div');tiles.className='material-family-tiles';
-  for(const {m,i} of items){
-   const b=document.createElement('button');
-   b.type='button';
-   b.className='materialcard materialTile'+(materialDetailVisible&&materialSelected===i?' selected':'');
-   b.style.setProperty('--matAccent',catColors[m.category]||'#45aacc');
-   b.dataset.materialIndex=String(i);
-   b.setAttribute('aria-expanded',String(materialDetailVisible&&materialSelected===i));
+  area.append(header,description,tiles);
+  for(const {m,i} of entries){
+   const button=document.createElement('button');
+   button.type='button';button.dataset.materialIndex=String(i);
+   button.className='materialcard materialTile'+(materialDetailVisible&&materialSelected===i?' selected':'');
+   button.style.setProperty('--matAccent',catColors[m.category]||'#45aacc');
+   button.setAttribute('aria-expanded',String(materialDetailVisible&&materialSelected===i));
    const symbol=document.createElement('strong');symbol.textContent=m.f;
    const name=document.createElement('span');name.textContent=m[lang]||m.hu;
-   const category=document.createElement('small');category.textContent=catNames[lang]?.[m.category]||key;
-   b.append(symbol,name,category);
-   b.onclick=()=>{
+   button.append(symbol,name);
+   button.addEventListener('click',()=>{
     const same=materialDetailVisible&&materialSelected===i;
-    materialSelected=i;
-    materialDetailVisible=!same;
-    for(const button of container.querySelectorAll('.materialTile')){
-     const active=button===b&&materialDetailVisible;
-     button.classList.toggle('selected',active);
-     button.setAttribute('aria-expanded',String(active));
+    materialSelected=i;materialDetailVisible=!same;
+    for(const tile of tiles.querySelectorAll('.materialTile')){
+     const current=tile===button&&materialDetailVisible;
+     tile.classList.toggle('selected',current);
+     tile.setAttribute('aria-expanded',String(current));
     }
-    if(materialDetailVisible){detail.hidden=false;b.after(detail);showMaterial()}
-    else{detail.hidden=true;detail.replaceChildren()}
-   };
-   tiles.append(b);
+    if(materialDetailVisible){
+     button.after(detail);detail.hidden=false;showMaterial();
+    }else{detail.hidden=true;detail.replaceChildren()}
+   });
+   tiles.append(button);
   }
-  family.append(tiles);
-  family.addEventListener('toggle',()=>{
-   if(family.open){
-    if(!query)materialOpenFamilies.add(key);
-   }else{
-    materialOpenFamilies.delete(key);
-    if(family.contains(detail)){
-     detail.hidden=true;
-     materialDetailVisible=false;
-     for(const button of tiles.querySelectorAll('.materialTile')){
-      button.classList.remove('selected');
-      button.setAttribute('aria-expanded','false');
-     }
-    }
-   }
-  });
-  container.append(family);
-  if(materialDetailVisible&&items.some(v=>v.i===materialSelected)&&family.open){
-   const selectedButton=[...tiles.querySelectorAll('.materialTile')].find(b=>b.dataset.materialIndex===String(materialSelected));
-   if(selectedButton)selectedButton.after(detail);else family.append(detail);
-   detail.hidden=false;
+  if(materialDetailVisible){
+   const selected=tiles.querySelector('.materialTile[data-material-index="'+materialSelected+'"]');
+   if(selected){selected.after(detail);detail.hidden=false;showMaterial()}
+   else{materialDetailVisible=false}
   }
+  grid.append(area);
  }
- if(!visible.length){
-  const p=document.createElement('p');
-  p.textContent=lang==='hu'?'Nincs találat.':lang==='de'?'Keine Treffer.':'No matches.';
-  container.append(p);
- }
- if(materialDetailVisible&&!detail.hidden)showMaterial();
- else if(!materialDetailVisible){detail.hidden=true;detail.replaceChildren()}
+ if(!filtered.length){const none=document.createElement('p');none.textContent=ui[3];grid.append(none);materialDetailVisible=false}
+ if(!materialDetailVisible){detail.hidden=true;detail.replaceChildren()}
 }
 
 function showMaterial(){let m=materials[materialSelected];if(!m)return;let dest=$('materialDetail');dest.replaceChildren();dest.className='materialDetail';dest.style.setProperty('--matAccent',catColors[m.category]||'#45aacc');
@@ -488,7 +477,7 @@ if(window.ChemistryMaterialLearning)window.ChemistryMaterialLearning.renderMater
  if(index<0||index>=materials.length)return;
  materialSelected=index;materialDetailVisible=true;
  const key=window.ChemistryMaterialFamilies?.family(materials[index])||materials[index].category;
- materialOpenFamilies.add(key);
+ activeMaterialFamily=key;
  renderMaterials();
  const next=$('materialCards').querySelector('.materialTile[data-material-index="'+index+'"]');
  next?.scrollIntoView({behavior:'auto',block:'nearest'});
