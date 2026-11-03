@@ -486,6 +486,11 @@ fact(bilingual('Halmazállapot (kb. 20 °C, 1 atm)','Aggregatzustand (ca. 20 °C
 const info=document.createElement('p');info.className='materialNote';info.textContent=(catInfo[m.category]||catInfo.molecule)[lang==='hu'?0:1]+' '+bilingual('Az adatlap tanulási célú. A keverékek és kristályok képlete nem önálló molekulát jelöl.','Diese Übersicht dient dem Lernen. Formeln von Gemischen und Kristallen beschreiben keine Einzelmoleküle.');dest.appendChild(info);
 if(materialModel(materialSelected)){
  const model=materialModel(materialSelected);
+ if(window.ChemistryMaterialPreview){
+  const preview=document.createElement('section');preview.className='material-preview-section';
+  window.ChemistryMaterialPreview.render(preview,model,lang,{label:(m[lang]||m.hu)+' – '+m.f});
+  dest.append(preview);
+ }
  fact(bilingual('Modelltípus','Modelltyp'),(modelKinds[lang]||modelKinds.hu)[model.kind]);
  let b=document.createElement('button');b.className='primaryMaterialAction';
  b.textContent=bilingual('Szerkezet megnyitása középen →','Struktur zentriert öffnen →');
@@ -512,6 +517,9 @@ if(window.ChemistryMaterialLearning)window.ChemistryMaterialLearning.renderMater
  renderMaterials();
  const next=$('materialCards').querySelector('.materialTile[data-material-index="'+index+'"]');
  next?.scrollIntoView({behavior:'auto',block:'nearest'});
+},(item)=>{
+ const i=materials.indexOf(item);
+ return i<0?null:materialModel(i);
 });
 }
 function openMaterialPreset(preset){if(!presetData[preset])return;tab='molecule';render();$('presets').value=preset;requestAnimationFrame(()=>requestAnimationFrame(()=>{centerPreset(preset);const cv=$('molCanvas');cv.scrollIntoView({behavior:'smooth',block:'center'})}))}
