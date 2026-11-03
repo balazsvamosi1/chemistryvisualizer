@@ -356,7 +356,37 @@ function phaseFor(m){return m.hu==='Szénsav'||m.hu==='Sósav'?3:gases.has(m.hu)
 const catInfo={molecule:['Önálló molekulákból álló anyag.','Besteht aus einzelnen Molekülen.'],gaz:['Gázként ismert anyag (közönséges körülmények között).','Unter gewöhnlichen Bedingungen als Gas bekannt.'],sav:['Savas kémhatású anyag vagy savképző vegyület.','Sauer reagierender oder säurebildender Stoff.'],bazis:['Bázis; a képlet többnyire összetételi arányt jelöl.','Base; die Formel beschreibt meist ein Teilchenverhältnis.'],so:['Rácsszerkezetű ionos vegyület, nem különálló molekula.','Ionische Gitterverbindung, kein einzelnes Molekül.'],fem:['Fémes kötésű kiterjedt kristályrács.','Ausgedehntes Kristallgitter mit Metallbindung.'],szerves:['Széntartalmú szerves vegyület.','Organische Kohlenstoffverbindung.'],halozat:['Kiterjedt kovalens atomrács.','Ausgedehntes kovalentes Atomnetzwerk.'],nemfem:['Nemfémes elemi anyag.','Elementarer nichtmetallischer Stoff.'],polimer:['Ismétlődő egységekből álló makromolekula; az n változó.','Makromolekül aus wiederkehrenden Einheiten; n ist variabel.'],keverek:['Több összetevőből álló elegy vagy oldat.','Gemisch oder Lösung aus mehreren Bestandteilen.']};
 let materialCategory='all';
 function ensureMaterialFilters(){let dest=$('materialFilters');if(!dest)return;dest.replaceChildren();const counts={};for(const m of materials)counts[m.category]=(counts[m.category]||0)+1;let labels=['all',...Object.keys(catNames.hu).filter(c=>counts[c])];labels.forEach(c=>{const b=document.createElement('button');b.className='materialFilter'+(c===materialCategory?' active':'');b.textContent=(c==='all'?bilingual('Összes','Alle'):catNames[lang][c])+' ('+(c==='all'?materials.length:counts[c])+')';b.onclick=()=>{materialCategory=c;renderMaterials()};dest.appendChild(b)})}
-function renderMaterials(){let q=$('materialSearch').value.toLocaleLowerCase().trim();ensureMaterialFilters();$('materialCards').replaceChildren();let visible=0;materials.forEach((m,i)=>{if(materialCategory!=='all'&&m.category!==materialCategory)return;if(!`${m.hu} ${m.de} ${m.f} ${catNames.hu[m.category]} ${catNames.de[m.category]}`.toLocaleLowerCase().includes(q))return;visible++;let b=document.createElement('button');b.className='materialcard materialTile'+(materialSelected===i?' selected':'');b.style.setProperty('--matAccent',catColors[m.category]||'#45aacc');const symbol=document.createElement('strong');symbol.textContent=m.f;const name=document.createElement('span');name.textContent=m[lang];const group=document.createElement('small');group.textContent=catNames[lang][m.category];b.append(symbol,name,group);b.onclick=()=>{materialSelected=i;renderMaterials();$('materialDetail').scrollIntoView({behavior:'smooth',block:'nearest'})};$('materialCards').appendChild(b)});if(!visible){let e=document.createElement('p');e.textContent=bilingual('Nincs találat.','Keine Treffer.');$('materialCards').appendChild(e)}showMaterial()}
+function renderMaterials(){
+ const q=$('materialSearch').value.toLocaleLowerCase().trim();
+ ensureMaterialFilters();
+ const dest=$('materialCards');dest.replaceChildren();
+ const familyAPI=window.ChemistryMaterialFamilies;
+ const visible=materials.map((m,i)=>({m,i})).filter(({m})=>
+ (materialCategory==='all'||m.category===materialCategory)&&
+ (`${m.hu} ${m.de} ${m.en||''} ${m.f} ${catNames.hu[m.category]||''} ${catNames.de[m.category]||''} ${familyAPI?.detail(m,'hu').title||''}`.toLocaleLowerCase().includes(q)));
+ const sorted=familyAPI?familyAPI.sort(visible):visible;
+ let lastFamily=null;
+ for(const {m,i} of sorted){
+  const family=familyAPI?.family(m)||m.category;
+  if(family!==lastFamily){
+   const heading=document.createElement('h3');
+   heading.className='material-family-heading';
+   heading.textContent=familyAPI?familyAPI.detail(m,lang).title:(catNames[lang]?.[m.category]||m.category);
+   dest.append(heading);lastFamily=family;
+  }
+  const b=document.createElement('button');
+  b.className='materialcard materialTile'+(materialSelected===i?' selected':'');
+  b.style.setProperty('--matAccent',catColors[m.category]||'#45aacc');
+  const symbol=document.createElement('strong');symbol.textContent=m.f;
+  const name=document.createElement('span');name.textContent=m[lang]||m.hu;
+  const group=document.createElement('small');group.textContent=catNames[lang]?.[m.category]||family;
+  b.append(symbol,name,group);
+  b.onclick=()=>{materialSelected=i;renderMaterials();$('materialDetail').scrollIntoView({behavior:'smooth',block:'nearest'})};
+  dest.append(b);
+ }
+ if(!visible.length){const p=document.createElement('p');p.textContent=bilingual('Nincs találat.','Keine Treffer.');dest.append(p)}
+ showMaterial();
+}
 function showMaterial(){let m=materials[materialSelected];if(!m)return;let dest=$('materialDetail');dest.replaceChildren();dest.className='materialDetail';dest.style.setProperty('--matAccent',catColors[m.category]||'#45aacc');
 const head=document.createElement('div');head.className='materialDetailHead';const title=document.createElement('div');const label=document.createElement('small');label.textContent=catNames[lang][m.category];const h=document.createElement('h3');h.textContent=m[lang];const chem=document.createElement('div');chem.className='materialBigFormula';chem.textContent=m.f;title.append(label,h);head.append(title,chem);dest.appendChild(head);
 const p=document.createElement('p');p.textContent=m.description[lang==='hu'?0:1];dest.appendChild(p);
@@ -372,6 +402,16 @@ if(materialModel(materialSelected)){
  b.onclick=()=>activateMaterialModel(materialSelected);dest.appendChild(b);
 } else {
  let note=document.createElement('small');note.textContent=bilingual('Nincs modell.','Kein Modell.');dest.appendChild(note)
+}
+if(window.ChemistryMaterialFamilies){
+ const d=window.ChemistryMaterialFamilies.detail(m,lang);
+ const section=document.createElement('details');section.className='material-family-science';
+ const summary=document.createElement('summary');
+ summary.textContent=lang==='hu'?'Részletesebb tudományos leírás':lang==='de'?'Mehr wissenschaftliche Details':'More scientific details';
+ section.append(summary);
+ const family=document.createElement('h4');family.textContent=d.title;section.append(family);
+ for(const value of [d.general,d.specific]){const p=document.createElement('p');p.textContent=value;section.append(p)}
+ dest.append(section);
 }
 if(window.ChemistryDiscovery)window.ChemistryDiscovery.renderMaterial(m,dest,materials,materialSelected,lang);
 }
