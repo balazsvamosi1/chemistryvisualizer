@@ -29,10 +29,29 @@ function renderMaterial(m,host,all,selected,lang='hu'){
  const q=document.createElement('p');q.textContent=l.challenge+': '+f.challenge[idx];box.append(q);const answer=document.createElement('details'),ans=document.createElement('summary');ans.textContent=l.answer;answer.append(ans);const response=document.createElement('p');response.textContent=f.answer[idx];answer.append(response);box.append(answer);
  }else{const hint=document.createElement('p');hint.textContent=m.description?.[idx===0?0:1]||'';box.append(hint)}
  const compare=document.createElement('div');compare.className='material-compare';const prompt=document.createElement('label');prompt.textContent=l.compareSelect+' ';const sel=document.createElement('select');sel.setAttribute('aria-label',l.compareSelect);
- for(let i=0;i<all.length;i++){if(i===selected)continue;const option=document.createElement('option');option.value=String(i);option.textContent=all[i][lang]||all[i].hu;sel.append(option)}
+ const recommended=window.ChemistryMaterialLearning?.related(m,all)||[];
+ const candidates=all.map((item,i)=>({item,i})).filter(x=>x.i!==selected);
+ candidates.sort((a,b)=>{
+  const ai=recommended.indexOf(a.item),bi=recommended.indexOf(b.item);
+  if(ai>=0&&bi>=0)return ai-bi;
+  if(ai>=0)return-1;if(bi>=0)return 1;return a.i-b.i;
+ });
+ for(const {item,i} of candidates){
+  const option=document.createElement('option');option.value=String(i);
+  option.textContent=(recommended.includes(item)?'★ ':'')+(item[lang]||item.hu);
+  sel.append(option);
+ }
  const view=document.createElement('div');view.className='material-compare-grid';
  const card=(item)=>{const div=document.createElement('div'),name=document.createElement('strong'),formula=document.createElement('p'),category=document.createElement('small');name.textContent=item[lang]||item.hu;formula.textContent=item.f;category.textContent=item.category||'';div.append(name,formula,category);return div};
- const update=()=>{view.replaceChildren(card(m),card(all[Number(sel.value)]))};sel.addEventListener('change',update);update();prompt.append(sel);compare.append(prompt,view);box.append(compare);
+ const noteDifference=document.createElement('p');noteDifference.className='material-compare-note';
+ const update=()=>{
+  const other=all[Number(sel.value)];
+  view.replaceChildren(card(m),card(other));
+  const comparison=window.ChemistryMaterialLearning?.info(m,other,lang);
+  noteDifference.textContent=comparison?.difference||'';
+  noteDifference.hidden=!comparison;
+ };
+sel.addEventListener('change',update);update();prompt.append(sel);compare.append(prompt,view,noteDifference);box.append(compare);
  const note=document.createElement('small');note.textContent=l.note;box.append(note);host.append(box);
 }
 return Object.freeze({insight,renderMaterial});
