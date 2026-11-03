@@ -385,7 +385,8 @@ function renderMaterials(){
  }
  if(query&&families.size===1)activeMaterialFamily=families.keys().next().value;
  const names=api?.familyNames||{};
- let expandedArea=null;
+ const familyCells=[];
+ let expandedArea=null,activeCellIndex=-1;
  for(const [key,entries] of families){
   const chosen=activeMaterialFamily===key;
   const familyName=names[key]?.[lang==='hu'?0:lang==='de'?1:2]||
@@ -394,11 +395,11 @@ function renderMaterials(){
   cell.className='material-family-cell'+(chosen?' active':'');
   cell.dataset.family=key;cell.setAttribute('aria-expanded',String(chosen));
   cell.style.setProperty('--familyAccent',catColors[entries[0].m.category]||'#77d9d0');
-  const familyCodes={water:'H₂O',gases:'G',oxides:'Ox',acids:'H⁺',bases:'OH⁻',carbonates:'CO₃',salts:'NaCl',metals:'Me',carbon:'C',networks:'SiO₂',solids:'S',hydrocarbons:'C–H',alcohols:'R–OH',carbonyls:'C=O',sugars:'Glc',polymers:'[n]',other:'⋯'};
-  const code=document.createElement('span');code.className='material-family-code';code.textContent=familyCodes[key]||'•';
+  // Family squares are CATEGORY labels, not representatives of any one molecule.
   const short=document.createElement('strong');short.textContent=familyName;
   const count=document.createElement('small');count.textContent=String(entries.length);
-  cell.append(code,short,count);cell.title=familyName;
+  count.setAttribute('aria-label',String(entries.length)+' materials');
+  cell.append(short,count);cell.title=familyName;
   cell.addEventListener('click',()=>{
    const wasOpen=activeMaterialFamily===key;
    activeMaterialFamily=wasOpen?null:key;
@@ -406,7 +407,9 @@ function renderMaterials(){
    renderMaterials();
   });
   grid.append(cell);
+  familyCells.push(cell);
   if(!chosen)continue;
+  activeCellIndex=familyCells.length-1;
   const area=document.createElement('section');area.className='material-family-expanded';
   area.dataset.family=key;
   const header=document.createElement('h3');header.textContent=familyName;
@@ -445,7 +448,14 @@ function renderMaterials(){
   }
   expandedArea=area;
  }
- if(expandedArea)grid.append(expandedArea);
+ if(expandedArea&&activeCellIndex>=0){
+  // Open directly beneath the ROW containing the chosen family square.
+  // The CSS grid has 6/5/3 columns at these same responsive breakpoints.
+  const columns=window.matchMedia('(max-width:650px)').matches?3:
+    window.matchMedia('(max-width:900px)').matches?5:6;
+  const afterRow=Math.ceil((activeCellIndex+1)/columns)*columns;
+  grid.insertBefore(expandedArea,familyCells[afterRow]||null);
+ }
  if(!filtered.length){const none=document.createElement('p');none.textContent=ui[3];grid.append(none);materialDetailVisible=false}
  if(!materialDetailVisible){detail.hidden=true;detail.replaceChildren()}
 }
