@@ -15,7 +15,7 @@ test('material categories render as selectable square periodic-table family cell
 test('only one expanded family is displayed below the square category grid',()=>{
  assert.match(app,/let activeMaterialFamily=null/);
  assert.match(render,/activeMaterialFamily=wasOpen\?null:key/);
- assert.match(render,/grid\.insertBefore\(expandedArea,familyCells\[afterRow\]\|\|null\)/);
+ assert.match(render,/draft\.insertBefore\(expandedArea,familyCells\[afterRow\]\|\|null\)/);
  assert.match(render,/Math\.ceil\(\(activeCellIndex\+1\)\/columns\)\*columns/);
  assert.match(render,/className='material-family-expanded'/);
 });
