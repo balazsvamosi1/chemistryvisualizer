@@ -73,3 +73,11 @@
 .ab-mission-actions button[aria-pressed="true"]{outline:3px solid #9cebd0;background:#185d61}
 #abTargetResult,#abMissionFeedback{min-height:1.7em;overflow-wrap:anywhere}
 @media(max-width:450px){.ab-mission-actions{grid-template-columns:1fr 1fr}}
+
+/* 2.8.1: interactive pH spectrum, same control for mouse, touch and keyboard */
+#abInteractiveScale{touch-action:none;cursor:ew-resize;user-select:none;min-height:28px;border:2px solid #e4f4fa;position:relative;outline-offset:5px}
+#abInteractiveScale:focus-visible{outline:3px solid #fff4a3}
+#abInteractiveScale #abPhMarker{position:absolute;top:-9px;height:42px;width:8px;border:2px solid #062033;border-radius:5px;background:#fff;box-shadow:0 0 0 1px #fff,0 2px 7px #021323;z-index:3;pointer-events:none;transition:left .12s}
+#abActualMarker{position:absolute;top:-5px;width:3px;height:33px;border-radius:3px;background:#142a3b;outline:1px solid #fff9;transform:translateX(-50%);pointer-events:none;z-index:2}
+.ab-target-entry input[type="number"]{max-width:130px;font-size:1.08rem;font-weight:700}
+@media(prefers-reduced-motion:reduce){#abInteractiveScale #abPhMarker{transition:none}}
