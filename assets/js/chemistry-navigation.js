@@ -20,6 +20,7 @@ function activate(id,scroll=true){if(!panels[id]||!$(panels[id]))return;selected
 for(const id of tabs){$(id).addEventListener('click',()=>{selected=id;queueMicrotask(()=>activate(id))})}
 prev.addEventListener('click',()=>{let id=tabs[tabs.indexOf(selected)-1];if(id)$(id).click()});next.addEventListener('click',()=>{let id=tabs[tabs.indexOf(selected)+1];if(id)$(id).click()});
 document.addEventListener('click',e=>{if(e.target.closest('.tabs > button'))return;const nav=e.target.closest('#curriculumOpen, #questNext');if(nav)requestAnimationFrame(enforce)});
+for(const lang of ['hu','de','en'])$(lang)?.addEventListener('click',()=>{queueMicrotask(enforce);requestAnimationFrame(enforce)});
 window.ChemistryNavigation={activate,refresh:enforce};
 enforce();
 })();
