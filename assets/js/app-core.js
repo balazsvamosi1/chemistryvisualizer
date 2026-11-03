@@ -356,37 +356,84 @@ function phaseFor(m){return m.hu==='Szénsav'||m.hu==='Sósav'?3:gases.has(m.hu)
 const catInfo={molecule:['Önálló molekulákból álló anyag.','Besteht aus einzelnen Molekülen.'],gaz:['Gázként ismert anyag (közönséges körülmények között).','Unter gewöhnlichen Bedingungen als Gas bekannt.'],sav:['Savas kémhatású anyag vagy savképző vegyület.','Sauer reagierender oder säurebildender Stoff.'],bazis:['Bázis; a képlet többnyire összetételi arányt jelöl.','Base; die Formel beschreibt meist ein Teilchenverhältnis.'],so:['Rácsszerkezetű ionos vegyület, nem különálló molekula.','Ionische Gitterverbindung, kein einzelnes Molekül.'],fem:['Fémes kötésű kiterjedt kristályrács.','Ausgedehntes Kristallgitter mit Metallbindung.'],szerves:['Széntartalmú szerves vegyület.','Organische Kohlenstoffverbindung.'],halozat:['Kiterjedt kovalens atomrács.','Ausgedehntes kovalentes Atomnetzwerk.'],nemfem:['Nemfémes elemi anyag.','Elementarer nichtmetallischer Stoff.'],polimer:['Ismétlődő egységekből álló makromolekula; az n változó.','Makromolekül aus wiederkehrenden Einheiten; n ist variabel.'],keverek:['Több összetevőből álló elegy vagy oldat.','Gemisch oder Lösung aus mehreren Bestandteilen.']};
 let materialCategory='all';
 function ensureMaterialFilters(){let dest=$('materialFilters');if(!dest)return;dest.replaceChildren();const counts={};for(const m of materials)counts[m.category]=(counts[m.category]||0)+1;let labels=['all',...Object.keys(catNames.hu).filter(c=>counts[c])];labels.forEach(c=>{const b=document.createElement('button');b.className='materialFilter'+(c===materialCategory?' active':'');b.textContent=(c==='all'?bilingual('Összes','Alle'):catNames[lang][c])+' ('+(c==='all'?materials.length:counts[c])+')';b.onclick=()=>{materialCategory=c;renderMaterials()};dest.appendChild(b)})}
+// The family view starts collapsed. Material details appear inside the selected family,
+// directly below its molecule cards rather than at the bottom of the entire library.
+const materialOpenFamilies=new Set();
+let materialDetailVisible=false;
 function renderMaterials(){
- const q=$('materialSearch').value.toLocaleLowerCase().trim();
+ const query=$('materialSearch').value.toLocaleLowerCase().trim();
  ensureMaterialFilters();
- const dest=$('materialCards');dest.replaceChildren();
- const familyAPI=window.ChemistryMaterialFamilies;
+ const container=$('materialCards'),detail=$('materialDetail'),api=window.ChemistryMaterialFamilies;
+ container.replaceChildren();
+ detail.hidden=true;
  const visible=materials.map((m,i)=>({m,i})).filter(({m})=>
- (materialCategory==='all'||m.category===materialCategory)&&
- (`${m.hu} ${m.de} ${m.en||''} ${m.f} ${catNames.hu[m.category]||''} ${catNames.de[m.category]||''} ${familyAPI?.detail(m,'hu').title||''}`.toLocaleLowerCase().includes(q)));
- const sorted=familyAPI?familyAPI.sort(visible):visible;
- let lastFamily=null;
- for(const {m,i} of sorted){
-  const family=familyAPI?.family(m)||m.category;
-  if(family!==lastFamily){
-   const heading=document.createElement('h3');
-   heading.className='material-family-heading';
-   heading.textContent=familyAPI?familyAPI.detail(m,lang).title:(catNames[lang]?.[m.category]||m.category);
-   dest.append(heading);lastFamily=family;
-  }
-  const b=document.createElement('button');
-  b.className='materialcard materialTile'+(materialSelected===i?' selected':'');
-  b.style.setProperty('--matAccent',catColors[m.category]||'#45aacc');
-  const symbol=document.createElement('strong');symbol.textContent=m.f;
-  const name=document.createElement('span');name.textContent=m[lang]||m.hu;
-  const group=document.createElement('small');group.textContent=catNames[lang]?.[m.category]||family;
-  b.append(symbol,name,group);
-  b.onclick=()=>{materialSelected=i;renderMaterials();$('materialDetail').scrollIntoView({behavior:'smooth',block:'nearest'})};
-  dest.append(b);
+  (materialCategory==='all'||m.category===materialCategory)&&
+  (`${m.hu} ${m.de} ${m.en||''} ${m.f} ${catNames.hu[m.category]||''} ${catNames.de[m.category]||''} ${api?.detail(m,'hu').title||''}`.toLocaleLowerCase().includes(query)));
+ const sorted=api?api.sort(visible):visible;
+ const families=new Map();
+ for(const entry of sorted){
+  const key=api?.family(entry.m)||entry.m.category;
+  if(!families.has(key))families.set(key,[]);
+  families.get(key).push(entry);
  }
- if(!visible.length){const p=document.createElement('p');p.textContent=bilingual('Nincs találat.','Keine Treffer.');dest.append(p)}
- showMaterial();
+ const groupLabel=(m)=>api?api.detail(m,lang).title:(catNames[lang]?.[m.category]||m.category);
+ for(const [key,items] of families){
+  const family=document.createElement('details');
+  family.className='material-family-group';
+  family.dataset.family=key;
+  family.open=Boolean(query)||materialOpenFamilies.has(key);
+  const summary=document.createElement('summary');
+  summary.className='material-family-heading';
+  const heading=document.createElement('span');heading.textContent=groupLabel(items[0].m);
+  const count=document.createElement('small');count.textContent=String(items.length);
+  summary.append(heading,count);
+  family.append(summary);
+  const tiles=document.createElement('div');tiles.className='material-family-tiles';
+  for(const {m,i} of items){
+   const b=document.createElement('button');
+   b.type='button';
+   b.className='materialcard materialTile'+(materialDetailVisible&&materialSelected===i?' selected':'');
+   b.style.setProperty('--matAccent',catColors[m.category]||'#45aacc');
+   b.setAttribute('aria-expanded',String(materialDetailVisible&&materialSelected===i));
+   const symbol=document.createElement('strong');symbol.textContent=m.f;
+   const name=document.createElement('span');name.textContent=m[lang]||m.hu;
+   const category=document.createElement('small');category.textContent=catNames[lang]?.[m.category]||key;
+   b.append(symbol,name,category);
+   b.onclick=()=>{
+    const same=materialDetailVisible&&materialSelected===i;
+    materialSelected=i;
+    materialDetailVisible=!same;
+    for(const button of tiles.querySelectorAll('.materialTile')){
+     const active=button===b&&materialDetailVisible;
+     button.classList.toggle('selected',active);
+     button.setAttribute('aria-expanded',String(active));
+    }
+    if(materialDetailVisible){detail.hidden=false;tiles.after(detail);showMaterial()}
+    else{detail.hidden=true;detail.replaceChildren()}
+   };
+   tiles.append(b);
+  }
+  family.append(tiles);
+  family.addEventListener('toggle',()=>{
+   if(family.open)materialOpenFamilies.add(key);else{
+    materialOpenFamilies.delete(key);
+    if(detail.parentElement===family){detail.hidden=true;materialDetailVisible=false}
+   }
+  });
+  container.append(family);
+  if(materialDetailVisible&&items.some(v=>v.i===materialSelected)&&family.open){
+   family.append(detail);detail.hidden=false;
+  }
+ }
+ if(!visible.length){
+  const p=document.createElement('p');
+  p.textContent=lang==='hu'?'Nincs találat.':lang==='de'?'Keine Treffer.':'No matches.';
+  container.append(p);
+ }
+ if(materialDetailVisible&&!detail.hidden)showMaterial();
+ else if(!materialDetailVisible){detail.hidden=true;detail.replaceChildren()}
 }
+
 function showMaterial(){let m=materials[materialSelected];if(!m)return;let dest=$('materialDetail');dest.replaceChildren();dest.className='materialDetail';dest.style.setProperty('--matAccent',catColors[m.category]||'#45aacc');
 const head=document.createElement('div');head.className='materialDetailHead';const title=document.createElement('div');const label=document.createElement('small');label.textContent=(catNames[lang]||catNames.hu)[m.category];const h=document.createElement('h3');h.textContent=m[lang]||m.hu;const chem=document.createElement('div');chem.className='materialBigFormula';chem.textContent=m.f;title.append(label,h);head.append(title,chem);dest.appendChild(head);
 const p=document.createElement('p');p.textContent=m.description[lang==='hu'?0:1];dest.appendChild(p);
