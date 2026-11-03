@@ -1,34 +1,36 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
 const app=read('assets/js/app-core.js'),css=read('assets/css/discovery.css'),html=read('index.html');
-const list=app.slice(app.indexOf('function renderMaterials(){'),app.indexOf('\nfunction showMaterial(){'));
-test('family headings are accessible, keyboard-operated native details',()=>{
- assert.match(list,/document\.createElement\('details'\)/);
- assert.match(list,/document\.createElement\('summary'\)/);
- assert.match(list,/family\.className='material-family-group'/);
+const render=app.slice(app.indexOf('function renderMaterials(){'),app.indexOf('\nfunction showMaterial(){'));
+test('material categories render as selectable square periodic-table family cells',()=>{
+ assert.match(render,/className='material-family-cell'/);
+ assert.match(render,/material-family-code/);
+ assert.match(render,/document\.createElement\('button'\)/);
+ assert.match(css,/#materialsSection \.material-family-cell\{/);
+ assert.match(css,/aspect-ratio:1\/1/);
+ assert.match(css,/grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/);
 });
-test('families start collapsed; open state is retained during rerenders',()=>{
- assert.match(list,/family\.open=Boolean\(query\)\|\|materialOpenFamilies\.has\(key\)/);
- assert.match(app,/const materialOpenFamilies=new Set\(\)/);
+test('only one expanded family is displayed below the square category grid',()=>{
+ assert.match(app,/let activeMaterialFamily=null/);
+ assert.match(render,/activeMaterialFamily=wasOpen\?null:key/);
+ assert.match(render,/if\(expandedArea\)grid\.append\(expandedArea\)/);
+ assert.match(render,/className='material-family-expanded'/);
 });
-test('card details stay inside their selected family, without auto-scroll',()=>{
- assert.match(list,/b\.after\(detail\)/);
- assert.doesNotMatch(list,/scrollIntoView/);
- assert.match(list,/if\(materialDetailVisible&&items\.some/);
+test('selected material detail opens inline rather than at bottom of library',()=>{
+ assert.match(render,/button\.after\(detail\)/);
+ assert.match(render,/selected\.after\(detail\)/);
+ assert.doesNotMatch(render,/scrollIntoView/);
 });
-test('only one material selection is shown at a time',()=>{
- assert.match(list,/container\.querySelectorAll\('\.materialTile'\)/);
- assert.match(list,/button\.classList\.toggle\('selected',active\)/);
-});
-test('search expands only matching families without persisting all groups',()=>{
- assert.match(list,/if\(!query\)materialOpenFamilies\.add\(key\)/);
- assert.match(list,/if\(!visible\.length\)/);
-});
-test('all prior material features remain present',()=>{
+test('redundant material type filters are absent, while search and JSON data handling remain',()=>{
+ assert.doesNotMatch(html,/id="materialFilters"/);
+ assert.doesNotMatch(html,/id="materialFilterSummary"/);
+ assert.match(html,/id="materialSearch"/);
+ assert.match(html,/id="materialImportSummary"/);
  assert.match(app,/function importLibrary\(/);
- assert.match(app,/function showMaterial\(/);
  assert.match(app,/function activateMaterialModel\(/);
+});
+test('material expansion and scientific learning are still connected',()=>{
  assert.match(app,/window\.ChemistryDiscovery\.renderMaterial/);
- assert.match(css,/#materialsSection \.material-family-tiles/);
- assert.match(html,/Beta 2\.9\.4/);
+ assert.match(app,/window\.ChemistryMaterialLearning\.renderMaterial/);
+ assert.match(html,/Beta 2\.9\.5/);
 });
