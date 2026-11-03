@@ -282,3 +282,11 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Mode-specific scientific fidelity notices clarify Bohr vs quantum models, screened hydrogenic multielectron approximations, limited valence/VSEPR heuristics, reference vs estimated molecular geometry, and Chemistry Quest's fictional atom-crafting, reagent weapons and fire rules. Quest includes a direct comparison with real chemistry.
 - Current limitation: this is a self-directed learning and assessment layer, **not** a certified school assessment or laboratory safety qualification. No login, grading upload, or cross-session score storage is added.
 - **26/26 targeted headless checks passed** across Academy and previously existing Bunsen education. Live visual/browser verification and the full repo test suite were not performed. GitHub Actions remains intentionally disabled.
+
+
+## Chemistry Lab 2.6.2 — UX consolidation (2026-11-03)
+- Chemistry Academy appears immediately before Chemistry Quest and is the **only** Learn / Practice / Exam area. The Bunsen laboratory remains a hands-on simulator with sample spectra, and its separate quizzes / test tabs were removed.
+- The entire previous Bunsen teaching bank is available in Academy as Basic, Advanced and Oberstufe subjects: **18 lessons and 48 questions**. Across Academy: **12 subject choices, 45 lessons and 84 questions** (with randomized practice and exam sessions).
+- A shared navigation controller enforces one visible top-level laboratory at a time; the Reaction Lab stays nested and visible within Molecule Builder only. The tab bar stays accessible when scrolling, with a fixed bottom previous/next switcher.
+- Text layout is responsive and allows long content to wrap. Acid–Base Lab gains a dynamic burette/beaker illustration, indicator colour, approximate pH scale marker and accessible acidic/neutral/basic labels. The existing analytical titration model is unchanged.
+- Verified **26/26** Bunsen + Academy targeted headless tests. A separate simulated DOM navigation check confirmed exclusive visibility across Bunsen, Molecule Builder, Acid–Base, Academy, Quest and Periodic Table. Browser visual testing on real devices remains outstanding. CI remains intentionally disabled.
