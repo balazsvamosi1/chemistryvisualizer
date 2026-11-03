@@ -41,7 +41,7 @@ const links={
 function matchPair(a,b){return comparisons.find(p=>(p.a===a&&p.b===b)||(p.b===a&&p.a===b))||null}
 function related(item,all){const recommended=links[item.hu]||[];const a=all.filter(x=>x.hu!==item.hu&&recommended.includes(x.hu));const family=typeof window!=='undefined'?window.ChemistryMaterialFamilies:null;const group=family?.family(item);const others=all.filter(x=>x.hu!==item.hu&&!a.includes(x)&&(group?family.family(x)===group:x.category===item.category));return a.concat(others).slice(0,6)}
 function info(item,other,lang='hu'){const p=matchPair(item.hu,other.hu);if(!p)return null;const i=lang==='de'?1:lang==='en'?2:0;return{difference:p.difference[i],question:p.question[i],answer:p.answer,type:p.type}}
-function renderMaterial(item,host,all,selected,lang,onSelect){
+function renderMaterial(item,host,all,selected,lang,onSelect,resolveModel){
  const l=names[lang]||names.hu,idx=lang==='de'?1:lang==='en'?2:0;
  const available=related(item,all),panel=document.createElement('section');panel.className='material-learning';
  const heading=document.createElement('h4');heading.textContent=l.related;panel.append(heading);
@@ -58,6 +58,19 @@ function renderMaterial(item,host,all,selected,lang,onSelect){
   for(const m of [item,paired]){const col=document.createElement('div');const name=document.createElement('strong');name.textContent=m[lang]||m.hu;
    const formula=document.createElement('span');formula.textContent=m.f;col.append(name,formula);columns.append(col)}
   diff.append(columns);
+  const previewApi=typeof window!=='undefined'?window.ChemistryMaterialPreview:null;
+  if(previewApi&&typeof resolveModel==='function'){
+   const structures=document.createElement('div');structures.className='material-dual-preview';
+   let rendered=0;
+   for(const compound of [item,paired]){
+    const model=resolveModel(compound);
+    if(!previewApi.valid(model))continue;
+    const view=document.createElement('div');view.className='material-dual-preview-cell';
+    previewApi.render(view,model,lang,{label:(compound[lang]||compound.hu)+' – '+compound.f});
+    structures.append(view);rendered++;
+   }
+   if(rendered===2)diff.append(structures);
+  }
   if(p.type==='bond'){
    const bonds=document.createElement('div');bonds.className='material-bond-compare';
    const symbols=[p.bondA,p.bondB];
