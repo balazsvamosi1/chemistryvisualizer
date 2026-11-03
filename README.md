@@ -298,3 +298,12 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Chemistry Academy label translates as *Kémia Akadémia / Chemie-Akademie / Chemistry Academy*, including after the global language buttons are used.
 - Acid–Base Lab adds a titrant-volume slider, ±1 mL controls and a reset-to-zero button; all are wired to the same validated pH/titration solver as the numeric entry. Choosing incompatible analyte/titrant types automatically changes the opposite reagent. Beaker colour is smoothly interpolated within the chosen indicator's transition range; the pH marker and graph update with dosing, including volumes above twice equivalence.
 - Checked representative HCl/NaOH 0.1 M pH values, explicit UI event simulations (dose slider, plus/minus/reset and switch to ammonia), live Academy language-selection simulations, and 26/26 pre-existing targeted tests. Complete real-browser visual and mobile layout testing remain outstanding.
+
+
+## Chemistry Lab 2.6.4 — Element Hunt in Chemistry Academy (2026-11-03)
+- Element Hunt moves from the top-level navigation into Chemistry Academy as a fourth activity next to Learn / Practice / Exam.
+- Existing eight challenges, choices, answer feedback and in-session score logic are preserved. The former separate tab is hidden, not deleted, to retain compatibility with legacy application code.
+- The Academy's Element Hunt topic now opens the embedded activity rather than attempting to activate the hidden tab.
+- Element Hunt question and feedback text now supports English in addition to Hungarian and German.
+- Added static integration regression assertions in `tests/academy-hunt.test.cjs` (run with `node --test tests/academy-hunt.test.cjs`). Full-browser verification is still outstanding.
+- This release **does not integrate RDKit.js or another third-party engine**. Candidate libraries require dependency/license verification and a verified, locally served browser distribution before deployment.
