@@ -168,12 +168,49 @@ function localize(){const save={a:$('abanalyte').value,t:$('abtitrant').value,i:
  $('abInteractiveScale').setAttribute('aria-label',mt('targetLabel'));
  const requested=Number($('abTargetPH').value);if($('abTargetPH').value.trim()!==''&&Number.isFinite(requested)&&requested>=0&&requested<=14)syncTargetUI(requested);
  missionRefresh();update();}
+
+const scienceTexts={
+ hu:{
+  title:'Mi történik a sav–bázis keverékben? (részletek)',
+  general:'A pH a hidrogénion-aktivitáshoz kapcsolódó logaritmikus mennyiség; ez a modell ideális híg oldatoknál koncentrációkat használ. A pH egy egységnyi változása közel tízszeres hidrogénion-aktivitás-változásnak felel meg.',
+  strong:'Az erős savat vagy bázist a modell teljesen disszociáltnak veszi. Ez nem azt jelenti, hogy minden erős sav ugyanúgy reagál az összes anyaggal.',
+  weak:'A gyenge sav/bázis részlegesen reagál vízzel, és egyensúly alakul ki. A gyenge elnevezés nem jelenti azt, hogy veszélytelen.',
+  eq:'Az egyenértékpontot a sav és a bázis sztöchiometriai anyagmennyisége határozza meg. Erős sav–erős bázis esetében kb. 7 lehet, gyenge sav titrálásánál jellemzően 7 fölött, gyenge bázisénál 7 alatt.',
+  indicator:'Az indikátor adott pH-tartományban vált színt. Az indikátor végpontja és a sztöchiometriai egyenértékpont nem feltétlenül egyezik.',
+  limits:'Határok: 25 °C, ideális oldat, legfeljebb egy protont leadó savak és egy protonfelvételi lépéssel kezelt bázisok. Többértékű savak, oldhatóság, fémek redoxreakciói és valós veszélyesség nincsenek e pH-számításban modellezve.'},
+ de:{
+  title:'Was geschieht in der Säure-Base-Mischung? (Details)',
+  general:'Der pH ist eine logarithmische Größe der Wasserstoffionenaktivität. Das ideale Modell verwendet Konzentrationen. Eine pH-Einheit entspricht etwa einem Faktor zehn.',
+  strong:'Starke Säuren und Basen werden als vollständig dissoziiert behandelt. Das bedeutet nicht, dass sie mit jedem Material gleich reagieren.',
+  weak:'Schwache Säuren/Basen stehen im Gleichgewicht mit Wasser. Schwach bedeutet nicht ungefährlich.',
+  eq:'Der Äquivalenzpunkt folgt der Stöchiometrie. Er liegt nicht immer bei pH 7, besonders bei schwachen Säuren oder Basen.',
+  indicator:'Indikatoren haben einen begrenzten Farbumschlagbereich. Endpunkt und Äquivalenzpunkt können verschieden sein.',
+  limits:'Grenzen: 25 °C, ideale Lösung, einprotonige Säuren und einstufig behandelte Basen. Mehrprotonige Säuren, Löslichkeit und Metall-Redoxreaktionen sind hier nicht modelliert.'},
+ en:{
+  title:'What happens in the acid–base mixture? (details)',
+  general:'pH is a logarithmic measure associated with hydrogen-ion activity. This ideal dilute-solution model uses concentrations. A difference of one pH unit is approximately a tenfold activity change.',
+  strong:'Strong acids/bases are treated as fully dissociated. This does not imply every strong acid reacts with every material in the same way.',
+  weak:'Weak acids/bases form equilibria in water. Weak does not mean harmless.',
+  eq:'Equivalence is determined by stoichiometric amounts, not automatically pH 7. Weak-acid or weak-base titrations can have different equivalence pH values.',
+  indicator:'An indicator has a pH transition interval. Its visual endpoint may differ from the equivalence point.',
+  limits:'Limits: 25 °C, ideal solution, monoprotic acids and single-step proton-accepting bases. Polyprotic species, solubility and metal redox chemistry are not simulated by the pH solver.'}
+};
+function updateScience(result){
+ const o=read(),a=engine.reagents[o.analyte],b=engine.reagents[o.titrant],txt=scienceTexts[lang()],box=$('abScienceContent');
+ $('abScienceSummary').textContent=txt.title;
+ const paragraphs=[txt.general,
+ a?.type.startsWith('weak')||b?.type.startsWith('weak')?txt.weak:txt.strong,
+ txt.eq+' '+(lang()==='hu'?'Jelenlegi számított egyenértéktérfogat: ':lang()==='de'?'Berechnetes Äquivalenzvolumen: ':'Calculated equivalence volume: ')+result.equivalenceMl.toFixed(2)+' mL.',
+ txt.indicator,txt.limits];
+ box.replaceChildren(...paragraphs.map(v=>{const p=document.createElement('p');p.textContent=v;return p}));
+}
+
 function update(){try{const opts=read(),result=engine.solve(opts);let series=engine.curve(opts);if(opts.addedMl>series[series.length-1].addedMl){const end=opts.addedMl*1.05;series=Array.from({length:121},(_,i)=>engine.solve({...opts,addedMl:end*i/120}))}const color=engine.indicatorColor(result.pH,$('abindicator').value);
  $('abPH').dataset.value=result.pH.toFixed(2); $('abPH').textContent=tr('ph')+': '+result.pH.toFixed(2);$('abEq').textContent=tr('eq')+': '+result.equivalenceMl.toFixed(2)+' mL';
  const indicatorShade=displayedIndicator(result.pH,$('abindicator').value);
  $('abIndicatorColor').style.background=indicatorShade;
  $('abStatus').textContent=tr('indicatorShade')+': '+engine.indicators[$('abindicator').value][lang()];
- $('abStatus').dataset.state='ok';updateVisual(result,indicatorShade);syncDoseSlider();const requested=Number($('abTargetPH').value);if($('abTargetPH').value.trim()!==''&&Number.isFinite(requested)&&requested>=0&&requested<=14)syncTargetUI(requested);draw(series,result);
+ $('abStatus').dataset.state='ok';updateVisual(result,indicatorShade);updateScience(result);syncDoseSlider();const requested=Number($('abTargetPH').value);if($('abTargetPH').value.trim()!==''&&Number.isFinite(requested)&&requested>=0&&requested<=14)syncTargetUI(requested);draw(series,result);
  }catch(e){$('abPH').textContent='—';$('abEq').textContent='—';$('abStatus').textContent=tr('error');$('abStatus').dataset.state='error'}}
 for(const key of fields)$('ab'+key).addEventListener('input',()=>{if(key==='analyte'||key==='titrant')autoCompatible(key);update()});
 $('abDoseSlider').addEventListener('input',e=>setDose(Number(e.target.value)));
