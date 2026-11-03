@@ -78,3 +78,8 @@
  #materialsSection .material-family-tiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:8px}
  #materialsSection .material-family-group>#materialDetail{margin:0 8px 8px}
 }
+
+/* Explicitly honour collapsed/hidden state even when global .pill/grid rules set display. */
+#materialsSection #materialDetail[hidden],
+#materialsSection .material-family-group:not([open])>.material-family-tiles,
+#materialsSection .material-family-group:not([open])>#materialDetail{display:none!important}
