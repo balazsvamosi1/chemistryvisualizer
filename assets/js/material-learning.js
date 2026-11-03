@@ -58,6 +58,14 @@ function renderMaterial(item,host,all,selected,lang,onSelect){
   for(const m of [item,paired]){const col=document.createElement('div');const name=document.createElement('strong');name.textContent=m[lang]||m.hu;
    const formula=document.createElement('span');formula.textContent=m.f;col.append(name,formula);columns.append(col)}
   diff.append(columns);
+  if(p.type==='bond'){
+   const bonds=document.createElement('div');bonds.className='material-bond-compare';
+   const symbols=[p.bondA,p.bondB];
+   for(let index=0;index<2;index++){
+    const bond=document.createElement('span');bond.textContent=symbols[index];bond.setAttribute('aria-label',index===0?'First molecule bond':'Second molecule bond');bonds.append(bond);
+   }
+   diff.append(bonds);
+  }
   const q=document.createElement('p');q.textContent=l.prediction+' '+p.question[idx];diff.append(q);
   const opts=document.createElement('div');opts.className='material-prediction-buttons';let answer=null;
   const feedback=document.createElement('p');feedback.setAttribute('role','status');feedback.className='material-prediction-feedback';feedback.hidden=true;
