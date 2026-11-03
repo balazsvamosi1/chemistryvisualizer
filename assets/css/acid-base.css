@@ -45,3 +45,15 @@
 @media(prefers-reduced-motion:reduce){#abLiquid,#abBuretteFill,#abPhMarker{transition:none}}
 
 @media(max-width:1000px){.ab-layout{grid-template-columns:minmax(0,1fr)!important}.ab-graph,.ab-controls{min-width:0}}
+
+/* 2.6.3: dosing is an actual input, not a detached picture */
+.ab-dose-controls{display:grid;gap:10px;padding:12px;border-radius:10px;background:#153449;border:1px solid #466d82;min-width:0}
+.ab-dose-controls label{font-weight:650;line-height:1.4}
+#abDoseSlider{display:block;box-sizing:border-box;width:100%;min-width:0;padding:0;accent-color:#7ed4e9;cursor:pointer}
+.ab-dose-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;min-width:0}
+.ab-dose-buttons button{box-sizing:border-box;min-width:0;padding:10px 4px;white-space:normal;overflow-wrap:anywhere;line-height:1.3;font-size:13px}
+#abVisual{grid-template-columns:minmax(36px,64px) minmax(82px,138px) minmax(0,1fr);gap:12px}
+#abVisual .ab-visual-information{max-width:100%;overflow-wrap:anywhere}
+#abVisualPhase{overflow-wrap:anywhere;line-height:1.45}
+#abVisualLegend{overflow-wrap:anywhere}
+@media(max-width:660px){#abVisual{grid-template-columns:minmax(35px,60px) minmax(86px,130px);justify-content:center;gap:14px}#abVisual .ab-visual-information{grid-column:1/-1}#abVisual .ab-burette{height:145px}#abVisual .ab-beaker{height:115px}}
