@@ -361,6 +361,17 @@ function ensureMaterialFilters(){let dest=$('materialFilters');if(!dest)return;d
 const materialOpenFamilies=new Set();
 let materialDetailVisible=false;
 function renderMaterials(){
+ const texts={
+  hu:['Válassz egy anyagcsaládot, majd fedezz fel egy anyagot!','Szűrés anyagcsoport szerint','Adatkezelés és JSON-importálás','Anyag vagy képlet keresése…'],
+  de:['Wähle eine Stofffamilie und entdecke ihre Stoffe!','Nach Stoffgruppen filtern','Datenverwaltung und JSON-Import','Stoff oder Formel suchen…'],
+  en:['Choose a material family, then explore a substance!','Filter by material type','Data management and JSON import','Find a material or formula…']
+ };
+ const ui=texts[lang]||texts.hu;
+ $('materialInstructions').textContent=ui[0];
+ $('materialFilterSummary').textContent=ui[1];
+ $('materialImportSummary').textContent=ui[2];
+ $('materialSearch').placeholder=ui[3];
+ $('materialSearch').setAttribute('aria-label',ui[3]);
  const query=$('materialSearch').value.toLocaleLowerCase().trim();
  ensureMaterialFilters();
  const container=$('materialCards'),detail=$('materialDetail'),api=window.ChemistryMaterialFamilies;
