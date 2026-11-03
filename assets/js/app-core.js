@@ -473,6 +473,15 @@ if(window.ChemistryMaterialFamilies){
  dest.append(section);
 }
 if(window.ChemistryDiscovery)window.ChemistryDiscovery.renderMaterial(m,dest,materials,materialSelected,lang);
+if(window.ChemistryMaterialLearning)window.ChemistryMaterialLearning.renderMaterial(m,dest,materials,materialSelected,lang,(index)=>{
+ if(index<0||index>=materials.length)return;
+ materialSelected=index;materialDetailVisible=true;
+ const key=window.ChemistryMaterialFamilies?.family(materials[index])||materials[index].category;
+ materialOpenFamilies.add(key);
+ renderMaterials();
+ const next=$('materialCards').querySelector('.materialTile[data-material-index="'+index+'"]');
+ next?.scrollIntoView({behavior:'auto',block:'nearest'});
+});
 }
 function openMaterialPreset(preset){if(!presetData[preset])return;tab='molecule';render();$('presets').value=preset;requestAnimationFrame(()=>requestAnimationFrame(()=>{centerPreset(preset);const cv=$('molCanvas');cv.scrollIntoView({behavior:'smooth',block:'center'})}))}
 function centerPreset(preset){let p=presetData[preset],cv=$('molCanvas');if(!p||!cv)return;const box=cv.getBoundingClientRect(),w=box.width,h=box.height;if(w<100||h<100)return;
