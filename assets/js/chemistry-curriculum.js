@@ -152,6 +152,7 @@ function jump(id){const dest=$(id);if(!dest)return;const tabId=api.topics.find(x
 function lessonButton(host,q){const b=add(host,'button',t('review')+' ('+t('lesson')+' '+(q.lessonIndex+1)+')');b.type='button';b.addEventListener('click',()=>{topic=q.topic;mode='learn';index=q.lessonIndex;qs=[];checked=false;completed=false;answers=[];render()})}
 function render(){
  for(const v of ['learn','practice','exam']){$('curriculum'+v).textContent=t(v);$('curriculum'+v).setAttribute('aria-pressed',String(mode===v))}
+ $('curriculumTab').textContent=t('title');
  $('curriculumTitle').textContent=t('title');$('curriculumIntro').textContent=t('intro');$('curriculumTopicLabel').textContent=t('topics');$('curriculumOpen').textContent=t('open');$('curriculumLimit').textContent=t('limit');
  const select=$('curriculumTopic'),old=topic;select.replaceChildren();for(const x of api.topics){let op=document.createElement('option');op.value=x.id;op.textContent=x.title[lang()];select.append(op)}if(mode!=='learn'){const option=document.createElement('option');option.value='all';option.textContent=t('all');select.append(option)}if(!Array.from(select.options).some(x=>x.value===old))topic='atoms';select.value=topic;
  $('curriculumOpen').hidden=topic==='all';
@@ -171,5 +172,5 @@ $('curriculumOpen').addEventListener('click',()=>{if(topicSections[topic])jump(t
 $('curriculumCheck').addEventListener('click',()=>{if(!Number.isInteger(answers[index])){$('curriculumFeedback').textContent=t('choose');return}checked=true;render()});
 $('curriculumNext').addEventListener('click',()=>{if(mode==='learn'){index=(index+1)%api.topics.find(x=>x.id===topic).lesson.length;render();return}if(!checked)return;if(index+1===qs.length)completed=true;else{index++;checked=false}render()});
 $('curriculumRestart').addEventListener('click',reset);
-for(const id of ['hu','de','en'])$(id)?.addEventListener('click',render);reset();
+for(const id of ['hu','de','en'])$(id)?.addEventListener('click',()=>{queueMicrotask(render);requestAnimationFrame(render)});reset();
 })();
