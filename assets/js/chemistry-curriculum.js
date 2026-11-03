@@ -1,5 +1,5 @@
 /* Chemistry Lab common education and scientific model disclosures. Apache-2.0. */
-(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.ChemistryCurriculum=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
+(function(root,factory){const api=factory(root);if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.ChemistryCurriculum=api;})(typeof globalThis!=='undefined'?globalThis:this,function(root){
 'use strict';
 const topics=[
 {id:'atoms',tab:'periodTab',title:{hu:'Atomok és periódusos rendszer',de:'Atome und Periodensystem',en:'Atoms and periodic table'},
@@ -118,8 +118,26 @@ academyTopic('speculative','specTab',['Spekulatív modellek tudományos korláta
 [['Egyenlő-e a hipotézis és a bizonyíték?','Sind Hypothese und Beleg identisch?','Is a hypothesis the same as evidence?'],['Nem','Nein','No'],['Igen','Ja','Yes'],['Csak vákuumban','Nur im Vakuum','Only in vacuum']],
 [['Bizonyít-e fázisstabilitást egy paraméter csúszkája?','Beweist ein Schieberegler Phasenstabilität?','Does adjusting a slider prove phase stability?'],['Nem','Nein','No'],['Igen','Ja','Yes'],['Csak alacsony nyomáson','Nur bei wenig Druck','Only at low pressure']]
 ]);
+// The Bunsen Lab is simulation-only; its complete P2 teaching bank lives in Academy.
+const bunsenEducation=(root&&root.BunsenEducation)||(typeof require==='function'?require('./bunsen-education.js'):null);
+if(bunsenEducation){
+ const at=topics.findIndex(t=>t.id==='bunsen');
+ if(at>=0){
+  const levelLabels={
+   basic:{hu:'Bunsen – alapfok (7–8.)',de:'Bunsen – Basis (7–8)',en:'Bunsen – Basic (7–8)'},
+   advanced:{hu:'Bunsen – haladó (9–10.)',de:'Bunsen – Fortgeschritten (9–10)',en:'Bunsen – Advanced (9–10)'},
+   upper:{hu:'Bunsen – Oberstufe (11–13.)',de:'Bunsen – Oberstufe (11–13)',en:'Bunsen – Upper Secondary (11–13)'}
+  };
+  const bunTopics=bunsenEducation.levels.map(level=>({
+   id:'bunsen-'+level,tab:'bunsenTab',title:levelLabels[level],
+   lesson:bunsenEducation.lesson[level],
+   bank:bunsenEducation.bank[level].map((item,i)=>({...item,id:'bunsen-'+level+'-'+i,topic:'bunsen-'+level,lessonIndex:item.lessonIndex}))
+  }));
+  topics.splice(at,1,...bunTopics);
+ }
+}
 function shuffle(arr,rng=Math.random){const x=arr.slice();for(let i=x.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
-function session(id,exam=false,rng=Math.random){const set=id==='all'?topics.flatMap(t=>t.bank.map(q=>({...q,topic:t.id}))):topics.find(x=>x.id===id)?.bank.map(q=>({...q,topic:id}))||[];const count=id==='all'?(exam?12:8):(exam?4:3);const selected=id==='all'&&exam?[...topics.map(t=>({...shuffle(t.bank,rng)[0],topic:t.id})),...shuffle(set,rng)].filter((q,i,a)=>a.findIndex(x=>x.id===q.id)===i).slice(0,count):shuffle(set,rng).slice(0,count);return selected.map(q=>{const ord=shuffle([0,1,2],rng);return {...q,choices:Object.fromEntries(locales.map(l=>[l,ord.map(i=>q.choices[l][i])])),answer:ord.indexOf(q.answer)}})}
+function session(id,exam=false,rng=Math.random){const set=id==='all'?topics.flatMap(t=>t.bank.map(q=>({...q,topic:t.id}))):topics.find(x=>x.id===id)?.bank.map(q=>({...q,topic:id}))||[];const count=id==='all'?(exam?14:10):(id.startsWith('bunsen-')?(exam?10:6):(exam?4:3));const selected=id==='all'&&exam?[...shuffle(topics.map(t=>({...shuffle(t.bank,rng)[0],topic:t.id})),rng),...shuffle(set,rng)].filter((q,i,a)=>a.findIndex(x=>x.id===q.id)===i).slice(0,count):shuffle(set,rng).slice(0,count);return selected.map(q=>{const ord=shuffle([0,1,2],rng);return {...q,choices:Object.fromEntries(locales.map(l=>[l,ord.map(i=>q.choices[l][i])])),answer:ord.indexOf(q.answer)}})}
 function grade(qs,answers){const correct=qs.filter((q,i)=>q.answer===answers[i]).length;return{correct,total:qs.length,percent:qs.length?Math.round(correct*100/qs.length):0,missed:qs.filter((q,i)=>q.answer!==answers[i])}}
 return Object.freeze({topics,locales,session,grade});
 });
@@ -130,7 +148,7 @@ const tr={hu:{title:'Kémia Akadémia',intro:'Válassz témát, tanuld meg a lec
 let topic='atoms',mode='learn',index=0,answers=[],checked=false,completed=false,qs=[];
 const lang=()=>['hu','de','en'].find(x=>$(x)?.classList.contains('active'))||'hu',t=k=>tr[lang()][k],add=(node,tag,str,cls)=>{const n=document.createElement(tag);n.textContent=str;if(cls)n.className=cls;node.append(n);return n};
 function reset(){index=0;answers=[];checked=false;completed=false;qs=mode==='learn'?[]:api.session(topic,mode==='exam');render()}
-function jump(id){const dest=$(id);if(!dest)return;document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden'));document.querySelectorAll('.tabs > button').forEach(b=>b.classList.remove('active'));dest.classList.remove('hidden');$(api.topics.find(x=>x.id===topic)?.tab)?.classList.add('active')}
+function jump(id){const dest=$(id);if(!dest)return;const tabId=api.topics.find(x=>x.id===topic)?.tab;if(tabId&&window.ChemistryNavigation){$(tabId)?.click();window.ChemistryNavigation.activate(tabId);return}document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden'));document.querySelectorAll('.tabs > button').forEach(b=>b.classList.remove('active'));dest.classList.remove('hidden');$(tabId)?.classList.add('active')}
 function lessonButton(host,q){const b=add(host,'button',t('review')+' ('+t('lesson')+' '+(q.lessonIndex+1)+')');b.type='button';b.addEventListener('click',()=>{topic=q.topic;mode='learn';index=q.lessonIndex;qs=[];checked=false;completed=false;answers=[];render()})}
 function render(){
  for(const v of ['learn','practice','exam']){$('curriculum'+v).textContent=t(v);$('curriculum'+v).setAttribute('aria-pressed',String(mode===v))}
@@ -148,7 +166,7 @@ function render(){
 }
 function show(){document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden'));document.querySelectorAll('.tabs > button').forEach(b=>b.classList.remove('active'));sec.classList.remove('hidden');tab.classList.add('active');render()}
 tab.addEventListener('click',show);$('curriculumTopic').addEventListener('change',e=>{topic=e.target.value;reset()});for(const v of ['learn','practice','exam'])$('curriculum'+v).addEventListener('click',()=>{mode=v;reset()});
-const topicSections={atoms:'periodSection',bonds:'moleculeSection',stoich:'stoichSection',acids:'acidBaseSection',bunsen:'bunsenSection',quest:'gameSection',hunt:'huntSection',materials:'materialsSection',physics:'physicsSection',speculative:'specSection'};
+const topicSections={atoms:'periodSection',bonds:'moleculeSection',stoich:'stoichSection',acids:'acidBaseSection',quest:'gameSection',hunt:'huntSection',materials:'materialsSection',physics:'physicsSection',speculative:'specSection','bunsen-basic':'bunsenSection','bunsen-advanced':'bunsenSection','bunsen-upper':'bunsenSection'};
 $('curriculumOpen').addEventListener('click',()=>{if(topicSections[topic])jump(topicSections[topic])});
 $('curriculumCheck').addEventListener('click',()=>{if(!Number.isInteger(answers[index])){$('curriculumFeedback').textContent=t('choose');return}checked=true;render()});
 $('curriculumNext').addEventListener('click',()=>{if(mode==='learn'){index=(index+1)%api.topics.find(x=>x.id===topic).lesson.length;render();return}if(!checked)return;if(index+1===qs.length)completed=true;else{index++;checked=false}render()});
