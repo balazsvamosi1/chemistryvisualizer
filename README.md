@@ -307,3 +307,13 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Element Hunt question and feedback text now supports English in addition to Hungarian and German.
 - Added static integration regression assertions in `tests/academy-hunt.test.cjs` (run with `node --test tests/academy-hunt.test.cjs`). Full-browser verification is still outstanding.
 - This release **does not integrate RDKit.js or another third-party engine**. Candidate libraries require dependency/license verification and a verified, locally served browser distribution before deployment.
+
+
+## Chemistry Lab 2.7.0 — Molecule learning workshop
+- Adds an original, Apache-2.0-compatible, client-side molecular analysis panel inside Molecule Builder: empirical atom counts, molecular formula, approximate molar mass, disconnected component count, and simplified covalent valence warnings.
+- Adds an interactive molar-mass question with answer feedback in Hungarian, German and English.
+- Reads a snapshot of the existing builder's atoms and bonds without replacing its editor or rendering engine.
+- Runs entirely on GitHub Pages without network requests or server-side computation. No BSD-3, GPL, LGPL or AGPL dependencies are bundled or fetched.
+- New tests: `node --test tests/molecule-learning.test.cjs tests/academy-hunt.test.cjs`. These tests have been authored but were not executed in this environment; full browser regression testing remains outstanding.
+- Kekule.js (MIT) was reviewed but **not bundled**: its optional Open Babel integration introduces GPL license concerns, and the exact distributable dependency closure has not yet been audited. The shipped learning module is original code with no external chemistry engine.
+- Limitations: simple bond-order and valence checks are not a full chemical structure validator; formal charges, aromaticity, stereochemistry, radicals and implicit hydrogen counts are not resolved. Molar mass uses a small reference table and displayed formula counts explicitly modeled atoms only.
