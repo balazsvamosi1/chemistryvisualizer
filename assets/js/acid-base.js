@@ -5,8 +5,15 @@ const Kw=1e-14;
 const reagents={
  HCl:{type:'strong-acid',hu:'Sósav (HCl)',de:'Salzsäure (HCl)',en:'Hydrochloric acid (HCl)'},
  HNO3:{type:'strong-acid',hu:'Salétromsav (HNO₃)',de:'Salpetersäure (HNO₃)',en:'Nitric acid (HNO₃)'},
+ HBr:{type:'strong-acid',hu:'Hidrogén-bromid-oldat (HBr)',de:'Bromwasserstoffsäure (HBr)',en:'Hydrobromic acid (HBr)'},
+ HCOOH:{type:'weak-acid',ka:1.8e-4,hu:'Hangyasav (HCOOH)',de:'Ameisensäure (HCOOH)',en:'Formic acid (HCOOH)'},
+ C3H6O3:{type:'weak-acid',ka:1.38e-4,hu:'Tejsav (C₃H₆O₃)',de:'Milchsäure (C₃H₆O₃)',en:'Lactic acid (C₃H₆O₃)'},
+ C3H6O2:{type:'weak-acid',ka:1.3e-5,hu:'Propionsav (C₃H₆O₂)',de:'Propionsäure (C₃H₆O₂)',en:'Propionic acid (C₃H₆O₂)'},
  NaOH:{type:'strong-base',hu:'Nátrium-hidroxid (NaOH)',de:'Natronlauge (NaOH)',en:'Sodium hydroxide (NaOH)'},
  KOH:{type:'strong-base',hu:'Kálium-hidroxid (KOH)',de:'Kalilauge (KOH)',en:'Potassium hydroxide (KOH)'},
+ LiOH:{type:'strong-base',hu:'Lítium-hidroxid (LiOH)',de:'Lithiumhydroxid (LiOH)',en:'Lithium hydroxide (LiOH)'},
+ CH3NH2:{type:'weak-base',kb:4.38e-4,hu:'Metil-amin (CH₃NH₂)',de:'Methylamin (CH₃NH₂)',en:'Methylamine (CH₃NH₂)'},
+ C5H5N:{type:'weak-base',kb:1.8e-9,hu:'Piridin (C₅H₅N)',de:'Pyridin (C₅H₅N)',en:'Pyridine (C₅H₅N)'},
  CH3COOH:{type:'weak-acid',ka:1.8e-5,hu:'Ecetsav (CH₃COOH)',de:'Essigsäure (CH₃COOH)',en:'Acetic acid (CH₃COOH)'},
  NH3:{type:'weak-base',kb:1.8e-5,hu:'Ammónia (NH₃)',de:'Ammoniak (NH₃)',en:'Ammonia (NH₃)'}
 };
