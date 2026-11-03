@@ -205,3 +205,21 @@
  #materialsSection .material-family-cell>strong{font-size:clamp(.7rem,2.7vw,.94rem)}
  #materialsSection .material-family-cell>small{font-size:.7rem;margin-top:2px}
 }
+
+
+/* Beta 2.9.8: educational interactive chemical structure preview */
+#materialsSection .material-preview-section{margin:12px 0;min-width:0}
+#materialsSection .material-2d-viewer{display:grid;gap:9px;min-width:0;padding:12px;border:1px solid #638d9f;background:#102b3d;border-radius:12px}
+#materialsSection .material-2d-viewer>strong{font-size:1rem;line-height:1.4}
+#materialsSection .material-structure-svg{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:600/290;min-height:150px;background:#0a2234;border:1px solid #3e6981;border-radius:9px;touch-action:none;cursor:grab}
+#materialsSection .material-structure-svg:active{cursor:grabbing}
+#materialsSection .material-structure-svg:focus-visible{outline:3px solid #aae9d9;outline-offset:2px}
+#materialsSection .material-preview-controls{display:flex;align-items:center;justify-content:center;gap:10px}
+#materialsSection .material-preview-controls>button{min-width:44px;min-height:44px;border:1px solid #6d9db0;border-radius:8px;background:#1b465e;color:#eaf8fd;font-size:1.3rem;cursor:pointer}
+#materialsSection .material-preview-controls>button:hover,#materialsSection .material-preview-controls>button:focus-visible{background:#276179;outline:2px solid #a6e7d5}
+#materialsSection .material-2d-viewer>small{line-height:1.5;color:#c4dae7}
+#materialsSection .material-dual-preview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+#materialsSection .material-dual-preview-cell{min-width:0}
+#materialsSection .material-dual-preview-cell .material-2d-viewer{padding:8px}
+@media(max-width:640px){#materialsSection .material-dual-preview{grid-template-columns:1fr}#materialsSection .material-structure-svg{min-height:130px}}
+@media(prefers-reduced-motion:reduce){#materialsSection .material-structure-svg{scroll-behavior:auto}}
