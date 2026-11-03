@@ -327,3 +327,17 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - All code remains own Apache-2.0 code. No MIT/BSD-3/GPL/AGPL external packages added.
 - Added `tests/focused-learning.test.cjs`. Pure inverse-solver cases were executed in the JavaScript runtime and succeeded; full Node tests, mobile-browser regressions and accessibility testing are still pending.
 - Navigation/interactivity 9/10 is a design **target**, not a validated score from real students.
+
+
+## Beta 2.8.1 — Interactive pH colour strip (2026-11-03)
+- The visible colored pH scale inside Acid–Base Lab is now the **actual target-pH control**, supporting click, pointer dragging, touch dragging and keyboard (Arrow, Page Up/Down, Home/End) interaction. The redundant target-pH range slider was removed; the precise number field remains available.
+- White marker represents requested target pH; a separate darker marker represents calculated current pH. An adjacent localized readout explicitly distinguishes the two.
+- Releasing a pointer or adjusting via keyboard immediately runs the existing inverse titration calculation and updates dose, indicator, beaker and graph when reachable; unsupported target values remain visibly unreachable.
+- Added `tests/ph-scale-ui.test.cjs` static integration/chemistry regression checks. Verified syntax and 15 numerical reverse-pH cases (strong acid/base, weak acid, weak base) using the JavaScript runtime; full DOM integration and live mobile/browser testing remain pending.
+- No external dependencies added. Apache-2.0 only; no BSD-3, GPL, LGPL or AGPL code.
+
+### Student-first UI audit notes
+- Positive: four learning-area entry points, interactive 3D models, clear colorful pH feedback, accessible input modalities, embedded Element Hunt, short acid-base prediction missions.
+- Priority issues: two simultaneously visible navigation systems plus fixed footer may overwhelm new learners; lessons rely heavily on short text and three-option multiple-choice questions; mission prompts and rewards are limited; some labs expose many settings before explaining what to do; color/shape alone must not convey correctness; diagrams need controls and labels placed together; mobile/browser accessibility must be validated in a real browser.
+- Target user experience: one main action per scene; discover/predict/try/explain mini loops; progressive reveal of advanced controls; no time pressure or forced animation; optional reduced-motion accommodations.
+- Navigation 9/10 and interactivity 9/10 remain desired student-evaluation targets, not measured results.
