@@ -386,3 +386,10 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - The individual material squares still display their own chemical formula and name. Existing educational comparisons, discovery prompts and JSON import/export remain untouched.
 - The application code and stylesheet include versioned asset URLs to avoid stale GitHub Pages browser caches.
 - Syntax and source-level invariants checked; no live browser interaction test has been performed.
+
+
+## Beta 2.9.7 — Fixed vanishing Material Library and structure-model access
+- Root cause: the `#materialDetail` DOM node was moved inside the dynamic family grid, then removed together with the grid when the family changed. Subsequent `getElementById` calls returned null and aborted the UI render. The node now returns to a stable position whenever its content closes, and an absent node is recreated defensively.
+- The material grid is built in a detached `DocumentFragment` and only swaps into the page after construction, preventing a partial redraw from leaving an empty catalogue. A responsive-column fallback is available without `matchMedia`.
+- Material 2D/interactive structural views are still present. The 'open structure' action now explicitly activates the modern Molecule tab before centering the selected structure.
+- Added regression assertions for detail-node preservation, structure-tab activation and defensive rendering. Validated JavaScript syntax and source-level invariants; live browser/mobile E2E regression not yet run.
