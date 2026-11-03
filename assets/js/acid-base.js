@@ -73,6 +73,11 @@ function updateVisual(result,color){
  $('abBuretteFill').style.height=Math.round((1-degree)*73)+'%';
  $('abDrop').style.opacity=result.addedMl>0?'1':'0.25';
 }
+function blendHex(a,b,t){const A=a.match(/[\da-f]{2}/gi).map(v=>parseInt(v,16)),B=b.match(/[\da-f]{2}/gi).map(v=>parseInt(v,16));return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*Math.max(0,Math.min(1,t))).toString(16).padStart(2,'0')).join('')}
+function displayedIndicator(ph,id){const ind=engine.indicators[id];if(!ind)return '#777';const start=ind.range[0],end=ind.range[1];return blendHex(ind.acid,ind.base,(ph-start)/(end-start))}
+function syncDoseSlider(){const value=Math.max(0,Number($('abadded').value)||0),options=read();let eq=25;try{eq=engine.solve({...options,addedMl:0}).equivalenceMl}catch{}const range=Math.max(10,Math.ceil(Math.max(eq*2,value)/5)*5);$('abDoseSlider').max=String(Math.min(5000,range));$('abDoseSlider').value=String(value)}
+function setDose(amount){$('abadded').value=Math.max(0,Math.min(5000,Math.round(amount*10)/10));update()}
+function autoCompatible(changed){const a=engine.reagents[$('abanalyte').value],t=engine.reagents[$('abtitrant').value];if(!a||!t||a.type.includes('acid')!==t.type.includes('acid'))return;if(changed==='analyte')$('abtitrant').value=a.type.includes('acid')?'NaOH':'HCl';else $('abanalyte').value=t.type.includes('acid')?'NaOH':'HCl'}
 const fields=['analyte','analyteM','volume','titrant','titrantM','added','indicator'];
 const select=(id,map)=>{const el=$('ab'+id);el.replaceChildren();for(const [k,val] of Object.entries(map)){const o=document.createElement('option');o.value=k;o.textContent=val[lang()]||k;el.append(o)}};
 const form={analyte:'HCl',analyteM:0.1,analyteMl:25,titrant:'NaOH',titrantM:0.1,addedMl:0};
@@ -90,16 +95,21 @@ function draw(series,current){const canvas=$('abCanvas'),rect=canvas.getBounding
 function localize(){const save={a:$('abanalyte').value,t:$('abtitrant').value,i:$('abindicator').value};select('analyte',engine.reagents);select('titrant',engine.reagents);select('indicator',engine.indicators);$('abanalyte').value=save.a;$('abtitrant').value=save.t;$('abindicator').value=save.i;
  $('abTitle').textContent=tr('title');$('abIntro').textContent=tr('intro');$('abNotice').textContent=tr('notice');$('abGraphLabel').textContent=tr('graph');
  for(const key of fields)$('abLabel'+key).textContent=tr(key);
- $('abEqButton').textContent=tr('reset');update();}
+ $('abEqButton').textContent=tr('reset');$('abDoseSliderLabel').textContent=tr('added');update();}
 function update(){try{const opts=read(),result=engine.solve(opts),series=engine.curve(opts),color=engine.indicatorColor(result.pH,$('abindicator').value);
  $('abPH').textContent=tr('ph')+': '+result.pH.toFixed(2);$('abEq').textContent=tr('eq')+': '+result.equivalenceMl.toFixed(2)+' mL';
- $('abIndicatorColor').style.background=color.includes(' → ')?'linear-gradient(90deg,'+color.split(' → ').join(',')+')':color;
+ const indicatorShade=displayedIndicator(result.pH,$('abindicator').value);
+ $('abIndicatorColor').style.background=indicatorShade;
  $('abStatus').textContent=tr('indicatorShade')+': '+engine.indicators[$('abindicator').value][lang()];
- $('abStatus').dataset.state='ok';updateVisual(result,color);draw(series,result);
+ $('abStatus').dataset.state='ok';updateVisual(result,indicatorShade);syncDoseSlider();draw(series,result);
  }catch(e){$('abPH').textContent='—';$('abEq').textContent='—';$('abStatus').textContent=tr('error');$('abStatus').dataset.state='error'}}
-for(const key of fields)$('ab'+key).addEventListener('input',update);
+for(const key of fields)$('ab'+key).addEventListener('input',()=>{if(key==='analyte'||key==='titrant')autoCompatible(key);update()});
+$('abDoseSlider').addEventListener('input',e=>setDose(Number(e.target.value)));
+$('abDoseMinus').addEventListener('click',()=>setDose((Number($('abadded').value)||0)-1));
+$('abDosePlus').addEventListener('click',()=>setDose((Number($('abadded').value)||0)+1));
+$('abDoseReset').addEventListener('click',()=>setDose(0));
 $('abEqButton').addEventListener('click',()=>{try{const value=engine.solve({...read(),addedMl:0}).equivalenceMl;$('abadded').value=value;update()}catch{update()}});
 tab.addEventListener('click',()=>{document.querySelectorAll('main > section').forEach(n=>n.classList.add('hidden'));document.querySelectorAll('.tabs > button').forEach(n=>n.classList.remove('active'));section.classList.remove('hidden');tab.classList.add('active');localize()});
-for(const l of ['hu','de','en'])$(l)?.addEventListener('click',localize);
+for(const l of ['hu','de','en'])$(l)?.addEventListener('click',()=>{queueMicrotask(localize);requestAnimationFrame(localize)});
 localize();
 })();
