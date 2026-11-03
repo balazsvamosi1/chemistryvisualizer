@@ -43,3 +43,5 @@
 #abPhMarker{position:absolute;top:-7px;left:50%;height:35px;width:5px;background:#fff;box-shadow:0 0 4px #000;border:1px solid #07121d;border-radius:3px;transform:translateX(-50%);transition:left .18s}
 @media(max-width:650px){#abVisual{grid-template-columns:45px 100px;gap:12px;min-height:0;padding:12px}#abVisual .ab-burette{height:140px;width:29px}#abVisual .ab-beaker{height:110px}#abVisual .ab-visual-information{grid-column:1/-1;text-align:center;gap:8px}.ab-layout{grid-template-columns:minmax(0,1fr)!important}}
 @media(prefers-reduced-motion:reduce){#abLiquid,#abBuretteFill,#abPhMarker{transition:none}}
+
+@media(max-width:1000px){.ab-layout{grid-template-columns:minmax(0,1fr)!important}.ab-graph,.ab-controls{min-width:0}}
