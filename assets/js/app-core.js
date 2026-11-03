@@ -403,7 +403,7 @@ function renderMaterials(){
     const same=materialDetailVisible&&materialSelected===i;
     materialSelected=i;
     materialDetailVisible=!same;
-    for(const button of tiles.querySelectorAll('.materialTile')){
+    for(const button of container.querySelectorAll('.materialTile')){
      const active=button===b&&materialDetailVisible;
      button.classList.toggle('selected',active);
      button.setAttribute('aria-expanded',String(active));
@@ -415,9 +415,18 @@ function renderMaterials(){
   }
   family.append(tiles);
   family.addEventListener('toggle',()=>{
-   if(family.open)materialOpenFamilies.add(key);else{
+   if(family.open){
+    if(!query)materialOpenFamilies.add(key);
+   }else{
     materialOpenFamilies.delete(key);
-    if(detail.parentElement===family){detail.hidden=true;materialDetailVisible=false}
+    if(detail.parentElement===family){
+     detail.hidden=true;
+     materialDetailVisible=false;
+     for(const button of tiles.querySelectorAll('.materialTile')){
+      button.classList.remove('selected');
+      button.setAttribute('aria-expanded','false');
+     }
+    }
    }
   });
   container.append(family);
