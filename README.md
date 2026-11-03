@@ -290,3 +290,11 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - A shared navigation controller enforces one visible top-level laboratory at a time; the Reaction Lab stays nested and visible within Molecule Builder only. The tab bar stays accessible when scrolling, with a fixed bottom previous/next switcher.
 - Text layout is responsive and allows long content to wrap. Acid–Base Lab gains a dynamic burette/beaker illustration, indicator colour, approximate pH scale marker and accessible acidic/neutral/basic labels. The existing analytical titration model is unchanged.
 - Verified **26/26** Bunsen + Academy targeted headless tests. A separate simulated DOM navigation check confirmed exclusive visibility across Bunsen, Molecule Builder, Acid–Base, Academy, Quest and Periodic Table. Browser visual testing on real devices remains outstanding. CI remains intentionally disabled.
+
+
+## Chemistry Lab 2.6.3 — user-reported UI corrections (2026-11-03)
+- Atom viewer: Bohr/Quantum/Scientific mode controls are positioned **above the atom canvas** instead of underneath the illustration; the instructional/model-accuracy text is now in normal document flow rather than layered over the animated atom.
+- Long headings, labels and explanatory text are allowed to wrap; existing absolute atom-view overlays have been disabled with targeted CSS rules.
+- Chemistry Academy label translates as *Kémia Akadémia / Chemie-Akademie / Chemistry Academy*, including after the global language buttons are used.
+- Acid–Base Lab adds a titrant-volume slider, ±1 mL controls and a reset-to-zero button; all are wired to the same validated pH/titration solver as the numeric entry. Choosing incompatible analyte/titrant types automatically changes the opposite reagent. Beaker colour is smoothly interpolated within the chosen indicator's transition range; the pH marker and graph update with dosing, including volumes above twice equivalence.
+- Checked representative HCl/NaOH 0.1 M pH values, explicit UI event simulations (dose slider, plus/minus/reset and switch to ammonia), live Academy language-selection simulations, and 26/26 pre-existing targeted tests. Complete real-browser visual and mobile layout testing remain outstanding.
