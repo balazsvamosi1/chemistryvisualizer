@@ -351,3 +351,12 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - **Element Hunt:** 100 additional 3-language factual questions derived from the existing 118-element catalog, giving 108 question records total. Correct choices are checked against the same local catalog, and all 100 new prompts are unique.
 - **Chemistry Quest remains untouched.** No external dependencies added, all new code Apache-2.0-compatible; GitHub Pages continues without a backend.
 - Added `tests/material-families-discovery.test.cjs` and performed JavaScript syntax checks and direct module-data verification. Full Node/browser UI testing is still outstanding.
+
+
+## Beta 2.9.1 — Material Library accordion
+- All 17 chemical families are collapsed by default, showing only descriptive group names and item counts.
+- Expanding one family shows only its related material tiles; multiple families may be opened independently.
+- Selecting an item now opens its material details immediately below the tile grid inside the selected family, with no automatic scroll to the bottom of the library. Clicking the same tile again closes details.
+- Search filters items and temporarily opens matching groups; the saved open/closed state of normal browsing is retained.
+- Existing JSON import, scientific descriptions, discovery cards, and structure model actions are unchanged.
+- Added a dedicated regression test file `tests/material-collapsible-ui.test.cjs` and verified syntax of changed JavaScript/test files. Real-browser mobile interaction testing has not yet been performed.
