@@ -19,7 +19,7 @@ test('Bunsen and other laboratories never remain simultaneously visible',()=>{
  for(const tab of ['bunsenTab','acidBaseTab','curriculumTab','gameTab','periodTab']){
   nodes[tab].click();
   const visible=Object.values(panels).filter(section=>!nodes[section].classList.contains('hidden'));
-  assert.deepEqual(visible,[panels[tab]]);
+  assert.deepEqual(visible,tab==='moleculeTab'?[panels.moleculeTab,panels.reactionTab]:[panels[tab]]);
  }
  assert(footer);assert.equal(footer.children.length,3);
 });
