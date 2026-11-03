@@ -360,3 +360,13 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Search filters items and temporarily opens matching groups; the saved open/closed state of normal browsing is retained.
 - Existing JSON import, scientific descriptions, discovery cards, and structure model actions are unchanged.
 - Added a dedicated regression test file `tests/material-collapsible-ui.test.cjs` and verified syntax of changed JavaScript/test files. Real-browser mobile interaction testing has not yet been performed.
+
+
+## Beta 2.9.4 — Student-centered Material Library browsing (2026-11-03)
+- Refined after reviewing [PubChem structure searches](https://pubchem.ncbi.nlm.nih.gov/docs/structure-search) and [MolView's 2D/3D split viewer](https://molview.com/): make related chemistry easy to discover and compare without loading third-party code or presenting the catalog as an algorithmic similarity search.
+- Material details open **directly after the clicked tile inside the same family grid**, spanning the available width. The page does not automatically jump to the end of a family.
+- The primary interface now offers a search field, collapsed chemical families and a short discovery prompt. Category filters and JSON import/export remain available behind optional disclosure controls.
+- Ten curated compound pairs include explanatory comparisons (alkanes/alkenes/alkynes, alcohols, graphite/diamond, table salt/bicarbonate, peroxide/water, acids, polymers). Changes in bonds are emphasized using symbolic side-by-side panels when applicable.
+- Related substances are prioritized for comparison. A short, two-option prediction question reveals correct scientific reasoning **only after the student answers**. Complex details are still optional.
+- Every user-facing added label is available in HU/DE/EN; it is an offline, static GitHub Pages deployment. All added code is original and Apache-2.0-compatible, with no new dependencies.
+- Code-level JS syntax and direct module-data checks were performed. Browser interaction, accessibility and end-to-end test suite execution remain to be verified.
