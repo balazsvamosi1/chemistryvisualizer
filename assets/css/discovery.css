@@ -83,3 +83,34 @@
 #materialsSection #materialDetail[hidden],
 #materialsSection .material-family-group:not([open])>.material-family-tiles,
 #materialsSection .material-family-group:not([open])>#materialDetail{display:none!important}
+
+
+/* Beta 2.9.3: in-row card details and related-structure guided learning */
+#materialsSection .material-family-tiles > #materialDetail {
+ grid-column:1/-1;
+ min-width:0;
+ margin:5px 0 10px;
+ padding:15px;
+ border:1px solid #6a9fb4;
+ border-left:4px solid #77d9d0;
+ border-radius:11px;
+ background:#0d2a3d;
+ overflow-wrap:anywhere;
+}
+#materialsSection #materialDetail[hidden] {display:none!important}
+#materialsSection .material-learning{display:grid;gap:12px;margin-top:14px;padding:15px;border-radius:12px;border:1px solid #527d95;background:#13384d}
+#materialsSection .material-learning h4{font-size:1.05rem;margin:0}
+#materialsSection .material-learning p{margin:0;line-height:1.5}
+#materialsSection .material-recommendations{display:flex;flex-wrap:wrap;gap:9px}
+#materialsSection .material-recommendations button,#materialsSection .material-prediction-buttons button{min-height:44px;white-space:normal;border-radius:9px;padding:9px 12px;background:#19445d;border:1px solid #6a9fb4;color:#f1f9ff;cursor:pointer}
+#materialsSection .material-recommendations button:hover,#materialsSection .material-recommendations button:focus-visible{border-color:#9de4e5;background:#23546b}
+#materialsSection .material-difference{padding:12px;background:#0a293c;border:1px solid #557e97;border-radius:10px}
+#materialsSection .material-difference summary{cursor:pointer;font-weight:700;padding:5px;min-height:32px}
+#materialsSection .material-structure-compare,#materialsSection .material-bond-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:9px 0}
+#materialsSection .material-structure-compare>div{display:grid;gap:5px;text-align:center;border-radius:9px;background:#1c455e;padding:12px}
+#materialsSection .material-structure-compare span{font-size:1.4rem;font-weight:700}
+#materialsSection .material-bond-compare span{border:1px solid #6294a5;border-radius:8px;text-align:center;font-size:1.55rem;font-weight:700;padding:6px;background:#173d52}
+#materialsSection .material-prediction-buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+#materialsSection .material-prediction-buttons button[aria-pressed="true"]{background:#285f63;outline:2px solid #95e0d1}
+#materialsSection .material-prediction-feedback{padding:10px;border-left:3px solid #80d4ca;background:#194459}
+@media(max-width:520px){#materialsSection .material-family-tiles > #materialDetail{padding:10px}#materialsSection .material-recommendations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
