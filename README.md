@@ -370,3 +370,11 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Related substances are prioritized for comparison. A short, two-option prediction question reveals correct scientific reasoning **only after the student answers**. Complex details are still optional.
 - Every user-facing added label is available in HU/DE/EN; it is an offline, static GitHub Pages deployment. All added code is original and Apache-2.0-compatible, with no new dependencies.
 - Code-level JS syntax and direct module-data checks were performed. Browser interaction, accessibility and end-to-end test suite execution remain to be verified.
+
+
+## Beta 2.9.5 — Periodic-table-style Material Family map
+- Replaced redundant category filters and long collapsible family bars with 17 color-accented **square category cells**, laid out in a compact responsive grid (six columns on desktop, three on narrow phones).
+- Each cell uses a short educational chemical mnemonic, family name and count. These mnemonics are category labels **not periodic-table element symbols or a claim of periodic regularity**.
+- Selecting a family shows its materials in a single expanded panel below the category grid; selecting a material opens its detailed science and comparison immediately after the selected material tile.
+- Search, curated related materials, prediction-first questions, advanced descriptions and optional JSON import/export remain. No new runtime dependencies; all original Apache-2.0-compatible code works as a static GitHub Pages site.
+- Static JavaScript syntax and source-level regression assertions checked; browser-level/mobile visual verification remains outstanding.
