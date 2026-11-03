@@ -378,3 +378,11 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Selecting a family shows its materials in a single expanded panel below the category grid; selecting a material opens its detailed science and comparison immediately after the selected material tile.
 - Search, curated related materials, prediction-first questions, advanced descriptions and optional JSON import/export remain. No new runtime dependencies; all original Apache-2.0-compatible code works as a static GitHub Pages site.
 - Static JavaScript syntax and source-level regression assertions checked; browser-level/mobile visual verification remains outstanding.
+
+
+## Beta 2.9.6 — Family-square labels and local expansion
+- Material-family square tiles now contain **only the chemical family name and number of listed materials**, not an arbitrary example molecular formula.
+- Selecting a family inserts the expanded materials area immediately **after the visual grid row of the clicked square**, rather than below every family square. Responsive calculation matches six/five/three columns at the CSS breakpoints.
+- The individual material squares still display their own chemical formula and name. Existing educational comparisons, discovery prompts and JSON import/export remain untouched.
+- The application code and stylesheet include versioned asset URLs to avoid stale GitHub Pages browser caches.
+- Syntax and source-level invariants checked; no live browser interaction test has been performed.
