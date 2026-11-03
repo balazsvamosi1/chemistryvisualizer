@@ -317,3 +317,13 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - New tests: `node --test tests/molecule-learning.test.cjs tests/academy-hunt.test.cjs`. These tests have been authored but were not executed in this environment; full browser regression testing remains outstanding.
 - Kekule.js (MIT) was reviewed but **not bundled**: its optional Open Babel integration introduces GPL license concerns, and the exact distributable dependency closure has not yet been audited. The shipped learning module is original code with no external chemistry engine.
 - Limitations: simple bond-order and valence checks are not a full chemical structure validator; formal charges, aromaticity, stereochemistry, radicals and implicit hydrogen counts are not resolved. Molar mass uses a small reference table and displayed formula counts explicitly modeled atoms only.
+
+
+## Beta 2.8.0 — Student-first focus, target pH and Bunsen diagram
+- Student-first, reduced-clutter navigation: four localized learning areas (Explore / Experiments / Learn & Play / Advanced) reveal only their relevant lab tabs, while the existing previous/next footer remains available.
+- Acid–Base Lab: inverse pH target calculator (0–14), synchronized slider and numeric input, computed titrant volume applied to the existing beaker, indicator and titration curve. The inverse uses the same 25 °C monoprotic charge-balance engine as the forward calculation. Unreachable targets are reported rather than invented.
+- Guided interactive mini missions: choose acidic/basic/neutral **before** calculating, then get feedback. No time pressure and no external services.
+- Bunsen burner parts 1–5 and their descriptions are displayed immediately below the numbered burner SVG, with existing selection behavior retained.
+- All code remains own Apache-2.0 code. No MIT/BSD-3/GPL/AGPL external packages added.
+- Added `tests/focused-learning.test.cjs`. Pure inverse-solver cases were executed in the JavaScript runtime and succeeded; full Node tests, mobile-browser regressions and accessibility testing are still pending.
+- Navigation/interactivity 9/10 is a design **target**, not a validated score from real students.
