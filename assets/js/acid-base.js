@@ -159,14 +159,14 @@ function localize(){const save={a:$('abanalyte').value,t:$('abtitrant').value,i:
  $('abEqButton').textContent=tr('reset');$('abDoseSliderLabel').textContent=tr('added');
  $('abTargetTitle').textContent=mt('targetTitle');$('abTargetIntro').textContent=mt('targetIntro');$('abTargetLabel').textContent=mt('targetLabel');$('abTargetSolve').textContent=mt('targetAction');
  $('abInteractiveScale').setAttribute('aria-label',mt('targetLabel'));
- syncTargetUI(targetRead());
+ const requested=Number($('abTargetPH').value);if($('abTargetPH').value.trim()!==''&&Number.isFinite(requested)&&requested>=0&&requested<=14)syncTargetUI(requested);
  missionRefresh();update();}
 function update(){try{const opts=read(),result=engine.solve(opts);let series=engine.curve(opts);if(opts.addedMl>series[series.length-1].addedMl){const end=opts.addedMl*1.05;series=Array.from({length:121},(_,i)=>engine.solve({...opts,addedMl:end*i/120}))}const color=engine.indicatorColor(result.pH,$('abindicator').value);
  $('abPH').dataset.value=result.pH.toFixed(2); $('abPH').textContent=tr('ph')+': '+result.pH.toFixed(2);$('abEq').textContent=tr('eq')+': '+result.equivalenceMl.toFixed(2)+' mL';
  const indicatorShade=displayedIndicator(result.pH,$('abindicator').value);
  $('abIndicatorColor').style.background=indicatorShade;
  $('abStatus').textContent=tr('indicatorShade')+': '+engine.indicators[$('abindicator').value][lang()];
- $('abStatus').dataset.state='ok';updateVisual(result,indicatorShade);syncDoseSlider();syncTargetUI(targetRead());draw(series,result);
+ $('abStatus').dataset.state='ok';updateVisual(result,indicatorShade);syncDoseSlider();const requested=Number($('abTargetPH').value);if($('abTargetPH').value.trim()!==''&&Number.isFinite(requested)&&requested>=0&&requested<=14)syncTargetUI(requested);draw(series,result);
  }catch(e){$('abPH').textContent='—';$('abEq').textContent='—';$('abStatus').textContent=tr('error');$('abStatus').dataset.state='error'}}
 for(const key of fields)$('ab'+key).addEventListener('input',()=>{if(key==='analyte'||key==='titrant')autoCompatible(key);update()});
 $('abDoseSlider').addEventListener('input',e=>setDose(Number(e.target.value)));
