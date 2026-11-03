@@ -35,5 +35,18 @@ test('redundant material type filters are absent, while search and JSON data han
 test('material expansion and scientific learning are still connected',()=>{
  assert.match(app,/window\.ChemistryDiscovery\.renderMaterial/);
  assert.match(app,/window\.ChemistryMaterialLearning\.renderMaterial/);
- assert.match(html,/Beta 2\.9\.6/);
+ assert.match(html,/Beta 2\.9\.7/);
+});
+
+test('material detail is reattached before switching family and after rebuilding',()=>{
+ assert.match(render,/grid\.after\(existingDetail\)/);
+ assert.match(render,/grid\.after\(detail\)/);
+ assert.match(render,/if\(!detail\)\{detail=document\.createElement\('div'\)/);
+ assert.match(render,/const draft=document\.createDocumentFragment\(\)/);
+ assert.match(render,/grid\.replaceChildren\(draft\)/);
+});
+test('interactive material models synchronize with modern tab navigation',()=>{
+ assert.match(app,/ChemistryNavigation\?\.activate/);
+ assert.match(app,/ChemistryNavigation\.activate\('moleculeTab',false\)/);
+ assert.match(app,/centerPreset\(key\)/);
 });
