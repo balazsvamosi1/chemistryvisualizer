@@ -89,7 +89,13 @@ const mt=k=>missions[lang()][k], fill=(template,map)=>template.replace(/\{(\w+)\
 let missionTarget=7,missionGuess=null,missionRound=0;
 function missionCategory(ph){return ph<6.95?'acid':ph>7.05?'base':'neutral'}
 function targetRead(){const input=$('abTargetPH'),number=Number(input.value);if(input.value.trim()===''||!Number.isFinite(number)||number<0||number>14)throw Error('invalid-target');return number}
-function syncTargetUI(number){$('abTargetPH').value=String(number);$('abTargetSlider').value=String(number)}
+function syncTargetUI(number){
+ $('abTargetPH').value=String(number);
+ const scale=$('abInteractiveScale');
+ scale.setAttribute('aria-valuenow',String(number));
+ scale.setAttribute('aria-valuetext','pH '+Number(number).toFixed(1));
+ $('abPhMarker').style.left=(Math.max(0,Math.min(14,number))/14*100)+'%';
+}
 function runTarget({mission=false}={}){try{
  const target=targetRead(),result=engine.solveForPH(read(),target);
  const out=$('abTargetResult');
@@ -120,8 +126,8 @@ function updateVisual(result,color){
  $('abVisualTitle').textContent=V.title;
  $('abVisualPhase').textContent=(result.pH<6.5?V.acid:result.pH>7.5?V.base:V.neutral)+' · '+(ratio<.98?V.before:ratio>1.02?V.after:V.at)+' · pH '+result.pH.toFixed(2);
  $('abVisualLegend').textContent=V.info;
- $('abPhMarker').style.left=(Math.max(0,Math.min(14,result.pH))/14*100)+'%';
- $('abPhMarker').setAttribute('aria-label','pH '+result.pH.toFixed(2));
+ $('abActualMarker').style.left=(Math.max(0,Math.min(14,result.pH))/14*100)+'%';
+ $('abActualMarker').title='Measured pH '+result.pH.toFixed(2);
  $('abLiquid').style.background=color.includes(' → ')?'linear-gradient(90deg,'+color.split(' → ').join(',')+')':color;
  $('abLiquid').style.height=(33+Math.round(degree*40))+'%';
  $('abBuretteFill').style.height=Math.round((1-degree)*73)+'%';
@@ -151,6 +157,8 @@ function localize(){const save={a:$('abanalyte').value,t:$('abtitrant').value,i:
  for(const key of fields)$('abLabel'+key).textContent=tr(key);
  $('abEqButton').textContent=tr('reset');$('abDoseSliderLabel').textContent=tr('added');
  $('abTargetTitle').textContent=mt('targetTitle');$('abTargetIntro').textContent=mt('targetIntro');$('abTargetLabel').textContent=mt('targetLabel');$('abTargetSolve').textContent=mt('targetAction');
+ $('abInteractiveScale').setAttribute('aria-label',mt('targetLabel'));
+ syncTargetUI(targetRead());
  missionRefresh();update();}
 function update(){try{const opts=read(),result=engine.solve(opts);let series=engine.curve(opts);if(opts.addedMl>series[series.length-1].addedMl){const end=opts.addedMl*1.05;series=Array.from({length:121},(_,i)=>engine.solve({...opts,addedMl:end*i/120}))}const color=engine.indicatorColor(result.pH,$('abindicator').value);
  $('abPH').textContent=tr('ph')+': '+result.pH.toFixed(2);$('abEq').textContent=tr('eq')+': '+result.equivalenceMl.toFixed(2)+' mL';
@@ -165,8 +173,35 @@ $('abDoseMinus').addEventListener('click',()=>setDose((Number($('abadded').value
 $('abDosePlus').addEventListener('click',()=>setDose((Number($('abadded').value)||0)+1));
 $('abDoseReset').addEventListener('click',()=>setDose(0));
 $('abEqButton').addEventListener('click',()=>{try{const value=engine.solve({...read(),addedMl:0}).equivalenceMl;$('abadded').value=value;update()}catch{update()}});
-$('abTargetPH').addEventListener('input',()=>{const n=Number($('abTargetPH').value);if(Number.isFinite(n)&&n>=0&&n<=14)$('abTargetSlider').value=String(n)});
-$('abTargetSlider').addEventListener('input',()=>{$('abTargetPH').value=$('abTargetSlider').value});
+$('abTargetPH').addEventListener('input',()=>{
+ const text=$('abTargetPH').value,n=Number(text);
+ if(text.trim()!==''&&Number.isFinite(n)&&n>=0&&n<=14)syncTargetUI(n);
+});
+const scale=$('abInteractiveScale');
+const setFromPointer=e=>{
+ const rect=scale.getBoundingClientRect();
+ if(!rect.width)return;
+ const position=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
+ syncTargetUI(Math.round(position*140)/10);
+};
+scale.addEventListener('pointerdown',e=>{
+ if(e.button!==0&&e.pointerType==='mouse')return;
+ e.preventDefault();scale.focus();scale.setPointerCapture(e.pointerId);setFromPointer(e);
+});
+scale.addEventListener('pointermove',e=>{
+ if(scale.hasPointerCapture(e.pointerId))setFromPointer(e);
+});
+scale.addEventListener('pointerup',e=>{
+ if(scale.hasPointerCapture(e.pointerId)){setFromPointer(e);scale.releasePointerCapture(e.pointerId)}
+});
+scale.addEventListener('keydown',e=>{
+ const keys={ArrowLeft:-0.1,ArrowDown:-0.1,ArrowRight:0.1,ArrowUp:0.1,PageDown:-1,PageUp:1};
+ if(!(e.key in keys)&&e.key!=='Home'&&e.key!=='End')return;
+ e.preventDefault();
+ const current=targetRead();
+ const value=e.key==='Home'?0:e.key==='End'?14:Math.max(0,Math.min(14,Math.round((current+keys[e.key])*10)/10));
+ syncTargetUI(value);
+});
 $('abTargetSolve').addEventListener('click',()=>runTarget());
 for(const [id,value] of [['abMissionPredict','acid'],['abMissionPredictBase','base'],['abMissionPredictNeutral','neutral']])$(''+id).addEventListener('click',()=>{missionGuess=value;missionRefresh();$('abMissionFeedback').textContent=''});
 $('abMissionTry').addEventListener('click',()=>{if(!missionGuess){$('abMissionFeedback').textContent=mt('predictFirst');return}syncTargetUI(missionTarget);runTarget({mission:true})});
