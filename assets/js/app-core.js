@@ -385,6 +385,7 @@ function renderMaterials(){
  }
  if(query&&families.size===1)activeMaterialFamily=families.keys().next().value;
  const names=api?.familyNames||{};
+ let expandedArea=null;
  for(const [key,entries] of families){
   const chosen=activeMaterialFamily===key;
   const familyName=names[key]?.[lang==='hu'?0:lang==='de'?1:2]||
@@ -393,9 +394,11 @@ function renderMaterials(){
   cell.className='material-family-cell'+(chosen?' active':'');
   cell.dataset.family=key;cell.setAttribute('aria-expanded',String(chosen));
   cell.style.setProperty('--familyAccent',catColors[entries[0].m.category]||'#77d9d0');
+  const familyCodes={water:'H₂O',gases:'G',oxides:'Ox',acids:'H⁺',bases:'OH⁻',carbonates:'CO₃',salts:'NaCl',metals:'Me',carbon:'C',networks:'SiO₂',solids:'S',hydrocarbons:'C–H',alcohols:'R–OH',carbonyls:'C=O',sugars:'Glc',polymers:'[n]',other:'⋯'};
+  const code=document.createElement('span');code.className='material-family-code';code.textContent=familyCodes[key]||'•';
   const short=document.createElement('strong');short.textContent=familyName;
   const count=document.createElement('small');count.textContent=String(entries.length);
-  cell.append(short,count);
+  cell.append(code,short,count);cell.title=familyName;
   cell.addEventListener('click',()=>{
    const wasOpen=activeMaterialFamily===key;
    activeMaterialFamily=wasOpen?null:key;
@@ -440,8 +443,9 @@ function renderMaterials(){
    if(selected){selected.after(detail);detail.hidden=false;showMaterial()}
    else{materialDetailVisible=false}
   }
-  grid.append(area);
+  expandedArea=area;
  }
+ if(expandedArea)grid.append(expandedArea);
  if(!filtered.length){const none=document.createElement('p');none.textContent=ui[3];grid.append(none);materialDetailVisible=false}
  if(!materialDetailVisible){detail.hidden=true;detail.replaceChildren()}
 }
