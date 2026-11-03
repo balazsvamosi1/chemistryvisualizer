@@ -181,3 +181,27 @@
 }
 @media(max-width:380px){#materialsSection .material-family-cell>strong{font-size:.63rem}#materialsSection .material-family-code{font-size:1.15rem}}
 @media(prefers-reduced-motion:reduce){#materialsSection .material-family-cell{transition:none}}
+
+
+/* Beta 2.9.6 — category names only; no chemistry formula on family squares. */
+#materialsSection .material-family-cell{
+ justify-content:center;
+ align-items:center;
+ text-align:center;
+ padding:11px 8px;
+}
+#materialsSection .material-family-cell>strong{
+ font-size:clamp(.82rem,1.35vw,1.04rem);
+ line-height:1.25;
+ overflow-wrap:anywhere;
+ hyphens:auto;
+}
+#materialsSection .material-family-cell>small{
+ align-self:center;
+ font-size:.78rem;
+ margin-top:5px;
+}
+@media(max-width:650px){
+ #materialsSection .material-family-cell>strong{font-size:clamp(.7rem,2.7vw,.94rem)}
+ #materialsSection .material-family-cell>small{font-size:.7rem;margin-top:2px}
+}
