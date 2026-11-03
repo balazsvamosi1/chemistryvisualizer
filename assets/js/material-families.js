@@ -4,15 +4,18 @@
 const familyNames={
  water:['Víz és vizes oldatok','Wasser und Lösungen','Water and solutions'],
  gases:['Elemi gázok','Elementare Gase','Elemental gases'],
- oxides:['Oxidok és gázvegyületek','Oxide und Gasverbindungen','Oxides and gaseous compounds'],
+ oxides:['Oxidok, peroxidok és gázvegyületek','Oxide, Peroxide und Gasverbindungen','Oxides, peroxides and gaseous compounds'],
  acids:['Savak','Säuren','Acids'],
  bases:['Bázisok és hidroxidok','Basen und Hydroxide','Bases and hydroxides'],
  carbonates:['Karbonátok és hidrogén-karbonátok','Carbonate und Hydrogencarbonate','Carbonates and bicarbonates'],
  salts:['Egyéb ionos sók','Weitere ionische Salze','Other ionic salts'],
  metals:['Fémek','Metalle','Metals'],
- carbon:['Szénmódosulatok és atomrácsok','Kohlenstoffmodifikationen und Atomgitter','Carbon allotropes and covalent networks'],
+ carbon:['Szénmódosulatok','Kohlenstoffmodifikationen','Carbon allotropes'],
+ networks:['Kovalens atomrácsok','Kovalente Atomgitter','Covalent networks'],
+ solids:['Molekulás nemfémes szilárd anyagok','Molekulare Nichtmetall-Feststoffe','Molecular nonmetal solids'],
  hydrocarbons:['Szénhidrogének: alkánok, alkének, alkinek','Kohlenwasserstoffe: Alkane, Alkene, Alkine','Hydrocarbons: alkanes, alkenes and alkynes'],
- alcohols:['Alkoholok és rokon szerves anyagok','Alkohole und verwandte Stoffe','Alcohols and related organic compounds'],
+ alcohols:['Alkoholok','Alkohole','Alcohols'],
+ carbonyls:['Ketonok és karbonilvegyületek','Ketone und Carbonylverbindungen','Ketones and carbonyl compounds'],
  sugars:['Cukrok és biológiai molekulák','Zucker und Biomoleküle','Sugars and biomolecules'],
  polymers:['Polimerek','Polymere','Polymers'],
  other:['További anyagok','Weitere Stoffe','Other materials']
@@ -26,9 +29,12 @@ const definitions={
  carbonates:['Szódabikarbóna','Kálcium-karbonát','Nátrium-karbonát'],
  salts:['Konyhasó','Kalcium-klorid','Réz-szulfát','Kálium-nitrát','Ammónium-klorid'],
  metals:['Vas','Réz','Alumínium','Arany','Ezüst','Cink','Magnézium'],
- carbon:['Grafit','Gyémánt','Szilícium-dioxid','Kén','Foszfor (fehér)'],
+ carbon:['Grafit','Gyémánt'],
+ networks:['Szilícium-dioxid'],
+ solids:['Kén','Foszfor (fehér)'],
  hydrocarbons:['Metán','Etán','Propán','Bután','Etén','Etin','Benzol'],
- alcohols:['Metanol','Etanol','Glicerin','Aceton'],
+ alcohols:['Metanol','Etanol','Glicerin'],
+ carbonyls:['Aceton'],
  sugars:['Szőlőcukor','Kristálycukor','Koffein'],
  polymers:['Keményítő','Cellulóz','Polietilén','PVC']
 };
@@ -43,8 +49,11 @@ const familyNotes={
  salts:['A sók szilárd formájukban gyakran ionrácsosak. A képletük összetételi arányt és nem önálló kovalens molekulát jelöl.','Salze bilden häufig Ionengitter; ihre Formeln beschreiben Verhältnisse und keine getrennten kovalenten Moleküle.','Solid salts commonly form ionic lattices; their formulas describe composition ratios, not individual covalent molecules.'],
  metals:['A fémekben delokalizált elektronok segítik az elektromos vezetést. A korrózió és savakkal való reakció nem minden fémnél azonos.','Delokalisierte Elektronen ermöglichen Leitfähigkeit. Korrosion und Säurereaktionen hängen vom Metall ab.','Delocalized electrons support electrical conduction. Corrosion and acid reactivity vary across metals.'],
  carbon:['Az azonos elem különböző atomszerkezete eltérő tulajdonságokat adhat. A grafit és a gyémánt közös kémiai eleme a szén, de más a kötésrendszerük.','Gleiches Element, verschiedene Struktur: Graphit und Diamant bestehen aus Kohlenstoff, unterscheiden sich aber in der Bindung.','Different atomic arrangements can give the same element different properties: graphite and diamond are both carbon.'],
+ networks:['Kovalens hálózatban az atomok kiterjedt kötésrendszert alkotnak, nem különálló, egyszerű molekulákat.','Kovalente Netzwerke bestehen aus weitreichenden Bindungen statt einfachen Molekülen.','Covalent networks contain extended bonded structures rather than individual simple molecules.'],
+ solids:['A kén gyakran S₈-gyűrűkből, a fehér foszfor P₄-molekulákból álló molekulakristályt alkot.','Schwefel kann S₈-Ringe und weißer Phosphor P₄-Moleküle in molekularen Feststoffen bilden.','Sulfur commonly forms S₈ rings and white phosphorus consists of P₄ molecules in molecular solids.'],
  hydrocarbons:['A szénhidrogének szénből és hidrogénből állnak. Az egyszeres, kettős vagy hármas kötés megváltoztatja a molekula tulajdonságait.','Kohlenwasserstoffe enthalten C und H; Einfach-, Doppel- und Dreifachbindungen beeinflussen die Eigenschaften.','Hydrocarbons contain carbon and hydrogen; single, double and triple bonds affect their properties.'],
  alcohols:['Az alkoholok hidroxilcsoportot tartalmaznak. A funkciós csoport, a molekula mérete és szerkezete határozza meg a tulajdonságok jelentős részét; nem minden oxigéntartalmú szerves anyag alkohol.','Alkohole besitzen Hydroxylgruppen; andere sauerstoffhaltige organische Stoffe sind nicht automatisch Alkohole.','Alcohols contain hydroxyl groups; not all oxygen-containing organic compounds are alcohols.'],
+ carbonyls:['A ketonok karbonilcsoportot (C=O) tartalmaznak, de nem alkoholok. Az aceton jól szemlélteti a különbséget.','Ketone besitzen eine Carbonylgruppe (C=O), sind aber keine Alkohole.','Ketones contain a carbonyl group (C=O) but are not alcohols; acetone is an example.'],
  sugars:['A cukrok és biomolekulák sokféle szerkezetűek. A képlet önmagában nem mutatja meg a kötések elrendezését vagy a biológiai szerepet.','Biomoleküle besitzen sehr unterschiedliche Strukturen; die Summenformel allein zeigt weder Bindungen noch biologische Funktion.','Sugars and biomolecules have varied structures; a formula alone does not reveal connectivity or biological role.'],
  polymers:['A polimerek sok ismétlődő egységet tartalmazó láncok vagy hálózatok. Az n jel a lánchossztól függ; nem egyetlen rögzített molekulaméretet jelent.','Polymere bestehen aus vielen Wiederholungseinheiten. n steht für eine variable Kettenlänge.','Polymers comprise repeating units. The symbol n represents variable chain length, not one fixed molecule size.'],
  other:['Az anyag összetétele és szerkezete együtt határozza meg a tulajdonságait.','Zusammensetzung und Struktur bestimmen gemeinsam die Eigenschaften.','Composition and structure jointly determine properties.']
@@ -83,7 +92,7 @@ Object.assign(extended,{
  'Ammónia':['Az ammónia NH₃ molekulája trigonális piramis alakú. Vízben protonfelvételi egyensúlyon keresztül lúgos kémhatást hozhat létre.','Ammoniak NH₃ ist trigonal-pyramidal und reagiert in Wasser als schwache Base.','Ammonia NH₃ is trigonal pyramidal; it acts as a weak base in water through a proton-transfer equilibrium.'],
  'Kálcium-karbonát':['A kalcium-karbonát ionrácsos anyag, a mészkő fő összetevője. Savval CO₂ fejlődhet, de a reakció tényleges sebessége a felülettől és a körülményektől függ.','Calciumcarbonat ist ein Ionengitter und Hauptbestandteil von Kalkstein; Säuren können CO₂ freisetzen.','Calcium carbonate is ionic and is the main component of limestone. Acid can release CO₂, with rate dependent on conditions.']
 });
-function family(m){return nameToFamily.get(m.hu)?.group||({sav:'acids',bazis:'bases',so:'salts',fem:'metals',gaz:'gases',szerves:'alcohols',polimer:'polymers',keverek:'water'}[m.category]||'other')}
+function family(m){return nameToFamily.get(m.hu)?.group||({sav:'acids',bazis:'bases',so:'salts',fem:'metals',gaz:'gases',szerves:'alcohols',halozat:'networks',nemfem:'solids',polimer:'polymers',keverek:'water'}[m.category]||'other')}
 function sort(items){const order=Object.keys(familyNames);return items.slice().sort((a,b)=>{
  const fa=family(a.m),fb=family(b.m),diff=order.indexOf(fa)-order.indexOf(fb);if(diff)return diff;
  return (nameToFamily.get(a.m.hu)?.rank??999)-(nameToFamily.get(b.m.hu)?.rank??999)||a.m.hu.localeCompare(b.m.hu,'hu')
