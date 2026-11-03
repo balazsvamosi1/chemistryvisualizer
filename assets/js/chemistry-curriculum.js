@@ -161,7 +161,7 @@ function render(){
  const isHunt=mode==='hunt';for(const id of ['curriculumTopic','curriculumTopicLabel','curriculumLimit','curriculumCheck','curriculumNext','curriculumRestart','curriculumFeedback'])$(id).hidden=isHunt;
  if(hunt)hunt.classList.toggle('hidden',!isHunt);
  const content=$('curriculumContent'),feedback=$('curriculumFeedback');content.replaceChildren();feedback.textContent='';$('curriculumCheck').textContent=t('check');$('curriculumNext').textContent=t('next');$('curriculumRestart').textContent=t('restart');$('curriculumCheck').hidden=mode==='learn'||checked||completed;$('curriculumNext').hidden=completed;
- if(mode==='hunt'){content.hidden=true;return}content.hidden=false;
+ if(mode==='hunt'){content.hidden=true;for(const id of ['curriculumCheck','curriculumNext','curriculumRestart'])$(id).hidden=true;return}content.hidden=false;
  if(mode==='learn'){
  const node=api.topics.find(x=>x.id===topic),lessons=node.lesson;index=Math.min(index,lessons.length-1);add(content,'h3',node.title[lang()]+' · '+t('lesson')+' '+(index+1)+'/'+lessons.length);add(content,'p',lessons[index][lang()],'academy-lesson');add(content,'p',t('limit'),'hint');$('curriculumNext').textContent=index===lessons.length-1?t('restart'):t('next');return;
  }
