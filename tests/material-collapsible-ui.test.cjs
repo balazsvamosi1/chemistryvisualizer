@@ -4,7 +4,9 @@ const app=read('assets/js/app-core.js'),css=read('assets/css/discovery.css'),htm
 const render=app.slice(app.indexOf('function renderMaterials(){'),app.indexOf('\nfunction showMaterial(){'));
 test('material categories render as selectable square periodic-table family cells',()=>{
  assert.match(render,/className='material-family-cell'/);
- assert.match(render,/material-family-code/);
+ assert.doesNotMatch(render,/material-family-code/);
+ assert.doesNotMatch(render,/familyCodes=/);
+ assert.match(render,/cell\.append\(short,count\)/);
  assert.match(render,/document\.createElement\('button'\)/);
  assert.match(css,/#materialsSection \.material-family-cell\{/);
  assert.match(css,/aspect-ratio:1\/1/);
@@ -13,7 +15,8 @@ test('material categories render as selectable square periodic-table family cell
 test('only one expanded family is displayed below the square category grid',()=>{
  assert.match(app,/let activeMaterialFamily=null/);
  assert.match(render,/activeMaterialFamily=wasOpen\?null:key/);
- assert.match(render,/if\(expandedArea\)grid\.append\(expandedArea\)/);
+ assert.match(render,/grid\.insertBefore\(expandedArea,familyCells\[afterRow\]\|\|null\)/);
+ assert.match(render,/Math\.ceil\(\(activeCellIndex\+1\)\/columns\)\*columns/);
  assert.match(render,/className='material-family-expanded'/);
 });
 test('selected material detail opens inline rather than at bottom of library',()=>{
@@ -32,5 +35,5 @@ test('redundant material type filters are absent, while search and JSON data han
 test('material expansion and scientific learning are still connected',()=>{
  assert.match(app,/window\.ChemistryDiscovery\.renderMaterial/);
  assert.match(app,/window\.ChemistryMaterialLearning\.renderMaterial/);
- assert.match(html,/Beta 2\.9\.5/);
+ assert.match(html,/Beta 2\.9\.6/);
 });
