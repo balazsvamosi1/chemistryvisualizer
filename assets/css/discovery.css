@@ -114,3 +114,15 @@
 #materialsSection .material-prediction-buttons button[aria-pressed="true"]{background:#285f63;outline:2px solid #95e0d1}
 #materialsSection .material-prediction-feedback{padding:10px;border-left:3px solid #80d4ca;background:#194459}
 @media(max-width:520px){#materialsSection .material-family-tiles > #materialDetail{padding:10px}#materialsSection .material-recommendations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* Student-first discovery: search is primary; advanced controls are optional */
+#materialsSection .material-instructions{margin:9px 0 13px;font-size:1rem;line-height:1.5;color:#d8edf7}
+#materialsSection .material-search-row{display:flex;margin:0 0 10px}
+#materialsSection #materialSearch{width:100%;max-width:560px;min-height:46px;padding:10px 14px;font-size:1rem}
+#materialsSection .material-tools{margin:8px 0;border:1px solid #496f85;border-radius:10px;background:#112e43}
+#materialsSection .material-tools>summary{cursor:pointer;min-height:44px;padding:10px 13px;font-weight:650}
+#materialsSection .material-tools:focus-within{border-color:#8edfcf}
+#materialsSection .material-tools>.materialFilters,#materialsSection .material-tools>.labrow{padding:8px 12px 12px}
+#materialsSection .material-tools>#importStatus{padding:0 12px 10px}
+#materialsSection .material-compare-note{padding:9px 12px;border-left:3px solid #6bd5c9;background:#14394b;border-radius:5px;line-height:1.55}
