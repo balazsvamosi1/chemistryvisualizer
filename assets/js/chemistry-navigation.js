@@ -9,7 +9,7 @@ const footer=document.createElement('nav');footer.className='chem-bottom-tabs';f
 prev.type=next.type='button';prev.textContent='‹';next.textContent='›';prev.setAttribute('aria-label','Previous laboratory');next.setAttribute('aria-label','Next laboratory');footer.append(prev,name,next);document.body.append(footer);
 function enforce(){
  for(const [id,section] of Object.entries(panels)){
-  const panel=$(section);if(panel)panel.classList.toggle('hidden',id!==selected);
+  const panel=$(section);if(panel)panel.classList.toggle('hidden',id!==selected&&!(id==='reactionTab'&&selected==='moleculeTab'));
   $(id)?.classList.toggle('active',id===selected);
  }
  const detail=$('atomDetail');if(selected!=='periodTab')detail?.classList.add('hidden');
