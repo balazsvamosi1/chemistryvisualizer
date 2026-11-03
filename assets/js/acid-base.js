@@ -177,6 +177,7 @@ $('abTargetPH').addEventListener('input',()=>{
  const text=$('abTargetPH').value,n=Number(text);
  if(text.trim()!==''&&Number.isFinite(n)&&n>=0&&n<=14)syncTargetUI(n);
 });
+$('abTargetPH').addEventListener('change',()=>{try{targetRead();runTarget()}catch{}});
 const scale=$('abInteractiveScale');
 const setFromPointer=e=>{
  const rect=scale.getBoundingClientRect();
@@ -192,7 +193,7 @@ scale.addEventListener('pointermove',e=>{
  if(scale.hasPointerCapture(e.pointerId))setFromPointer(e);
 });
 scale.addEventListener('pointerup',e=>{
- if(scale.hasPointerCapture(e.pointerId)){setFromPointer(e);scale.releasePointerCapture(e.pointerId)}
+ if(scale.hasPointerCapture(e.pointerId)){setFromPointer(e);scale.releasePointerCapture(e.pointerId);runTarget()}
 });
 scale.addEventListener('keydown',e=>{
  const keys={ArrowLeft:-0.1,ArrowDown:-0.1,ArrowRight:0.1,ArrowUp:0.1,PageDown:-1,PageUp:1};
@@ -201,6 +202,7 @@ scale.addEventListener('keydown',e=>{
  const current=targetRead();
  const value=e.key==='Home'?0:e.key==='End'?14:Math.max(0,Math.min(14,Math.round((current+keys[e.key])*10)/10));
  syncTargetUI(value);
+ runTarget();
 });
 $('abTargetSolve').addEventListener('click',()=>runTarget());
 for(const [id,value] of [['abMissionPredict','acid'],['abMissionPredictBase','base'],['abMissionPredictNeutral','neutral']])$(''+id).addEventListener('click',()=>{missionGuess=value;missionRefresh();$('abMissionFeedback').textContent=''});
