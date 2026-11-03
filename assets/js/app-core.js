@@ -368,8 +368,8 @@ function renderMaterials(){
  const search=$('materialSearch');search.placeholder=ui[2];search.setAttribute('aria-label',ui[2]);
  const query=search.value.toLocaleLowerCase().trim();
  const grid=$('materialCards'),detail=$('materialDetail'),api=window.ChemistryMaterialFamilies;
- grid.replaceChildren();
- detail.hidden=true;
+ const draft=document.createDocumentFragment();
+ // Build the complete replacement offscreen. A failed update must not erase the library.
  const filtered=materials.map((m,i)=>({m,i})).filter(({m})=>
   `${m.hu} ${m.de} ${m.en||''} ${m.f} ${catNames.hu[m.category]||''} ${catNames.de[m.category]||''} ${api?.detail(m,'hu').title||''}`.toLocaleLowerCase().includes(query));
  const sorted=api?api.sort(filtered):filtered;
@@ -406,7 +406,7 @@ function renderMaterials(){
    materialDetailVisible=false;
    renderMaterials();
   });
-  grid.append(cell);
+  draft.append(cell);
   familyCells.push(cell);
   if(!chosen)continue;
   activeCellIndex=familyCells.length-1;
@@ -443,7 +443,7 @@ function renderMaterials(){
   }
   if(materialDetailVisible){
    const selected=tiles.querySelector('.materialTile[data-material-index="'+materialSelected+'"]');
-   if(selected){selected.after(detail);detail.hidden=false;showMaterial()}
+   if(selected){selected.after(detail);detail.hidden=false}
    else{materialDetailVisible=false}
   }
   expandedArea=area;
@@ -454,10 +454,12 @@ function renderMaterials(){
   const columns=window.matchMedia('(max-width:650px)').matches?3:
     window.matchMedia('(max-width:900px)').matches?5:6;
   const afterRow=Math.ceil((activeCellIndex+1)/columns)*columns;
-  grid.insertBefore(expandedArea,familyCells[afterRow]||null);
+  draft.insertBefore(expandedArea,familyCells[afterRow]||null);
  }
- if(!filtered.length){const none=document.createElement('p');none.textContent=ui[3];grid.append(none);materialDetailVisible=false}
- if(!materialDetailVisible){detail.hidden=true;detail.replaceChildren()}
+ if(!filtered.length){const none=document.createElement('p');none.textContent=ui[3];draft.append(none);materialDetailVisible=false}
+ grid.replaceChildren(draft);
+ if(materialDetailVisible&&!detail.hidden)showMaterial();
+ else{detail.hidden=true;detail.replaceChildren()}
 }
 
 function showMaterial(){let m=materials[materialSelected];if(!m)return;let dest=$('materialDetail');dest.replaceChildren();dest.className='materialDetail';dest.style.setProperty('--matAccent',catColors[m.category]||'#45aacc');
