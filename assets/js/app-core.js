@@ -511,6 +511,8 @@ if(window.ChemistryMaterialFamilies){
 if(window.ChemistryDiscovery)window.ChemistryDiscovery.renderMaterial(m,dest,materials,materialSelected,lang);
 if(window.ChemistryMaterialLearning)window.ChemistryMaterialLearning.renderMaterial(m,dest,materials,materialSelected,lang,(index)=>{
  if(index<0||index>=materials.length)return;
+ // A related-material jump is an explicit selection: clear an incompatible search.
+ $('materialSearch').value='';
  materialSelected=index;materialDetailVisible=true;
  const key=window.ChemistryMaterialFamilies?.family(materials[index])||materials[index].category;
  activeMaterialFamily=key;
