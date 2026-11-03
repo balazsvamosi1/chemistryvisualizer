@@ -78,3 +78,13 @@
 #bunsenContaminationSettings{display:grid;gap:8px}
 #bunsenSection .bunsen-contamination-option{display:flex;gap:10px;align-items:center;cursor:pointer;margin-top:8px}
 #bunsenSection .bunsen-contamination-option input{width:18px;height:18px}
+
+
+/* 2.8.0: burner component names directly underneath the labelled illustration */
+#bunsenSection .bunsen-diagram-parts{padding:11px 13px;margin:8px 0 12px;border:1px solid #496b7c;background:#122f45;border-radius:10px}
+#bunsenSection .bunsen-diagram-parts h3{font-size:1rem;margin:0 0 8px}
+#bunsenSection .bunsen-diagram-parts .bunsen-parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding-inline-start:23px;line-height:1.4}
+#bunsenSection .bunsen-diagram-parts li{padding:5px 3px;cursor:pointer;min-height:32px}
+#bunsenSection .bunsen-diagram-parts li[aria-pressed="true"]{color:#9cf0d6}
+#bunsenSection #bunsenPartDetail{line-height:1.5;margin:9px 0 0}
+@media(max-width:450px){#bunsenSection .bunsen-diagram-parts .bunsen-parts{grid-template-columns:1fr}}
