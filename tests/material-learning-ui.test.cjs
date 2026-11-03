@@ -8,8 +8,8 @@ const discovery=source('assets/js/chemistry-discovery.js');
 const related=require('../assets/js/material-learning.js');
 const fam=require('../assets/js/material-families.js');
 test('detail appears directly after the selected material card, not below all family tiles',()=>{
- assert.match(app,/b\.after\(detail\)/);
- assert.match(app,/selectedButton\.after\(detail\)/);
+ assert.match(app,/button\.after\(detail\)/);
+ assert.match(app,/selected\.after\(detail\)/);
  assert.doesNotMatch(app.slice(app.indexOf('function renderMaterials(){'),app.indexOf('function showMaterial(){')),/tiles\.after\(detail\)/);
  assert.match(css,/\.material-family-tiles > #materialDetail/);
  assert.match(css,/grid-column:1\/-1/);
@@ -40,8 +40,8 @@ test('original scientific data, offline hosting and legacy modules remain intact
  assert.match(app,/function activateMaterialModel\(/);
  assert.match(app,/window\.ChemistryMaterialLearning\.renderMaterial/);
  assert.match(discovery,/const recommended=window\.ChemistryMaterialLearning\?\.related/);
- assert.match(html,/Beta 2\.9\.6/);
+ assert.match(html,/Beta 2\.9\.8/);
  const appPosition=html.indexOf('app-core.js?v=2.9.8');
- assert.ok(html.indexOf('material-learning.js?v=2.9.4')<appPosition);
+ assert.ok(html.indexOf('material-learning.js?v=2.9.8')<appPosition);
  assert.ok(html.indexOf('chemistry-discovery.js?v=2.9.4')<appPosition);
 });
