@@ -46,7 +46,7 @@ test('expanded acid/base titration remains browser-side and numerically consiste
  assert.equal(inv.reachable,true);assert.ok(Math.abs(inv.pH-7)<1e-3);
 });
 test('new scripts load before app-core and UI has hidden science section',()=>{
- const appPos=html.indexOf('src="assets/js/app-core.js"');
+ const appPos=html.indexOf('src="assets/js/app-core.js?v=2.9.8"');
  for(const script of ['material-families.js','element-hunt-expansion.js','chemistry-discovery.js']){
   const pos=html.indexOf(script);assert.ok(pos>=0&&pos<appPos,script);
  }
