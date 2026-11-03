@@ -282,12 +282,15 @@ function registerMaterialModel(i){
 }
 function refreshMaterialModelOptions(){for(let i=0;i<materials.length;i++)registerMaterialModel(i)}
 function activateMaterialModel(i){
- let key=registerMaterialModel(i);if(!key)return;
+ const key=registerMaterialModel(i);if(!key)return;
  currentMaterialModel=materialModel(i);
+ // Synchronize the legacy molecule canvas and modern tab navigation.
  tab='molecule';render();
+ if(window.ChemistryNavigation?.activate)window.ChemistryNavigation.activate('moleculeTab',false);
+ else $('moleculeTab')?.click();
  requestAnimationFrame(()=>requestAnimationFrame(()=>{
   centerPreset(key);modelNotice(currentMaterialModel);
-  const cv=$('molCanvas');cv.scrollIntoView({behavior:'smooth',block:'center'});
+  $('molCanvas')?.scrollIntoView({behavior:'auto',block:'center'});
  }));
 }
 // User-provided JSON schema v1: {schemaVersion:1,materials:[{id,hu,de,f,category,type,description,structure:{kind,atoms:[[symbol,x,y]],edges:[[from,to,order]]}}]}.
@@ -451,8 +454,10 @@ function renderMaterials(){
  if(expandedArea&&activeCellIndex>=0){
   // Open directly beneath the ROW containing the chosen family square.
   // The CSS grid has 6/5/3 columns at these same responsive breakpoints.
-  const columns=window.matchMedia('(max-width:650px)').matches?3:
-    window.matchMedia('(max-width:900px)').matches?5:6;
+  const columns=typeof window.matchMedia==='function'?
+    (window.matchMedia('(max-width:650px)').matches?3:
+     window.matchMedia('(max-width:900px)').matches?5:6):
+    (window.innerWidth<=650?3:window.innerWidth<=900?5:6);
   const afterRow=Math.ceil((activeCellIndex+1)/columns)*columns;
   draft.insertBefore(expandedArea,familyCells[afterRow]||null);
  }
