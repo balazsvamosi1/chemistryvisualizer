@@ -65,3 +65,11 @@ main>section{scroll-margin-top:82px;min-width:0}
 #curriculumSection .academy-choices label,#curriculumSection .curriculum-content button{white-space:normal;min-height:42px;overflow-wrap:anywhere}
 #curriculumSection .curriculum-content,#curriculumSection .curriculum-toolbar,#curriculumSection .curriculum-actions{box-sizing:border-box;max-width:100%}
 @media(max-width:700px){#atomDetail #atom{height:310px;min-height:260px}#atomDetail .viewfoot{gap:5px;padding:8px}#atomDetail .viewfoot button{font-size:13px;padding:8px 7px}#atomDetail .viewerhead{padding:10px}}
+
+
+/* 2.8.0: ADHD-friendly single-tap navigation by learning area */
+.chem-quick-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;position:sticky;top:0;z-index:56;background:#0a1d30;padding:8px 2px;border-bottom:1px solid #355d70}
+.chem-quick-nav button{min-width:0;min-height:48px;padding:8px 5px;line-height:1.25;white-space:normal;font-weight:700;border-radius:10px;background:#17394f;color:#e7f4fc;border:1px solid #4d7188}
+.chem-quick-nav button[aria-current="true"]{border-color:#8debd2;background:#235866;box-shadow:inset 0 0 0 1px #8debd2}
+.tabs{top:64px!important;scroll-padding-inline:10px}
+@media(max-width:650px){.chem-quick-nav{gap:4px;padding:5px 0}.chem-quick-nav button{font-size:12px;min-height:48px}.tabs{top:58px!important}}
