@@ -32,3 +32,12 @@
 @keyframes gasRise{from{transform:translateY(5px);opacity:.6}to{transform:translateY(-8px);opacity:1}}
 @media(max-width:580px){.material-compare-grid,.ab-reaction-controls{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.ab-reaction-result .ab-reaction-gas{animation:none!important}}
+
+/* 2.9: periodic-table-inspired chemical-family rows */
+#materialsSection .material-family-heading{grid-column:1/-1;margin:15px 0 0;padding:11px 13px;border:1px solid #52788b;border-left:5px solid #77d9d0;border-radius:9px;background:#15384c;font-size:1.05rem;line-height:1.3;letter-spacing:.015em}
+#materialsSection .material-family-heading:first-child{margin-top:2px}
+#materialsSection .material-family-science{display:grid;gap:10px;margin:15px 0;border:1px solid #52788b;border-radius:10px;padding:12px;background:#13354a}
+#materialsSection .material-family-science summary{cursor:pointer;font-weight:700;min-height:26px}
+#materialsSection .material-family-science h4{margin:12px 0 5px;font-size:1.05rem}
+#materialsSection .material-family-science p{margin:9px 0;line-height:1.65;max-width:85ch}
+#materialsSection .materialcards{align-items:stretch}
