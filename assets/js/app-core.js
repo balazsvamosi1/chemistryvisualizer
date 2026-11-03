@@ -417,5 +417,11 @@ $('balanceSolve').onclick=()=>{updateBalance()};$('balanceReveal').onclick=()=>{
 const oldReactionSelection=reactionSelection;reactionSelection=function(){oldReactionSelection();renderBalance()};$('reactionSelect').onchange=reactionSelection;
 const oldRenderReactionText=renderReactionText;renderReactionText=function(){oldRenderReactionText();renderBalance()};
 
+
+// Read-only bridge for optional MIT-licensed molecule learning modules.
+window.ChemistryMoleculeSnapshot = function () {
+ return {atoms:molAtoms.map(a=>({id:a.id,s:a.s})),bonds:molBonds.map(b=>({a:b.a,b:b.b,order:b.order,kind:b.kind||'covalent'}))};
+};
+
 requestAnimationFrame(drawReaction);
 render();requestAnimationFrame(frame);requestAnimationFrame(drawMol);
