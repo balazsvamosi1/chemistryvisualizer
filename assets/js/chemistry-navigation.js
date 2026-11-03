@@ -5,6 +5,7 @@ if(typeof document==='undefined')return;
 const panels={periodTab:'periodSection',moleculeTab:'moleculeSection',reactionTab:'reactionSection',huntTab:'huntSection',materialsTab:'materialsSection',bunsenTab:'bunsenSection',stoichTab:'stoichSection',acidBaseTab:'acidBaseSection',physicsTab:'physicsSection',specTab:'specSection',curriculumTab:'curriculumSection',gameTab:'gameSection'};
 const $=id=>document.getElementById(id),tabs=Object.keys(panels).filter(id=>$(id)&&$(id).getAttribute('style')!=='display:none!important');
 let selected='periodTab';
+let visibleGroup='explore';
 const groupDefinitions=[
  {key:'explore',items:['periodTab','moleculeTab','materialsTab']},
  {key:'experiment',items:['bunsenTab','stoichTab','acidBaseTab','physicsTab']},
@@ -36,6 +37,9 @@ function enforce(){
   $(id)?.classList.toggle('active',id===selected);
  }
  const activeGroup=groupDefinitions.find(g=>g.items.includes(selected))?.key;
+ visibleGroup=activeGroup||visibleGroup;
+ const shown=new Set(groupDefinitions.find(g=>g.key===visibleGroup)?.items||[]);
+ for(const id of tabs)$(id).hidden=!shown.has(id);
  for(const group of groupDefinitions){const button=quickButtons.get(group.key);if(!button)continue;
   button.textContent=groupNames[navLang()][group.key];button.setAttribute('aria-current',String(group.key===activeGroup));
  }
