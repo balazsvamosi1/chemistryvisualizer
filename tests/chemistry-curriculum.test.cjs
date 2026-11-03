@@ -1,22 +1,44 @@
 const test=require('node:test');const assert=require('node:assert/strict');const academy=require('../assets/js/chemistry-curriculum.js');
-test('ten cross-lab topics and 30 lessons with trilingual descriptions',()=>{
- assert.equal(academy.topics.length,10);
- for(const topic of academy.topics){assert.equal(topic.lesson.length,3);assert.equal(topic.bank.length,4);
-  for(const lesson of topic.lesson)for(const locale of academy.locales)assert(lesson[locale].length>40);
-  for(const q of topic.bank){assert(q.lessonIndex>=0&&q.lessonIndex<topic.lesson.length);for(const locale of academy.locales){assert(q.q[locale].length>10);assert.equal(q.choices[locale].length,3)}}
+const bun=require('../assets/js/bunsen-education.js');
+test('academy has twelve subject options including the entire Bunsen curriculum',()=>{
+ assert.equal(academy.topics.length,12);
+ assert.equal(academy.topics.reduce((n,t)=>n+t.lesson.length,0),45);
+ assert.equal(academy.topics.reduce((n,t)=>n+t.bank.length,0),84);
+ for(const level of bun.levels){
+  const topic=academy.topics.find(x=>x.id==='bunsen-'+level);
+  assert(topic);assert.equal(topic.lesson.length,6);assert.equal(topic.bank.length,16);
+  for(const q of topic.bank)assert(q.lessonIndex>=0&&q.lessonIndex<topic.lesson.length);
+ }
+ for(const topic of academy.topics){
+  for(const l of topic.lesson)for(const locale of academy.locales)assert(l[locale].length>30);
+  for(const q of topic.bank)for(const locale of academy.locales){
+   assert(q.q[locale].length>10);assert.equal(q.choices[locale].length,3);
+  }
  }
 });
-test('grade uses randomized answer positions correctly in all topics',()=>{
- for(const topic of academy.topics){const qs=academy.session(topic.id,true,()=>.26);
- assert.equal(qs.length,4);assert.equal(academy.grade(qs,qs.map(q=>q.answer)).percent,100);
- assert.equal(academy.grade(qs,qs.map(q=>(q.answer+1)%3)).percent,0)}
+test('academy grading preserves selected answer when choices shuffle',()=>{
+ for(const topic of academy.topics){
+  const set=academy.session(topic.id,true,()=>.26);
+  assert.equal(set.length,topic.id.startsWith('bunsen-')?10:4);
+  assert.equal(academy.grade(set,set.map(q=>q.answer)).percent,100);
+  assert.equal(academy.grade(set,set.map(q=>(q.answer+1)%3)).percent,0);
+  for(const q of set){
+   const original=topic.bank.find(x=>x.id===q.id);
+   for(const locale of academy.locales)assert.equal(q.choices[locale][q.answer],original.choices[locale][original.answer]);
+  }
+ }
 });
-test('cross-topic exams sample 12 questions and preserve lesson targets',()=>{
+test('full exam covers all topics in 14 questions and randomizes order',()=>{
  const a=academy.session('all',true,()=>.16),b=academy.session('all',true,()=>.83);
- assert.equal(a.length,12);assert.equal(b.length,12);assert.notDeepEqual(a.map(q=>q.id+'-'+q.answer),b.map(q=>q.id+'-'+q.answer));
- for(const q of a)assert(academy.topics.some(t=>t.id===q.topic&&t.lesson[q.lessonIndex]));assert.equal(new Set(a.map(q=>q.topic)).size,10);
+ assert.equal(a.length,14);assert.equal(b.length,14);
+ assert.notDeepEqual(a.map(q=>q.id+'-'+q.answer),b.map(q=>q.id+'-'+q.answer));
+ assert.equal(new Set(a.map(q=>q.topic)).size,12);
+ for(const q of a)assert(academy.topics.some(t=>t.id===q.topic&&t.lesson[q.lessonIndex]));
 });
-test('individual practice selects three questions with localized matching answers',()=>{
- for(const topic of academy.topics){const questions=academy.session(topic.id,false,()=>.73);assert.equal(questions.length,3);
- for(const q of questions)for(const locale of academy.locales)assert(q.choices[locale][q.answer]);}
+test('individual practice includes six Bunsen items or three other items',()=>{
+ for(const topic of academy.topics){
+  const set=academy.session(topic.id,false,()=>.73);
+  assert.equal(set.length,topic.id.startsWith('bunsen-')?6:3);
+  for(const q of set)for(const locale of academy.locales)assert(q.choices[locale][q.answer]);
+ }
 });
