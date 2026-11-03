@@ -370,7 +370,10 @@ function renderMaterials(){
  $('materialImportSummary').textContent=ui[1];
  const search=$('materialSearch');search.placeholder=ui[2];search.setAttribute('aria-label',ui[2]);
  const query=search.value.toLocaleLowerCase().trim();
- const grid=$('materialCards'),detail=$('materialDetail'),api=window.ChemistryMaterialFamilies;
+ const grid=$('materialCards'),api=window.ChemistryMaterialFamilies;
+ let detail=$('materialDetail');
+ // Self-heal older sessions where a previous grid rebuild discarded the node.
+ if(!detail){detail=document.createElement('div');detail.id='materialDetail';detail.className='materialDetail';grid.after(detail)}
  const draft=document.createDocumentFragment();
  // Build the complete replacement offscreen. A failed update must not erase the library.
  const filtered=materials.map((m,i)=>({m,i})).filter(({m})=>
