@@ -45,3 +45,23 @@ main>section{scroll-margin-top:82px;min-width:0}
 .chem-bottom-tabs span{font-weight:650;text-align:center;max-width:min(500px,65vw);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chem-bottom-tabs button:disabled{opacity:.3;cursor:not-allowed}
 @media(max-width:650px){.tabs button{min-width:105px!important;font-size:12px!important}#curriculumSection .curriculum-content{padding:12px}.chem-bottom-tabs{padding:7px 10px}#curriculumSection .curriculum-actions{bottom:52px}}
+
+/* 2.6.3: remove the actual cause of atom-view overlap: absolute overlays. */
+#atomDetail{min-width:0}
+#atomDetail .viewer{display:flex!important;flex-direction:column!important;align-items:stretch!important;min-height:0!important;overflow:visible!important}
+#atomDetail .viewfoot{position:relative!important;inset:auto!important;left:auto!important;right:auto!important;bottom:auto!important;display:flex!important;flex-wrap:wrap;justify-content:center;align-items:center;gap:7px;padding:10px;z-index:2;background:#112c43;border-radius:12px 12px 0 0}
+#atomDetail .viewfoot button{min-width:0;white-space:normal;flex:0 1 auto;padding:9px}
+#atomDetail .viewerhead{position:relative!important;inset:auto!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;pointer-events:auto!important;padding:12px 16px;background:#11293c;border-top:1px solid #3b5a70;overflow-wrap:anywhere;line-height:1.55}
+#atomDetail #atom{flex:0 0 auto;width:100%;height:clamp(260px,38vw,420px);min-height:260px;display:block}
+#atomDetail #chemistryAtomModelBadge{position:static!important;margin:12px 0 0;max-width:100%;overflow-wrap:anywhere}
+#atomDetail .viewerhead small{display:block;white-space:normal;line-height:1.5}
+#atomDetail .viewerhead .eyebrow{white-space:normal}
+#atomDetail .panel,#atomDetail article,#atomDetail .viewerhead,#atomDetail .viewfoot{min-width:0;max-width:100%}
+#atomDetail .viewfoot button:nth-child(1),#atomDetail .viewfoot button:nth-child(2),#atomDetail .viewfoot button:nth-child(3){flex:1 1 90px}
+#atomDetail .viewfoot button:nth-child(n+4){flex:0 0 auto}
+#atomDetail p,#atomDetail .hint,#atomDetail .note{overflow-wrap:anywhere;white-space:normal}
+#curriculumSection .curriculum-toolbar>*{min-width:0}
+#curriculumSection select{width:min(100%,390px)}
+#curriculumSection .academy-choices label,#curriculumSection .curriculum-content button{white-space:normal;min-height:42px;overflow-wrap:anywhere}
+#curriculumSection .curriculum-content,#curriculumSection .curriculum-toolbar,#curriculumSection .curriculum-actions{box-sizing:border-box;max-width:100%}
+@media(max-width:700px){#atomDetail #atom{height:310px;min-height:260px}#atomDetail .viewfoot{gap:5px;padding:8px}#atomDetail .viewfoot button{font-size:13px;padding:8px 7px}#atomDetail .viewerhead{padding:10px}}
