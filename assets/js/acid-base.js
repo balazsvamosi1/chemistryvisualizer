@@ -80,6 +80,36 @@ const labels={
  en:{title:'Acid–Base Laboratory and Titration',intro:'Acid/base pH, indicators and interactive titration curves.',analyte:'Analyte solution',analyteM:'Concentration (mol/L)',volume:'Initial volume (mL)',titrant:'Titrant',titrantM:'Titrant concentration (mol/L)',added:'Added titrant (mL)',indicator:'Indicator',eq:'Equivalence volume',ph:'Calculated pH',notice:'Ideal model at 25 °C for monoprotic acids and monovalent bases. Activity, temperature, ionic strength and volume contraction are not modeled. Indicator colors are approximate.',error:'Invalid values or incompatible acid/base selection.',reset:'Equivalence point',graph:'Titration curve',indicatorShade:'Indicator color'}
 };
 const lang=()=>['hu','de','en'].find(k=>$(k)?.classList.contains('active'))||'hu',tr=k=>labels[lang()][k];
+const missions={
+ hu:{targetTitle:'Cél-pH – találd meg az adagolást!',targetIntro:'Válassz egy kívánt pH-t, majd nézd meg, mennyi oldatot kell hozzáadnod.',targetLabel:'Elérendő pH (0–14)',targetAction:'Számítás és kipróbálás',targetSuccess:'Ehhez körülbelül {dose} mL titrálóoldat kell. Elért pH: {ph}.',targetImpossible:'Ez a pH a jelenlegi sav–bázis párral és koncentrációkkal 0–5000 mL hozzáadásával nem érhető el. Kiinduló pH: {start}; 5000 mL után: {end}.',targetError:'Adj meg 0 és 14 közötti cél-pH értéket.',missionTitle:'Mini-küldetés · Előbb tippelj!',missionPrompt:'Mit vársz: az oldat savas vagy lúgos lesz, ha a cél-pH {ph}?',acid:'Savas',base:'Lúgos',neutral:'Semleges körüli',predictAcid:'Savas lesz',predictBase:'Lúgos lesz',predictNeutral:'Semleges körül',try:'Próbáld ki!',next:'Új kihívás',predictFirst:'Először válassz egy tippet!',right:'Talált! A pH-skálán a 7 körüli érték semleges, alatta savas, felette lúgos.',wrong:'Majdnem! A pH 7 alatt savas, 7 felett lúgos, 7 körül semleges.',unreachable:'Ez a cél az aktuális keverékkel nem érhető el. Próbálj másik koncentrációt vagy sav–bázis párt.'},
+ de:{targetTitle:'Ziel-pH – Dosiervolumen finden!',targetIntro:'Wähle den gewünschten pH-Wert und berechne das nötige Dosiervolumen.',targetLabel:'Ziel-pH (0–14)',targetAction:'Berechnen und ausprobieren',targetSuccess:'Etwa {dose} mL Maßlösung erforderlich. Erreichter pH: {ph}.',targetImpossible:'Dieser pH-Wert ist mit den gewählten Reagenzien innerhalb von 0–5000 mL nicht erreichbar. Start-pH: {start}; bei 5000 mL: {end}.',targetError:'Gib einen Ziel-pH zwischen 0 und 14 ein.',missionTitle:'Mini-Mission · Erst vorhersagen!',missionPrompt:'Ist die Lösung bei Ziel-pH {ph} sauer oder basisch?',acid:'Sauer',base:'Basisch',neutral:'Etwa neutral',predictAcid:'Sauer',predictBase:'Basisch',predictNeutral:'Neutral',try:'Ausprobieren!',next:'Neue Aufgabe',predictFirst:'Wähle zuerst eine Vorhersage!',right:'Richtig! Unter pH 7 sauer, über pH 7 basisch, nahe 7 neutral.',wrong:'Noch nicht. Unter pH 7 sauer, über pH 7 basisch, nahe 7 neutral.',unreachable:'Dieses Ziel ist für die gewählte Mischung nicht erreichbar. Passe die Konzentrationen oder die Stoffe an.'},
+ en:{targetTitle:'Target pH – find the dose!',targetIntro:'Choose a desired pH and calculate how much titrant is needed.',targetLabel:'Target pH (0–14)',targetAction:'Calculate and try it',targetSuccess:'Approximately {dose} mL of titrant needed. Reached pH: {ph}.',targetImpossible:'This pH cannot be reached with the selected reagents within 0–5000 mL. Start pH: {start}; at 5000 mL: {end}.',targetError:'Enter a target pH between 0 and 14.',missionTitle:'Mini mission · Predict first!',missionPrompt:'Will the solution be acidic or basic at target pH {ph}?',acid:'Acidic',base:'Basic',neutral:'Near neutral',predictAcid:'Acidic',predictBase:'Basic',predictNeutral:'Near neutral',try:'Test it!',next:'New challenge',predictFirst:'Make a prediction first!',right:'Correct! Below pH 7 is acidic, above 7 is basic, and around 7 is neutral.',wrong:'Try again. Below pH 7 is acidic, above 7 is basic, and around 7 is neutral.',unreachable:'This target is unreachable for the selected mixture. Adjust concentrations or reagents.'}
+};
+const mt=k=>missions[lang()][k], fill=(template,map)=>template.replace(/\{(\w+)\}/g,(_,k)=>map[k]??'');
+let missionTarget=7,missionGuess=null,missionRound=0;
+function missionCategory(ph){return ph<6.95?'acid':ph>7.05?'base':'neutral'}
+function targetRead(){const input=$('abTargetPH'),number=Number(input.value);if(input.value.trim()===''||!Number.isFinite(number)||number<0||number>14)throw Error('invalid-target');return number}
+function syncTargetUI(number){$('abTargetPH').value=String(number);$('abTargetSlider').value=String(number)}
+function runTarget({mission=false}={}){try{
+ const target=targetRead(),result=engine.solveForPH(read(),target);
+ const out=$('abTargetResult');
+ if(!result.reachable){
+  out.textContent=fill(mt('targetImpossible'),{start:result.startPH.toFixed(2),end:result.endPH.toFixed(2)});
+  out.dataset.state='error';if(mission)$('abMissionFeedback').textContent=mt('unreachable');return false;
+ }
+ $('abadded').value=String(result.addedMl);update();
+ const real=engine.solve(read());
+ out.textContent=fill(mt('targetSuccess'),{dose:result.addedMl.toFixed(result.addedMl<0.1?4:2),ph:real.pH.toFixed(2)});
+ out.dataset.state='ok';
+ if(mission)$('abMissionFeedback').textContent=(missionGuess===missionCategory(target)?mt('right'):mt('wrong'))+' '+out.textContent;
+ return true;
+ }catch(e){$('abTargetResult').textContent=mt('targetError');$('abTargetResult').dataset.state='error';return false}}
+function missionRefresh(){const n=missionTarget;$('abMissionTitle').textContent=mt('missionTitle');$('abMissionPrompt').textContent=fill(mt('missionPrompt'),{ph:n.toFixed(1)});
+ $('abMissionPredict').textContent=mt('predictAcid');$('abMissionPredictBase').textContent=mt('predictBase');$('abMissionPredictNeutral').textContent=mt('predictNeutral');
+ $('abMissionTry').textContent=mt('try');$('abMissionNext').textContent=mt('next');
+ for(const [id,val] of [['abMissionPredict','acid'],['abMissionPredictBase','base'],['abMissionPredictNeutral','neutral']])$(''+id).setAttribute('aria-pressed',String(missionGuess===val));
+}
+
 const visuals={
  hu:{title:'Így változik az oldat',acid:'Savas oldat',neutral:'Semleges körüli pH',base:'Lúgos oldat',before:'Egyenértékpont előtt',at:'Egyenértékpont közelében',after:'Egyenértékpont után',info:'A pohár színe az indikátor szemléltető színe; a pH-skála nem egy indikátor színskálája.',drops:'Titrálóoldat hozzáadása'},
  de:{title:'So verändert sich die Lösung',acid:'Saure Lösung',neutral:'Etwa neutraler pH',base:'Basische Lösung',before:'Vor dem Äquivalenzpunkt',at:'Nahe Äquivalenzpunkt',after:'Nach dem Äquivalenzpunkt',info:'Die Becherfarbe illustriert den Indikator; die pH-Skala ist keine Indikator-Farbskala.',drops:'Maßlösung zugeben'},
@@ -119,7 +149,9 @@ function draw(series,current){const canvas=$('abCanvas'),rect=canvas.getBounding
 function localize(){const save={a:$('abanalyte').value,t:$('abtitrant').value,i:$('abindicator').value};select('analyte',engine.reagents);select('titrant',engine.reagents);select('indicator',engine.indicators);$('abanalyte').value=save.a;$('abtitrant').value=save.t;$('abindicator').value=save.i;
  $('abTitle').textContent=tr('title');$('abIntro').textContent=tr('intro');$('abNotice').textContent=tr('notice');$('abGraphLabel').textContent=tr('graph');
  for(const key of fields)$('abLabel'+key).textContent=tr(key);
- $('abEqButton').textContent=tr('reset');$('abDoseSliderLabel').textContent=tr('added');update();}
+ $('abEqButton').textContent=tr('reset');$('abDoseSliderLabel').textContent=tr('added');
+ $('abTargetTitle').textContent=mt('targetTitle');$('abTargetIntro').textContent=mt('targetIntro');$('abTargetLabel').textContent=mt('targetLabel');$('abTargetSolve').textContent=mt('targetAction');
+ missionRefresh();update();}
 function update(){try{const opts=read(),result=engine.solve(opts);let series=engine.curve(opts);if(opts.addedMl>series[series.length-1].addedMl){const end=opts.addedMl*1.05;series=Array.from({length:121},(_,i)=>engine.solve({...opts,addedMl:end*i/120}))}const color=engine.indicatorColor(result.pH,$('abindicator').value);
  $('abPH').textContent=tr('ph')+': '+result.pH.toFixed(2);$('abEq').textContent=tr('eq')+': '+result.equivalenceMl.toFixed(2)+' mL';
  const indicatorShade=displayedIndicator(result.pH,$('abindicator').value);
@@ -133,6 +165,12 @@ $('abDoseMinus').addEventListener('click',()=>setDose((Number($('abadded').value
 $('abDosePlus').addEventListener('click',()=>setDose((Number($('abadded').value)||0)+1));
 $('abDoseReset').addEventListener('click',()=>setDose(0));
 $('abEqButton').addEventListener('click',()=>{try{const value=engine.solve({...read(),addedMl:0}).equivalenceMl;$('abadded').value=value;update()}catch{update()}});
+$('abTargetPH').addEventListener('input',()=>{const n=Number($('abTargetPH').value);if(Number.isFinite(n)&&n>=0&&n<=14)$('abTargetSlider').value=String(n)});
+$('abTargetSlider').addEventListener('input',()=>{$('abTargetPH').value=$('abTargetSlider').value});
+$('abTargetSolve').addEventListener('click',()=>runTarget());
+for(const [id,value] of [['abMissionPredict','acid'],['abMissionPredictBase','base'],['abMissionPredictNeutral','neutral']])$(''+id).addEventListener('click',()=>{missionGuess=value;missionRefresh();$('abMissionFeedback').textContent=''});
+$('abMissionTry').addEventListener('click',()=>{if(!missionGuess){$('abMissionFeedback').textContent=mt('predictFirst');return}syncTargetUI(missionTarget);runTarget({mission:true})});
+$('abMissionNext').addEventListener('click',()=>{const values=[3,5,7,9,11,6,8,4,10];missionRound=(missionRound+1)%values.length;missionTarget=values[missionRound];missionGuess=null;missionRefresh();$('abMissionFeedback').textContent='';$('abTargetResult').textContent='';syncTargetUI(missionTarget)});
 tab.addEventListener('click',()=>{document.querySelectorAll('main > section').forEach(n=>n.classList.add('hidden'));document.querySelectorAll('.tabs > button').forEach(n=>n.classList.remove('active'));section.classList.remove('hidden');tab.classList.add('active');localize()});
 for(const l of ['hu','de','en'])$(l)?.addEventListener('click',()=>{queueMicrotask(localize);requestAnimationFrame(localize)});
 localize();
