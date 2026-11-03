@@ -21,3 +21,27 @@
 .quest-reality summary{cursor:pointer;font-weight:700}
 .quest-reality p{margin:11px 0}
 @media(max-width:640px){.curriculum-toolbar{align-items:stretch;flex-direction:column}.curriculum-modes button{flex:1}.curriculum-content{padding:13px}#curriculumTopic{width:100%}}
+
+/* 2.6: no overlapping text, fixed tab access and visible feedback */
+html{scroll-padding-top:80px}
+body{padding-bottom:68px}
+main{min-width:0}
+main>section{scroll-margin-top:82px;min-width:0}
+#reactionSection.hidden{display:none!important}
+.tabs{position:sticky!important;top:0!important;z-index:55!important;display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overscroll-behavior-x:contain;scrollbar-width:thin;background:#0b1d30!important;box-shadow:0 5px 20px #0008;margin-top:4px!important}
+.tabs button{flex:0 0 auto!important;min-width:110px!important;max-width:185px!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.3;min-height:42px;padding:8px 12px!important}
+#curriculumSection, #bunsenSection, #acidBaseSection{min-width:0;overflow-wrap:anywhere}
+#curriculumSection *{max-width:100%}
+#curriculumSection h2,#curriculumSection h3,#curriculumSection p,#curriculumSection li{overflow-wrap:anywhere;white-space:normal;line-height:1.55}
+#curriculumSection .curriculum-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+#curriculumSection .curriculum-content{width:100%;min-width:0}
+#curriculumSection .curriculum-choices{min-width:0}
+#curriculumSection .academy-choices label{min-width:0;overflow-wrap:anywhere}
+#curriculumSection .academy-choices input{min-width:18px!important}
+#curriculumSection .curriculum-modes{display:flex;flex-wrap:wrap;gap:7px}
+#curriculumSection .curriculum-actions{position:sticky;bottom:52px;z-index:20;background:#0b2435f5;border:1px solid #34556d;padding:8px;border-radius:11px}
+.chem-bottom-tabs{position:fixed;bottom:0;left:0;right:0;z-index:80;display:flex;justify-content:center;align-items:center;gap:12px;padding:8px 16px;background:#091828f5;border-top:1px solid #45677b;box-shadow:0 -5px 24px #0008;min-height:53px}
+.chem-bottom-tabs button{min-width:45px;min-height:38px;font-size:22px;line-height:1;padding:4px}
+.chem-bottom-tabs span{font-weight:650;text-align:center;max-width:min(500px,65vw);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chem-bottom-tabs button:disabled{opacity:.3;cursor:not-allowed}
+@media(max-width:650px){.tabs button{min-width:105px!important;font-size:12px!important}#curriculumSection .curriculum-content{padding:12px}.chem-bottom-tabs{padding:7px 10px}#curriculumSection .curriculum-actions{bottom:52px}}
