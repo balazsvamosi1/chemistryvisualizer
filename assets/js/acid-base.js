@@ -96,7 +96,7 @@ function localize(){const save={a:$('abanalyte').value,t:$('abtitrant').value,i:
  $('abTitle').textContent=tr('title');$('abIntro').textContent=tr('intro');$('abNotice').textContent=tr('notice');$('abGraphLabel').textContent=tr('graph');
  for(const key of fields)$('abLabel'+key).textContent=tr(key);
  $('abEqButton').textContent=tr('reset');$('abDoseSliderLabel').textContent=tr('added');update();}
-function update(){try{const opts=read(),result=engine.solve(opts),series=engine.curve(opts),color=engine.indicatorColor(result.pH,$('abindicator').value);
+function update(){try{const opts=read(),result=engine.solve(opts);let series=engine.curve(opts);if(opts.addedMl>series[series.length-1].addedMl){const end=opts.addedMl*1.05;series=Array.from({length:121},(_,i)=>engine.solve({...opts,addedMl:end*i/120}))}const color=engine.indicatorColor(result.pH,$('abindicator').value);
  $('abPH').textContent=tr('ph')+': '+result.pH.toFixed(2);$('abEq').textContent=tr('eq')+': '+result.equivalenceMl.toFixed(2)+' mL';
  const indicatorShade=displayedIndicator(result.pH,$('abindicator').value);
  $('abIndicatorColor').style.background=indicatorShade;
