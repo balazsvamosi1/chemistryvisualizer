@@ -57,3 +57,19 @@
 #abVisualPhase{overflow-wrap:anywhere;line-height:1.45}
 #abVisualLegend{overflow-wrap:anywhere}
 @media(max-width:660px){#abVisual{grid-template-columns:minmax(35px,60px) minmax(86px,130px);justify-content:center;gap:14px}#abVisual .ab-visual-information{grid-column:1/-1}#abVisual .ab-burette{height:145px}#abVisual .ab-beaker{height:115px}}
+
+
+/* 2.8.0: target-pH exploration and focused mini-missions */
+#abTargetResult[data-state="error"]{color:#ffbaa8}
+#abTargetResult[data-state="ok"]{color:#a9f4d5}
+.ab-target-panel,.ab-mission{display:grid;gap:10px;padding:15px;border:1px solid #4e859e;border-radius:12px;background:#143750}
+.ab-target-panel h3,.ab-mission strong{font-size:1.05rem;margin:0}
+.ab-target-panel p,.ab-mission p{margin:0;line-height:1.5}
+.ab-target-entry{display:grid;gap:10px}
+.ab-target-entry input[type="range"]{accent-color:#82d9f0;min-height:28px}
+#abTargetSolve,.ab-mission-actions button{min-height:44px;cursor:pointer}
+.ab-mission-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.ab-mission-actions button{padding:9px;white-space:normal}
+.ab-mission-actions button[aria-pressed="true"]{outline:3px solid #9cebd0;background:#185d61}
+#abTargetResult,#abMissionFeedback{min-height:1.7em;overflow-wrap:anywhere}
+@media(max-width:450px){.ab-mission-actions{grid-template-columns:1fr 1fr}}
