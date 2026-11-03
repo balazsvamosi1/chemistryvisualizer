@@ -126,3 +126,58 @@
 #materialsSection .material-tools>.materialFilters,#materialsSection .material-tools>.labrow{padding:8px 12px 12px}
 #materialsSection .material-tools>#importStatus{padding:0 12px 10px}
 #materialsSection .material-compare-note{padding:9px 12px;border-left:3px solid #6bd5c9;background:#14394b;border-radius:5px;line-height:1.55}
+
+
+/* Beta 2.9.5 — periodic-table-inspired square MATERIAL FAMILY map */
+#materialsSection #materialCards.materialcards{
+ display:grid!important;
+ grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ gap:9px!important;
+ align-items:stretch;
+ margin:14px 0;
+}
+#materialsSection .material-family-cell{
+ position:relative;
+ aspect-ratio:1/1;
+ min-width:0;min-height:0;
+ display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;
+ gap:4px;padding:10px;
+ border:1px solid var(--familyAccent,#77d9d0);
+ border-top:5px solid var(--familyAccent,#77d9d0);
+ border-radius:7px;
+ background:#153a50;color:#eaf8fd;
+ text-align:left;cursor:pointer;
+ transition:background-color .12s,border-color .12s;
+ box-sizing:border-box;
+}
+#materialsSection .material-family-cell:hover,#materialsSection .material-family-cell:focus-visible{background:#21536d;outline:2px solid #b5eddd;outline-offset:1px}
+#materialsSection .material-family-cell.active{background:#285c68;box-shadow:inset 0 0 0 2px #b9f2db}
+#materialsSection .material-family-code{font-size:clamp(1.25rem,2.5vw,1.95rem);font-weight:800;line-height:1.1;letter-spacing:-.04em;white-space:nowrap}
+#materialsSection .material-family-cell>strong{font-weight:650;font-size:clamp(.69rem,1.1vw,.9rem);line-height:1.17;overflow-wrap:anywhere}
+#materialsSection .material-family-cell>small{align-self:flex-end;opacity:.83;font-size:.73rem}
+#materialsSection .material-family-expanded{
+ grid-column:1/-1;
+ display:grid;gap:12px;
+ border:1px solid #638b9d;
+ border-radius:12px;background:#102d43;
+ padding:15px;min-width:0;
+}
+#materialsSection .material-family-expanded>h3{margin:0;font-size:1.1rem}
+#materialsSection .material-family-intro{margin:0;line-height:1.5;color:#cce4ed}
+#materialsSection .material-family-expanded .material-family-tiles{
+ display:grid;grid-template-columns:repeat(auto-fill,minmax(116px,1fr));gap:9px;min-width:0;
+}
+#materialsSection .material-family-expanded .materialTile{min-width:0;aspect-ratio:1/1;min-height:0;overflow-wrap:anywhere}
+#materialsSection .material-family-expanded .material-family-tiles>#materialDetail{
+ grid-column:1/-1;aspect-ratio:auto;min-width:0;padding:12px;
+}
+@media(max-width:900px){#materialsSection #materialCards.materialcards{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
+@media(max-width:650px){#materialsSection #materialCards.materialcards{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+ #materialsSection .material-family-cell{padding:7px;min-height:0}
+ #materialsSection .material-family-code{font-size:1.3rem}
+ #materialsSection .material-family-cell>strong{font-size:.70rem}
+ #materialsSection .material-family-expanded{padding:9px}
+ #materialsSection .material-family-expanded .material-family-tiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+}
+@media(max-width:380px){#materialsSection .material-family-cell>strong{font-size:.63rem}#materialsSection .material-family-code{font-size:1.15rem}}
+@media(prefers-reduced-motion:reduce){#materialsSection .material-family-cell{transition:none}}
