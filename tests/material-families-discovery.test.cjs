@@ -51,5 +51,5 @@ test('new scripts load before app-core and UI has hidden science section',()=>{
   const pos=html.indexOf(script);assert.ok(pos>=0&&pos<appPos,script);
  }
  assert.match(html,/id="abScienceDetails"/);assert.match(html,/id="abReactionExplorer"/);
- assert.ok(html.includes('acid-material-explorer.js'));assert.ok(html.includes('Beta 2.9.5'));
+ assert.ok(html.includes('acid-material-explorer.js'));assert.ok(html.includes('Beta 2.9.6'));
 });
