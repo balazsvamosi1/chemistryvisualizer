@@ -1,0 +1,34 @@
+/* Chemistry Lab Beta 2.9.0 — discoverable material science without visual clutter.
+   All detail panels are optional and closed by default. */
+.material-discovery{display:grid;gap:11px;margin-top:16px;padding:15px;border-radius:12px;background:#12344a;border:1px solid #547e93;max-width:100%;box-sizing:border-box}
+.material-discovery h4{margin:0;font-size:1.1rem}
+.material-discovery>strong{font-size:1rem;line-height:1.4}
+.material-discovery p{margin:4px 0;line-height:1.55}
+.material-discovery details,.ab-science-details,.ab-reaction-result details{border:1px solid #476e82;border-radius:9px;padding:10px 12px;background:#0c263a}
+.material-discovery summary,.ab-science-details summary,.ab-reaction-result summary{cursor:pointer;font-weight:650;min-height:24px}
+.material-compare{display:grid;gap:8px}
+.material-compare label{display:grid;gap:5px;font-weight:650}
+.material-compare select{width:100%;max-width:400px;min-height:44px;padding:7px 10px;background:#0a2436;color:#e3f2fa;border:1px solid #5c879c;border-radius:8px}
+.material-compare-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.material-compare-grid>div{display:grid;gap:6px;padding:11px;border:1px solid #4c7488;border-radius:10px;background:#163b50;min-width:0;overflow-wrap:anywhere}
+.material-compare-grid p{font-weight:750;font-size:1.3rem}
+.ab-science-details,.ab-reaction-explorer{margin:14px 0;border-radius:12px}
+.ab-science-details{padding:12px}
+.ab-science-details p{line-height:1.65;margin:12px 0}
+.ab-reaction-explorer{display:grid;gap:11px;padding:15px;border:1px solid #4a748e;background:#0c293b}
+.ab-reaction-explorer h3{font-size:1.1rem;margin:0}
+.ab-reaction-explorer>p{margin:0;line-height:1.5}
+.ab-reaction-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ab-reaction-controls label{display:grid;gap:6px;min-width:0}
+.ab-reaction-controls select{min-width:0;width:100%;padding:9px;color:#edf8ff;background:#092338;border:1px solid #59849c;border-radius:8px}
+.ab-reaction-explorer button{justify-self:start;min-height:44px;padding:9px 20px}
+.ab-reaction-result{display:grid;gap:10px;padding:12px;border-radius:10px;background:#102d42}
+.ab-reaction-result>p{margin:0;overflow-wrap:anywhere}
+.ab-reaction-visual{height:78px;display:flex;align-items:center;justify-content:center;border:1px solid #6b879a;border-radius:12px;background:linear-gradient(120deg,#173e52,#2b7180)}
+.ab-reaction-gas{font-weight:750;font-size:1.4rem}
+.ab-reaction-result[data-reaction="gas"] .ab-reaction-gas{animation:gasRise 1.8s ease-in-out infinite alternate}
+.ab-reaction-result[data-reaction="none"] .ab-reaction-visual{background:#193147}
+.ab-reaction-explorer small{line-height:1.5;color:#bed6e4}
+@keyframes gasRise{from{transform:translateY(5px);opacity:.6}to{transform:translateY(-8px);opacity:1}}
+@media(max-width:580px){.material-compare-grid,.ab-reaction-controls{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.ab-reaction-result .ab-reaction-gas{animation:none!important}}
