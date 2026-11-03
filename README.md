@@ -393,3 +393,11 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - The material grid is built in a detached `DocumentFragment` and only swaps into the page after construction, preventing a partial redraw from leaving an empty catalogue. A responsive-column fallback is available without `matchMedia`.
 - Material 2D/interactive structural views are still present. The 'open structure' action now explicitly activates the modern Molecule tab before centering the selected structure.
 - Added regression assertions for detail-node preservation, structure-tab activation and defensive rendering. Validated JavaScript syntax and source-level invariants; live browser/mobile E2E regression not yet run.
+
+
+## Beta 2.9.8 — Inline interactive structure previews and comparison
+- A selected material's existing catalogue structure now appears directly in its material details as an **interactive, lightweight SVG 2D viewer**: pan with mouse/touch, zoom with wheel or accessible +/- controls, reset, and keyboard pan/zoom (arrow keys, +/- or Home). Its geometry is explicitly an educational, schematic 2D representation rather than a molecular energy minimization.
+- The full existing Molecule laboratory remains available from the material card. No 3D data or imported structure models are removed.
+- For the ten curated learning pairs, an expanded comparison displays two independent structural viewers when both catalogue models exist, alongside the existing prediction question and scientific explanation.
+- Source-level verification checked that all 68 built-in structure entries yield valid drawable geometry, and a dedicated test file `tests/material-preview.test.cjs` covers geometry, event handlers, language/navigation and DOM state invariants. Browser-based manual and end-to-end tests have not yet been run.
+- Original Apache-2.0 implementation with no external runtime dependencies, compatible with GitHub Pages.
