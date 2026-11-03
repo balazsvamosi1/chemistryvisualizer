@@ -35,7 +35,7 @@ test('redundant material type filters are absent, while search and JSON data han
 test('material expansion and scientific learning are still connected',()=>{
  assert.match(app,/window\.ChemistryDiscovery\.renderMaterial/);
  assert.match(app,/window\.ChemistryMaterialLearning\.renderMaterial/);
- assert.match(html,/Beta 2\.9\.7/);
+ assert.match(html,/Beta 2\.9\.8/);
 });
 
 test('material detail is reattached before switching family and after rebuilding',()=>{
