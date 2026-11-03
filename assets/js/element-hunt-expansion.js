@@ -20,9 +20,9 @@ function build(elements,count=100){
   let q;
   if(kind===0)q=[`Melyik elem rendszáma ${a.z}?`,`Welches Element hat die Ordnungszahl ${a.z}?`,`Which element has atomic number ${a.z}?`];
   if(kind===1)q=[`Melyik elem vegyjele tartozik ehhez a névhez: ${a.hu}?`,`Welches Symbol gehört zu ${a.de}?`,`Which symbol belongs to ${a.en}?`];
-  if(kind===2)q=[`Melyik elem található a periódusos rendszer ${p}. periódusában?`,`Welches Element steht in Periode ${p}?`,`Which element belongs to period ${p}?`];
+  if(kind===2)q=[`Melyik ${a.z} rendszámú elem található a ${p}. periódusban?`,`Welches Element mit der Ordnungszahl ${a.z} steht in Periode ${p}?`,`Which element with atomic number ${a.z} belongs to period ${p}?`];
   if(kind===3)q=[`Melyik elem követi a(z) ${previous.hu} (${previous.s}) elemet rendszám szerint?`,`Welches Element folgt auf ${previous.de} (${previous.s})?`,`Which element comes directly after ${previous.en} (${previous.s}) by atomic number?`];
-  if(kind===4)q=[`Melyik elem ${family[0]} a ${p}. periódusban?`,`Welches Element ist ein ${family[1]} in Periode ${p}?`,`Which element is a ${family[2]} in period ${p}?`];
+  if(kind===4)q=[`Melyik ${a.z} rendszámú elem ${family[0]} a ${p}. periódusban?`,`Welches Element mit Ordnungszahl ${a.z} ist ein ${family[1]} in Periode ${p}?`,`Which element with atomic number ${a.z} is a ${family[2]} in period ${p}?`];
   const valid=x=>x.z!==a.z&&(kind===2?period(x.z)!==p:kind===4?(x.cat!==a.cat||period(x.z)!==p):true);
   const pool=byZ.filter(valid).sort((x,y)=>Math.abs(x.z-a.z)-Math.abs(y.z-a.z)||x.z-y.z);
   const distractors=[];for(const item of pool){if(distractors.length===3)break;if(!distractors.some(x=>x.s===item.s))distractors.push(item)}
