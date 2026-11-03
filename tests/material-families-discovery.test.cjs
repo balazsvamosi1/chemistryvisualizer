@@ -6,8 +6,8 @@ const hunt=require('../assets/js/element-hunt-expansion.js');
 const discovery=require('../assets/js/chemistry-discovery.js');
 const reactivity=require('../assets/js/acid-material-explorer.js');
 const engine=require('../assets/js/acid-base.js');
-const elements=JSON.parse(html.match(/<script id="element-data" type="application\\/json">([^<]+)<\\/script>/)[1]);
-const extra=JSON.parse(app.match(/materials\\.push\\(\\.\\.\\.(\\[[\\s\\S]*?\\])\\);/)[1]);
+const elements=JSON.parse(html.match(/<script id="element-data" type="application\/json">([^<]+)<\/script>/)[1]);
+const extra=JSON.parse(app.match(/materials\.push\(\.\.\.(\[[\s\S]*?\])\);/)[1]);
 const baseline=[{hu:'Víz',category:'molecule'},{hu:'Konyhasó',category:'so'},{hu:'Kristálycukor',category:'szerves'},{hu:'Szőlőcukor',category:'szerves'},{hu:'Ecet (ecetsav)',category:'keverek'},{hu:'Szódabikarbóna',category:'so'},{hu:'Etanol',category:'szerves'},{hu:'Szén-dioxid',category:'gaz'},{hu:'Koffein',category:'szerves'},{hu:'Metán',category:'gaz'},{hu:'Hidrogén-peroxid',category:'szerves'},{hu:'Grafit',category:'halozat'}];
 test('68 materials have a named chemical family and adjacent sorted relatives',()=>{
  const list=baseline.concat(extra);assert.equal(list.length,68);
