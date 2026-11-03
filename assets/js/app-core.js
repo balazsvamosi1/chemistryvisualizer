@@ -394,6 +394,7 @@ function renderMaterials(){
    b.type='button';
    b.className='materialcard materialTile'+(materialDetailVisible&&materialSelected===i?' selected':'');
    b.style.setProperty('--matAccent',catColors[m.category]||'#45aacc');
+   b.dataset.materialIndex=String(i);
    b.setAttribute('aria-expanded',String(materialDetailVisible&&materialSelected===i));
    const symbol=document.createElement('strong');symbol.textContent=m.f;
    const name=document.createElement('span');name.textContent=m[lang]||m.hu;
@@ -408,7 +409,7 @@ function renderMaterials(){
      button.classList.toggle('selected',active);
      button.setAttribute('aria-expanded',String(active));
     }
-    if(materialDetailVisible){detail.hidden=false;tiles.after(detail);showMaterial()}
+    if(materialDetailVisible){detail.hidden=false;b.after(detail);showMaterial()}
     else{detail.hidden=true;detail.replaceChildren()}
    };
    tiles.append(b);
@@ -419,7 +420,7 @@ function renderMaterials(){
     if(!query)materialOpenFamilies.add(key);
    }else{
     materialOpenFamilies.delete(key);
-    if(detail.parentElement===family){
+    if(family.contains(detail)){
      detail.hidden=true;
      materialDetailVisible=false;
      for(const button of tiles.querySelectorAll('.materialTile')){
@@ -431,7 +432,9 @@ function renderMaterials(){
   });
   container.append(family);
   if(materialDetailVisible&&items.some(v=>v.i===materialSelected)&&family.open){
-   family.append(detail);detail.hidden=false;
+   const selectedButton=[...tiles.querySelectorAll('.materialTile')].find(b=>b.dataset.materialIndex===String(materialSelected));
+   if(selectedButton)selectedButton.after(detail);else family.append(detail);
+   detail.hidden=false;
   }
  }
  if(!visible.length){
