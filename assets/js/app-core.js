@@ -256,7 +256,7 @@ function modelNotice(m){
  const msg=m.kind==='molecule'
  ? bilingual('A rajz 2D molekulaszerkezet; a pontos térgeometria eltérhet.','Die Zeichnung zeigt eine 2D-Molekülstruktur; die räumliche Geometrie kann abweichen.')
  : bilingual('FIGYELEM: szemléltető részlet, nem önálló molekula. A kötésvalidátor nem alkalmazható közvetlenül erre a rács-/láncmodellre.','ACHTUNG: schematischer Ausschnitt, kein isoliertes Molekül. Der Molekülvalidator ist auf dieses Gitter-/Kettenmodell nicht unmittelbar anwendbar.');
- box.textContent=modelKinds[lang][m.kind]+' — '+msg;
+ box.textContent=(modelKinds[lang]||modelKinds.hu)[m.kind]+' — '+msg;
 }
 function modelToPreset(model){
  const atoms=model.atoms.map(a=>[a[0],Number(a[1]),Number(a[2])]);
@@ -407,6 +407,9 @@ function renderMaterials(){
    const wasOpen=activeMaterialFamily===key;
    activeMaterialFamily=wasOpen?null:key;
    materialDetailVisible=false;
+   // Detach the unique detail node to its stable home before rebuilding the grid.
+   const existingDetail=$('materialDetail');
+   if(existingDetail){existingDetail.hidden=true;existingDetail.replaceChildren();grid.after(existingDetail)}
    renderMaterials();
   });
   draft.append(cell);
@@ -440,7 +443,7 @@ function renderMaterials(){
     }
     if(materialDetailVisible){
      button.after(detail);detail.hidden=false;showMaterial();
-    }else{detail.hidden=true;detail.replaceChildren()}
+    }else{detail.hidden=true;detail.replaceChildren();grid.after(detail)}
    });
    tiles.append(button);
   }
@@ -464,7 +467,11 @@ function renderMaterials(){
  if(!filtered.length){const none=document.createElement('p');none.textContent=ui[3];draft.append(none);materialDetailVisible=false}
  grid.replaceChildren(draft);
  if(materialDetailVisible&&!detail.hidden)showMaterial();
- else{detail.hidden=true;detail.replaceChildren()}
+ else{
+  // A hidden detail MUST stay attached to the DOM. Otherwise the next
+  // document.getElementById('materialDetail') returns null and aborts rendering.
+  detail.hidden=true;detail.replaceChildren();grid.after(detail);
+ }
 }
 
 function showMaterial(){let m=materials[materialSelected];if(!m)return;let dest=$('materialDetail');dest.replaceChildren();dest.className='materialDetail';dest.style.setProperty('--matAccent',catColors[m.category]||'#45aacc');
