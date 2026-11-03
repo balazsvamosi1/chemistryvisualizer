@@ -56,6 +56,23 @@ const labels={
  en:{title:'Acid–Base Laboratory and Titration',intro:'Acid/base pH, indicators and interactive titration curves.',analyte:'Analyte solution',analyteM:'Concentration (mol/L)',volume:'Initial volume (mL)',titrant:'Titrant',titrantM:'Titrant concentration (mol/L)',added:'Added titrant (mL)',indicator:'Indicator',eq:'Equivalence volume',ph:'Calculated pH',notice:'Ideal model at 25 °C for monoprotic acids and monovalent bases. Activity, temperature, ionic strength and volume contraction are not modeled. Indicator colors are approximate.',error:'Invalid values or incompatible acid/base selection.',reset:'Equivalence point',graph:'Titration curve',indicatorShade:'Indicator color'}
 };
 const lang=()=>['hu','de','en'].find(k=>$(k)?.classList.contains('active'))||'hu',tr=k=>labels[lang()][k];
+const visuals={
+ hu:{title:'Így változik az oldat',acid:'Savas oldat',neutral:'Semleges körüli pH',base:'Lúgos oldat',before:'Egyenértékpont előtt',at:'Egyenértékpont közelében',after:'Egyenértékpont után',info:'A pohár színe az indikátor szemléltető színe; a pH-skála nem egy indikátor színskálája.',drops:'Titrálóoldat hozzáadása'},
+ de:{title:'So verändert sich die Lösung',acid:'Saure Lösung',neutral:'Etwa neutraler pH',base:'Basische Lösung',before:'Vor dem Äquivalenzpunkt',at:'Nahe Äquivalenzpunkt',after:'Nach dem Äquivalenzpunkt',info:'Die Becherfarbe illustriert den Indikator; die pH-Skala ist keine Indikator-Farbskala.',drops:'Maßlösung zugeben'},
+ en:{title:'Watch the solution change',acid:'Acidic solution',neutral:'Near neutral pH',base:'Basic solution',before:'Before equivalence',at:'Near equivalence',after:'After equivalence',info:'The beaker shows illustrative indicator colour; the pH scale is not a single indicator colour scale.',drops:'Adding titrant'}
+};
+function updateVisual(result,color){
+ const V=visuals[lang()],ratio=result.equivalenceMl>0?result.addedMl/result.equivalenceMl:0,degree=Math.max(0,Math.min(1,ratio/2));
+ $('abVisualTitle').textContent=V.title;
+ $('abVisualPhase').textContent=(result.pH<6.5?V.acid:result.pH>7.5?V.base:V.neutral)+' · '+(ratio<.98?V.before:ratio>1.02?V.after:V.at)+' · pH '+result.pH.toFixed(2);
+ $('abVisualLegend').textContent=V.info;
+ $('abPhMarker').style.left=(Math.max(0,Math.min(14,result.pH))/14*100)+'%';
+ $('abPhMarker').setAttribute('aria-label','pH '+result.pH.toFixed(2));
+ $('abLiquid').style.background=color.includes(' → ')?'linear-gradient(90deg,'+color.split(' → ').join(',')+')':color;
+ $('abLiquid').style.height=(33+Math.round(degree*40))+'%';
+ $('abBuretteFill').style.height=Math.round((1-degree)*73)+'%';
+ $('abDrop').style.opacity=result.addedMl>0?'1':'0.25';
+}
 const fields=['analyte','analyteM','volume','titrant','titrantM','added','indicator'];
 const select=(id,map)=>{const el=$('ab'+id);el.replaceChildren();for(const [k,val] of Object.entries(map)){const o=document.createElement('option');o.value=k;o.textContent=val[lang()]||k;el.append(o)}};
 const form={analyte:'HCl',analyteM:0.1,analyteMl:25,titrant:'NaOH',titrantM:0.1,addedMl:0};
@@ -78,7 +95,7 @@ function update(){try{const opts=read(),result=engine.solve(opts),series=engine.
  $('abPH').textContent=tr('ph')+': '+result.pH.toFixed(2);$('abEq').textContent=tr('eq')+': '+result.equivalenceMl.toFixed(2)+' mL';
  $('abIndicatorColor').style.background=color.includes(' → ')?'linear-gradient(90deg,'+color.split(' → ').join(',')+')':color;
  $('abStatus').textContent=tr('indicatorShade')+': '+engine.indicators[$('abindicator').value][lang()];
- $('abStatus').dataset.state='ok';draw(series,result);
+ $('abStatus').dataset.state='ok';updateVisual(result,color);draw(series,result);
  }catch(e){$('abPH').textContent='—';$('abEq').textContent='—';$('abStatus').textContent=tr('error');$('abStatus').dataset.state='error'}}
 for(const key of fields)$('ab'+key).addEventListener('input',update);
 $('abEqButton').addEventListener('click',()=>{try{const value=engine.solve({...read(),addedMl:0}).equivalenceMl;$('abadded').value=value;update()}catch{update()}});
