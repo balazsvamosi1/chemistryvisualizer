@@ -37,6 +37,30 @@ function solve({analyte='HCl',analyteM=0.1,analyteMl=25,titrant='NaOH',titrantM=
  const pH=(lo+hi)/2;
  return{pH,equivalenceMl:ca*va/ct,addedMl:vb,analyte,titrant,temperature:25,acidic:pH<6.95,relativeH:Math.pow(10,-pH)};
 }
+/**
+ * Inverse titration for a requested pH. Uses the same charge-balance equation as solve().
+ * Returns an explicit unreachable result if no dose in [0, maxAddedMl] can reach the target.
+ */
+function solveForPH(options={},targetPH,{maxAddedMl=5000,tolerancePH=1e-5}={}){
+ const target=Number(targetPH),max=Number(maxAddedMl);
+ if(!Number.isFinite(target)||target<0||target>14)throw Error('invalid-target-ph');
+ if(!Number.isFinite(max)||max<0||max>5000)throw Error('invalid-maximum-dose');
+ const base={...options,addedMl:0};
+ const start=solve(base),end=solve({...base,addedMl:max});
+ const upward=end.pH>start.pH;
+ const lowPH=Math.min(start.pH,end.pH),highPH=Math.max(start.pH,end.pH);
+ if(target<lowPH-tolerancePH||target>highPH+tolerancePH)
+  return{reachable:false,targetPH:target,startPH:start.pH,endPH:end.pH,maxAddedMl:max,equivalenceMl:start.equivalenceMl};
+ if(Math.abs(start.pH-target)<=tolerancePH)return{reachable:true,...start,targetPH:target,errorPH:start.pH-target};
+ if(Math.abs(end.pH-target)<=tolerancePH)return{reachable:true,...end,targetPH:target,errorPH:end.pH-target};
+ let lo=0,hi=max,midResult=start;
+ for(let i=0;i<65;i++){
+  const mid=(lo+hi)/2;midResult=solve({...base,addedMl:mid});
+  if(Math.abs(midResult.pH-target)<tolerancePH)break;
+  if((midResult.pH<target)===upward)lo=mid;else hi=mid;
+ }
+ return{reachable:true,...midResult,targetPH:target,errorPH:midResult.pH-target};
+}
 function curve(options={},points=121){const p=positive(points,'points');if(!Number.isInteger(p)||p<2||p>1001)throw Error('invalid-points');const eq=solve({...options,addedMl:0}).equivalenceMl;const end=Math.max(eq*2,1);return Array.from({length:p},(_,i)=>solve({...options,addedMl:end*i/(p-1)}))}
 const indicators={
  methylOrange:{hu:'Metilnarancs',de:'Methylorange',en:'Methyl orange',range:[3.1,4.4],acid:'#ea343b',base:'#f5cf31'},
@@ -44,7 +68,7 @@ const indicators={
  phenolphthalein:{hu:'Fenolftalein',de:'Phenolphthalein',en:'Phenolphthalein',range:[8.2,10],acid:'#e8f2f9',base:'#ed3c9c'}
 };
 function indicatorColor(ph,id){const x=indicators[id];if(!x)throw Error('unknown-indicator');if(ph<=x.range[0])return x.acid;if(ph>=x.range[1])return x.base;return x.acid+' → '+x.base}
-return Object.freeze({reagents,indicators,solve,curve,indicatorColor});
+return Object.freeze({reagents,indicators,solve,solveForPH,curve,indicatorColor});
 });
 (function(){
 'use strict';if(typeof document==='undefined')return;
