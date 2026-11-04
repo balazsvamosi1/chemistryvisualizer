@@ -87,7 +87,7 @@ let swipe=null;cv.addEventListener('pointerdown',e=>{swipe={x:e.clientX,y:e.clie
 function frame(now){let dt=Math.min(.08,(now-last)/1000||.016);last=now;requestAnimationFrame(frame);if($('mazeSection').classList.contains('hidden')||document.hidden)return;
  if(!state.pending&&!state.completed&&!state.failed){moveAcc+=dt;const heldDir=Object.values(held)[0];if(heldDir&&moveAcc>Math.max(.09,.17-state.upgrades.catalyst*.025)){moveAcc=0;doMove(...heldDir);}G.tick(state,dt);if(G.finish(state)){say(t('complete'));roundFinished=true;}}
  const events=state.events.splice(0);for(const event of events){if(event.type==='generated')say(t('generator')+' '+event.sym);else if(event.type==='full')say(t('full'));else if(event.type==='empowered'||event.type==='split')say(t('misfire'));else if(event.type==='failed')say(t('over'));else if(event.type==='defeated')say(t('reagent')+' ✓');else if(event.type==='upgrade')say(t(event.kind==='shield'?'help':event.kind));else if(event.type==='activator')say(t('activator'));}
- notificationTime=Math.max(0,notificationTime-dt);if(!notificationTime)notification='';sync();draw();quiz();
+ notificationTime=Math.max(0,notificationTime-dt);if(!notificationTime)notification='';if(events.length||!state._hudClock||now-state._hudClock>350){state._hudClock=now;sync();}draw();quiz();
 }
 for(const k of ['hu','de','en'])$(k)?.addEventListener('click',()=>queueMicrotask(()=>{sync();if(state.pending){quizShown=null;quiz();}}));
 window.ReactionMazeGame={reset,choose,getState:()=>state,move:doMove,craft:synth,place:charge,advance:next};
