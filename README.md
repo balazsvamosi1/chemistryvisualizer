@@ -2,6 +2,13 @@
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
 
+## Beta 2.10.2 — P0 answer-label hotfix (2026-11-04)
+
+- **P0 fixed:** Reaction Maze now localizes C, Cl and S quiz choices using the same `optionOrder` shuffle permutation as the underlying answer checker. A displayed correct chemistry term can no longer be rejected merely because its translated label was shown at a different index; incorrect labels do not award atoms.
+- New UI-level regression suite `tests/reaction-maze-displayed-answers.test.cjs`: 9 affected question-language combinations × 24 simulated interactions = 216 correct/incorrect rendered-answer click checks. All passed in the JavaScript DOM-mock test environment.
+- Keeps the first-attempt-only atom collection rule unchanged and retains the original Apache-2.0 browser-only distribution. Bumps the Reaction Maze UI script cache key for GitHub Pages.
+- Full Android/browser end-to-end validation remains outstanding.
+
 ## Beta 2.10.1 — P1 gameplay and assessment fixes (2026-11-04)
 
 - **Reaction Maze:** Catalyst only accelerates player movement / charge synthesis timing; enemy patrol speed now depends solely on enemy type and temporary enemy-specific boosts.
