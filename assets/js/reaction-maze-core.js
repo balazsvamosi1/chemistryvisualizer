@@ -69,35 +69,104 @@ function inside(x,y){return x>=0&&x<W&&y>=0&&y<H;}
 function open(s,x,y){return inside(x,y)&&s.grid[y][x]==='.';}
 function neighbors(x,y){return [[x+1,y],[x-1,y],[x,y+1],[x,y-1]].filter(([a,b])=>inside(a,b));}
 function distances(grid,x,y){const seen=new Map([[key(x,y),0]]),q=[[x,y]];for(let i=0;i<q.length;i++){const [a,b]=q[i],d=seen.get(key(a,b));for(const [nx,ny] of neighbors(a,b)){const k=key(nx,ny);if(grid[ny][nx]!=='.'||seen.has(k))continue;seen.set(k,d+1);q.push([nx,ny]);}}return seen;}
+// Symmetric arcade corridors: interconnected perimeter, inner lanes, crossroads and a central hub.
+// Each stage opens different bypasses; solid walls and breakable crystals are distinct.
+const PACMAN_LAYOUT=[
+ '###################',
+ '#.................#',
+ '#.###.###.###.###.#',
+ '#...#.........#...#',
+ '#.###.###.###.###.#',
+ '#..#...........#..#',
+ '#.###.........###.#',
+ '#..#...........#..#',
+ '#.###.###.###.###.#',
+ '#...#.........#...#',
+ '#.###.###.###.###.#',
+ '#.................#',
+ '###################'
+];
+const STAGE_PASSAGES=[
+ [],
+ [[2,3],[2,15],[10,3],[10,15]],
+ [[4,7],[4,11],[8,7],[8,11]],
+ [[2,7],[2,11],[10,7],[10,11]],
+ [[4,3],[4,15],[8,3],[8,15]],
+ [[2,3],[2,15],[4,7],[4,11],[8,7],[8,11],[10,3],[10,15]]
+];
+function shuffle(items,rnd){for(let i=items.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[items[i],items[j]]=[items[j],items[i]];}return items;}
 function generate(stage,seed){
- const rnd=random(seed),grid=Array.from({length:H},()=>Array(W).fill('#'));
- const stack=[[1,1]];grid[1][1]='.';while(stack.length){const [x,y]=stack[stack.length-1];const opts=[[2,0],[-2,0],[0,2],[0,-2]].filter(([dx,dy])=>inside(x+dx,y+dy)&&grid[y+dy][x+dx]==='#'&&x+dx>0&&y+dy>0&&x+dx<W-1&&y+dy<H-1);if(!opts.length){stack.pop();continue;}const [dx,dy]=opts[Math.floor(rnd()*opts.length)];grid[y+dy/2][x+dx/2]='.';grid[y+dy][x+dx]='.';stack.push([x+dx,y+dy]);}
- for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++)if(grid[y][x]==='#'&&rnd()<0.23&&((grid[y][x-1]==='.'&&grid[y][x+1]==='.')||(grid[y-1][x]==='.'&&grid[y+1][x]==='.')))grid[y][x]='.';
- let floors=[];for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++)if(grid[y][x]==='.')floors.push({x,y});
- const gen=floors.slice().sort((a,b)=>(Math.abs(a.x-9)+Math.abs(a.y-6))-(Math.abs(b.x-9)+Math.abs(b.y-6)))[0];
- const dist=distances(grid,1,1);
- const exit=floors.slice().sort((a,b)=>(dist.get(key(b.x,b.y))||0)-(dist.get(key(a.x,a.y))||0))[0];
- // A few removable walls, retaining a route between the spawn, ion generator and exit.
- const safe=(x,y)=>!((x<=2&&y<=2)||(x===gen.x&&y===gen.y)||(x===exit.x&&y===exit.y));
- for(const p of floors.slice().sort(()=>rnd()-.5)){if(rnd()>0.095||!safe(p.x,p.y))continue;grid[p.y][p.x]='%';const d=distances(grid,1,1);if(!d.has(key(gen.x,gen.y))||!d.has(key(exit.x,exit.y)))grid[p.y][p.x]='.';}
- floors=[];for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++)if(grid[y][x]==='.')floors.push({x,y});
- const d=distances(grid,1,1),reachable=floors.filter(p=>d.has(key(p.x,p.y)));
- const reserved=new Set([key(1,1),key(gen.x,gen.y),key(exit.x,exit.y)]);
- const enemyPositions=reachable.filter(p=>((d.get(key(p.x,p.y))||0)>9)&&!reserved.has(key(p.x,p.y))).sort((a,b)=>(d.get(key(b.x,b.y))||0)-(d.get(key(a.x,a.y))||0));
- const enemies=[];for(let i=0;i<STAGES[stage].count;i++){const pos=enemyPositions.find(p=>!reserved.has(key(p.x,p.y)))||exit;reserved.add(key(pos.x,pos.y));enemies.push({id:i,x:pos.x,y:pos.y,type:STAGES[stage].type,alive:true,clock:0,dir:i%4,boost:0});}
+ const rnd=random(seed),grid=PACMAN_LAYOUT.map(row=>row.split(''));
+ for(const [y,x] of STAGE_PASSAGES[stage])grid[y][x]='.';
+ if(stage===1||stage===3||stage===5){
+  for(const y of [3,9]){grid[y][4]=grid[y][14]='.';grid[y][7]=grid[y][11]='#';}
+ }else if(stage===2||stage===4){
+  for(const y of [5,7]){grid[y][3]=grid[y][15]='.';grid[y][7]=grid[y][11]='#';}
+ }
+ const gen={x:9,y:6},exit={x:17,y:11},start={x:1,y:1};
+ const cells=[];for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++)if(grid[y][x]==='.')cells.push({x,y});
+ const reserved=new Set([key(start.x,start.y),key(gen.x,gen.y),key(exit.x,exit.y)]);
+ // Use a few breakable tiles without ever disconnecting the usable map.
+ const candidates=shuffle(cells.filter(p=>!reserved.has(key(p.x,p.y))&&Math.abs(p.x-start.x)+Math.abs(p.y-start.y)>4),rnd);
+ let broken=0;
+ for(const p of candidates){
+  if(broken>=5+stage||rnd()>.24)continue;
+  grid[p.y][p.x]='%';
+  const remaining=distances(grid,start.x,start.y);
+  if(!remaining.has(key(gen.x,gen.y))||!remaining.has(key(exit.x,exit.y))||remaining.size!==cells.length-broken-1){
+   grid[p.y][p.x]='.';
+  }else broken++;
+ }
+ const d=distances(grid,start.x,start.y);
+ const walk=cells.filter(p=>grid[p.y][p.x]==='.'&&d.has(key(p.x,p.y)));
+ const enemyPositions=walk.filter(p=>(d.get(key(p.x,p.y))||0)>12&&!reserved.has(key(p.x,p.y))).sort((a,b)=>(d.get(key(b.x,b.y))||0)-(d.get(key(a.x,a.y))||0));
+ const enemies=[];
+ for(let i=0;i<STAGES[stage].count;i++){
+  const pos=enemyPositions.find(p=>!reserved.has(key(p.x,p.y)))||exit;
+  reserved.add(key(pos.x,pos.y));enemies.push({id:i,x:pos.x,y:pos.y,type:STAGES[stage].type,alive:true,clock:0,dir:i%4,boost:0});
+ }
  const useful=RECIPES[stage].atoms,choices=[];
  for(const [sym,n] of Object.entries(useful))for(let i=0;i<n*(STAGES[stage].count+3);i++)choices.push(sym);
  const decoys=['Ca','Fe',...(stage>0?Object.keys(RECIPES[stage-1].atoms):['C','Na'])];
- for(const sym of decoys)choices.push(sym);
- const pickupPositions=reachable.filter(p=>!reserved.has(key(p.x,p.y))).sort(()=>rnd()-.5);
- const atoms=[];choices.forEach((sym,i)=>{const pos=pickupPositions[i%pickupPositions.length];if(pos)atoms.push({id:i,x:pos.x,y:pos.y,sym});});
- const activator=stage===4?pickupPositions.find(p=>!atoms.some(a=>a.x===p.x&&a.y===p.y))||gen:null;
- return {grid,gen:{x:gen.x,y:gen.y},exit:{x:exit.x,y:exit.y},enemies,atoms,activator:activator?{x:activator.x,y:activator.y}:null,rnd};
+ choices.push(...decoys);
+ const pickupPositions=shuffle(walk.filter(p=>!reserved.has(key(p.x,p.y))),rnd);
+ const atoms=choices.slice(0,pickupPositions.length).map((sym,i)=>({id:i,x:pickupPositions[i].x,y:pickupPositions[i].y,sym}));
+ const occupied=new Set(atoms.map(a=>key(a.x,a.y)));
+ const activator=stage===4?(pickupPositions.find(p=>!occupied.has(key(p.x,p.y))&&Math.abs(p.x-start.x)+Math.abs(p.y-start.y)>6)||gen):null;
+ return {grid,gen,exit,enemies,atoms,activator:activator?{x:activator.x,y:activator.y}:null,rnd};
+}
+// All generated pickups are on reachable, empty corridors, away from their former position.
+function newPickupPosition(state,origin,minDistance=5){
+ const reach=distances(state.grid,state.player.x,state.player.y),floor=[];
+ for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){
+  const p={x,y};
+  if(state.grid[y][x]!=='.'||!reach.has(key(x,y)))continue;
+  if(x===state.player.x&&y===state.player.y)continue;
+  if(x===state.gen.x&&y===state.gen.y||x===state.exit.x&&y===state.exit.y)continue;
+  if(state.activator&&x===state.activator.x&&y===state.activator.y)continue;
+  if(state.atoms.some(a=>a.x===x&&a.y===y)||state.enemies.some(e=>e.alive&&e.x===x&&e.y===y))continue;
+  if(state.bombs.some(b=>b.x===x&&b.y===y)||state.bonuses.some(b=>b.x===x&&b.y===y))continue;
+  if(state.hazards.some(h=>h.x===x&&h.y===y)||state.waves.some(w=>w.cells.some(c=>c.x===x&&c.y===y)))continue;
+  floor.push(p);
+ }
+ const distance=p=>origin?Math.abs(p.x-origin.x)+Math.abs(p.y-origin.y):Infinity;
+ const remote=floor.filter(p=>distance(p)>=minDistance);
+ const choices=remote.length?remote:floor.filter(p=>distance(p)>0);
+ return choices.length?choices[Math.floor(state.rnd()*choices.length)]:null;
+}
+function emitAtom(state,sym,origin){
+ if(state.atoms.length>=35)return false;
+ const pos=newPickupPosition(state,origin);
+ if(!pos)return false;
+ state.atoms.push({id:state.nextAtomId++,x:pos.x,y:pos.y,sym});
+ state.lastSpawnPosition=pos;
+ state.events.push({type:'generated',sym});
+ return true;
 }
 function createLevel(stage=0,upgrades=null,seed=null){
  if(!Number.isInteger(stage)||stage<0||stage>=STAGES.length)throw Error('Stage out of range');
  const g=generate(stage,seed===null?20261104+stage*113:seed),inv={},ammo={};const stats={attempts:0,correct:0,missed:0,crafted:0,detonations:0,defeated:0,purged:0};
- return {stage,grid:g.grid,gen:g.gen,exit:g.exit,enemies:g.enemies,atoms:g.atoms,activator:g.activator,rnd:g.rnd,inv,ammo,stats,player:{x:1,y:1,hp:3,shield:upgrades?.shield||0},upgrades:{range:upgrades?.range||0,flask:upgrades?.flask||0,catalyst:upgrades?.catalyst||0,shield:0},bombs:[],waves:[],hazards:[],bonuses:[],pending:null,completed:false,failed:false,generatorTimer:10,elapsed:0,events:[]};
+ return {stage,grid:g.grid,gen:g.gen,exit:g.exit,enemies:g.enemies,atoms:g.atoms,activator:g.activator,rnd:g.rnd,inv,ammo,stats,player:{x:1,y:1,hp:3,shield:upgrades?.shield||0},upgrades:{range:upgrades?.range||0,flask:upgrades?.flask||0,catalyst:upgrades?.catalyst||0,shield:0},bombs:[],waves:[],hazards:[],bonuses:[],pending:null,completed:false,failed:false,generatorTimer:8,activatorRespawnTimer:12,atomRespawns:[],nextAtomId:g.atoms.length,lastSpawnPosition:null,lastActivatorPosition:g.activator,elapsed:0,events:[]};
 }
 function countInv(inv){return Object.values(inv).reduce((a,b)=>a+b,0);}
 function questionFor(state,sym){
@@ -113,13 +182,13 @@ function questionFor(state,sym){
  return question;
 }
 function collect(state){if(state.pending||state.failed||state.completed)return null;const p=state.player;
- if(state.activator&&p.x===state.activator.x&&p.y===state.activator.y){state.activator=null;state.inv.ACT=(state.inv.ACT||0)+1;state.events.push({type:'activator'});}
+ if(state.activator&&p.x===state.activator.x&&p.y===state.activator.y){state.lastActivatorPosition={...state.activator};state.activator=null;state.activatorRespawnTimer=12;state.inv.ACT=(state.inv.ACT||0)+1;state.events.push({type:'activator'});}
  const j=state.atoms.findIndex(a=>a.x===p.x&&a.y===p.y);if(j<0)return null;
  if(countInv(state.inv)>=MAX_INV){state.events.push({type:'full'});return null;}
- const atom=state.atoms.splice(j,1)[0];const q=questionFor(state,atom.sym);state.pending={sym:atom.sym,question:q};state.events.push({type:'quiz',sym:atom.sym});return state.pending;
+ const atom=state.atoms.splice(j,1)[0];const q=questionFor(state,atom.sym);state.pending={sym:atom.sym,question:q,origin:{x:atom.x,y:atom.y}};state.events.push({type:'quiz',sym:atom.sym});return state.pending;
 }
 function answer(state,index){const p=state.pending;if(!p)return null;
- const ok=Number.isInteger(index)&&index===p.question[4];state.stats.attempts++;if(ok){state.stats.correct++;state.inv[p.sym]=(state.inv[p.sym]||0)+1;}else{state.stats.missed++;}state.pending=null;state.events.push({type:ok?'correct':'wrong',sym:p.sym});return {ok,sym:p.sym,correct:p.question[4]};}
+ const ok=Number.isInteger(index)&&index===p.question[4];state.stats.attempts++;if(ok){state.stats.correct++;state.inv[p.sym]=(state.inv[p.sym]||0)+1;}else{state.stats.missed++;}state.atomRespawns.push({sym:p.sym,origin:p.origin,readyAt:state.elapsed+8+state.rnd()*4});state.pending=null;state.events.push({type:ok?'correct':'wrong',sym:p.sym});return {ok,sym:p.sym,correct:p.question[4]};}
 function canWalk(state,x,y){return open(state,x,y)&&!state.bombs.some(b=>b.x===x&&b.y===y);}
 function move(state,dx,dy){if(state.pending||state.failed||state.completed||Math.abs(dx)+Math.abs(dy)!==1)return false;const p=state.player,nx=p.x+dx,ny=p.y+dy;if(!canWalk(state,nx,ny))return false;p.x=nx;p.y=ny;collect(state);for(const b of state.bonuses){if(b.x===nx&&b.y===ny){if(b.type==='shield')p.shield++;else state.upgrades[b.type]=Math.min(3,(state.upgrades[b.type]||0)+1);state.events.push({type:'upgrade',kind:b.type});}}state.bonuses=state.bonuses.filter(b=>b.x!==nx||b.y!==ny);return true;}
 function craft(state,recipeId){const idx=RECIPES.findIndex(r=>r.id===recipeId);if(idx<0||idx>state.stage)return 'locked';const r=RECIPES[idx];if(Object.entries(r.atoms).some(([sym,n])=>(state.inv[sym]||0)<n))return 'missing';if(r.needsActivator&&!(state.inv.ACT>0))return 'activator';for(const [sym,n] of Object.entries(r.atoms))state.inv[sym]-=n;if(r.needsActivator)state.inv.ACT--;state.ammo[recipeId]=(state.ammo[recipeId]||0)+1;state.stats.crafted++;state.events.push({type:'craft',recipe:recipeId});return 'ok';}
@@ -154,8 +223,35 @@ function tick(state,dt){if(state.failed||state.completed||state.pending)return;d
  for(const enemy of state.enemies){if(!enemy.alive)continue;enemy.clock+=dt;enemy.boost=Math.max(0,enemy.boost-dt);const interval=Math.max(.22,STAGES[state.stage].speed-(enemy.boost>0?.3:0));if(enemy.clock>=interval){enemy.clock=0;enemyStep(state,enemy);}}
  const touching=state.enemies.find(e=>e.alive&&e.x===state.player.x&&e.y===state.player.y);
  if(state.hitCooldown<=0&&(state.hazards.some(h=>h.x===state.player.x&&h.y===state.player.y&&h.type!=='wet')||touching)){if(touching?.type==='rust'){state.player.hp=0;state.failed=true;state.events.push({type:'failed'});}else damage(state);state.hitCooldown=1.6;}
- // Safe periodic ion generator: after missed quizzes/expended charges a new quiz-able atom becomes available.
- state.generatorTimer-=dt;if(state.generatorTimer<=0){state.generatorTimer=8;const syms=Object.keys(RECIPES[state.stage].atoms);const sym=syms[Math.floor(state.rnd()*syms.length)];const pos=[state.gen,...neighbors(state.gen.x,state.gen.y).map(([x,y])=>({x,y}))].find(p=>open(state,p.x,p.y)&&!(p.x===state.player.x&&p.y===state.player.y)&&!state.atoms.some(a=>a.x===p.x&&a.y===p.y));if(pos){state.atoms.push({id:state.elapsed,x:pos.x,y:pos.y,sym});state.events.push({type:'generated',sym});}}
+ // A collected atom is lost from its old position, then returns later elsewhere.
+ for(let i=state.atomRespawns.length-1;i>=0;i--){
+  const item=state.atomRespawns[i];
+  if(item.readyAt>state.elapsed)continue;
+  if(emitAtom(state,item.sym,item.origin))state.atomRespawns.splice(i,1);
+  else item.readyAt=state.elapsed+2;
+ }
+ // The central ion generator distributes additional atoms to remote walkable lanes.
+ state.generatorTimer-=dt;
+ if(state.generatorTimer<=0){
+  state.generatorTimer=8;
+  const syms=Object.keys(RECIPES[state.stage].atoms);
+  const sym=syms[Math.floor(state.rnd()*syms.length)];
+  emitAtom(state,sym,state.lastSpawnPosition||state.gen);
+ }
+ // Stage five must never softlock if a one-use fictional activator was wasted.
+ if(state.stage===4&&!state.activator&&!(state.inv.ACT>0)&&!(state.ammo.AL>0)&&!state.bombs.some(b=>b.recipe==='AL')){
+  state.activatorRespawnTimer-=dt;
+  if(state.activatorRespawnTimer<=0){
+   const pos=newPickupPosition(state,state.lastActivatorPosition||state.gen,5);
+   if(pos){
+    state.activator={x:pos.x,y:pos.y};
+    state.lastActivatorPosition={...pos};
+    state.events.push({type:'activatorGenerated'});
+    state.activatorRespawnTimer=12;
+   }else state.activatorRespawnTimer=2;
+  }
+ }
+
 }
 function finish(state){if(state.failed||state.completed||state.pending||state.enemies.some(e=>e.alive))return false;if(state.player.x!==state.exit.x||state.player.y!==state.exit.y)return false;state.completed=true;state.events.push({type:'completed'});return true;}
 function purge(state,sym){if(!(state.inv[sym]>0))return false;state.inv[sym]--;state.stats.purged++;state.events.push({type:'purged',sym});if(sym==='Na'&&state.hazards.some(h=>h.type==='wet'&&h.x===state.player.x&&h.y===state.player.y)){damage(state);state.events.push({type:'sodiumWater'});}return true;}
