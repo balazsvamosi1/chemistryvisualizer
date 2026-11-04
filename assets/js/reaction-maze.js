@@ -13,10 +13,10 @@ en:{name:'Reaction Maze',subtitle:'Six tactical chemistry stages · quiz-based a
 const t=k=>T[lang()][k]||T.hu[k]||k;
 const modeColor={fire:'#ff8b49',spark:'#f5e269',acid:'#b2ff81',alkaline:'#9bc7ff',rust:'#c99a82',heavy:'#c9adf5'};
 const atomColor={H:'#e8f9ff',O:'#f68c83',C:'#93b6cc',Na:'#f4bf92',Cl:'#a9ed93',Al:'#b5bcce',K:'#bfa2f4',S:'#f4e17e',Ca:'#e5b8f8',Fe:'#b89e86'};
-let state=G.createLevel(),selected=G.RECIPES[0].id,held={},moving=0,moveAcc=0,last=0,quizShown=null,notification='',notificationTime=0,roundFinished=false;
+let state=G.createLevel(),selected=G.RECIPES[0].id,held={},moving=0,moveAcc=0,last=0,quizShown=null,notification='',notificationTime=0,roundFinished=false,recipeSignature='',purgeSignature='';
 const $make=(tag,cls,text)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;};
 const say=(msg)=>{notification=msg;notificationTime=5;};
-function reset(stage=state.stage,keepUpgrades=false){state=G.createLevel(stage,keepUpgrades?{...state.upgrades,shield:state.player.shield}:null);selected=G.RECIPES[stage].id;roundFinished=false;quizShown=null;const quiz=$('mazeQuiz');quiz.hidden=true;quiz.replaceChildren();say(G.STAGES[stage].description[li()]);sync();render();}
+function reset(stage=state.stage,keepUpgrades=false){state=G.createLevel(stage,keepUpgrades?{...state.upgrades,shield:state.player.shield}:null);selected=G.RECIPES[stage].id;roundFinished=false;quizShown=null;const quiz=$('mazeQuiz');quiz.hidden=true;quiz.replaceChildren();say(G.STAGES[stage].description[li()]);sync();draw();}
 const choose=(id)=>{selected=id;sync();};
 function currentRecipe(){return G.RECIPES.find(r=>r.id===selected);}
 function parts(r){return Object.entries(r.atoms).map(([k,n])=>n+'×'+k).join(' + ')+(r.needsActivator?' + ★':'');}
@@ -29,8 +29,8 @@ function sync(){
  $('mazeInventory').textContent=t('inventory')+' ('+G.countInv(state.inv)+'/'+G.MAX_INV+'): '+inv;
  $('mazeHint').textContent=t('goal')+' '+stage.description[li()]+'  '+t('reagent')+': '+G.RECIPES[state.stage].symbol+' ('+parts(G.RECIPES[state.stage])+') · '+remaining()+' '+(lang()==='hu'?'anomália':lang()==='de'?'Anomalien':'anomalies');
  $('mazeInfo').textContent=r.symbol+' = '+parts(r)+' · '+(state.ammo[r.id]||0)+' '+t('ready')+' · '+r.explain[li()];
- const select=$('mazeRecipe');select.replaceChildren();for(let i=0;i<=state.stage;i++){const rec=G.RECIPES[i],o=$make('option','',rec.symbol+' · '+rec.name[li()]);o.value=rec.id;select.append(o);}select.value=selected;
- const purge=$('mazePurgeAtom'),previousPurge=purge.value;purge.replaceChildren();for(const [sym,n] of Object.entries(state.inv))if(n>0&&sym!=='ACT'){const o=$make('option','',sym+' ×'+n);o.value=sym;purge.append(o);}if([...purge.options].some(o=>o.value===previousPurge))purge.value=previousPurge;
+ const select=$('mazeRecipe'),rs=state.stage+':'+lang();if(rs!==recipeSignature){recipeSignature=rs;select.replaceChildren();for(let i=0;i<=state.stage;i++){const rec=G.RECIPES[i],o=$make('option','',rec.symbol+' · '+rec.name[li()]);o.value=rec.id;select.append(o);}}if(select.value!==selected)select.value=selected;
+ const purge=$('mazePurgeAtom'),ps=Object.entries(state.inv).filter(([sym,n])=>sym!=='ACT'&&n>0).map(([sym,n])=>sym+':'+n).join('|');if(ps!==purgeSignature){purgeSignature=ps;const previousPurge=purge.value;purge.replaceChildren();for(const [sym,n] of Object.entries(state.inv))if(n>0&&sym!=='ACT'){const o=$make('option','',sym+' ×'+n);o.value=sym;purge.append(o);}if([...purge.options].some(o=>o.value===previousPurge))purge.value=previousPurge;}
  $('mazePurge').disabled=!purge.children.length;
  $('mazePlace').disabled=!(state.ammo[selected]>0)||state.pending||state.failed||state.completed;
  $('mazeNext').hidden=!state.completed;$('mazeNext').textContent=state.stage===5?t('all'):t('next');
@@ -49,9 +49,9 @@ function quiz(){
  };
  let options=pending.question[3];const qidx=G.QUIZZES[pending.sym]?.indexOf(pending.question)||0;
  if(translated[pending.sym]&&((pending.sym==='C'&&qidx===0)||(pending.sym==='Cl'&&qidx===1)||(pending.sym==='S'&&qidx===0)))options=translated[pending.sym][lang()];
- options.forEach((item,i)=>{const b=$make('button','',item);b.type='button';b.onclick=()=>{const result=G.answer(state,i);host.hidden=true;quizShown=null;say(result.ok?t('good'):t('bad'));sync();render();};grid.append(b);});
+ options.forEach((item,i)=>{const b=$make('button','',item);b.type='button';b.onclick=()=>{const result=G.answer(state,i);host.hidden=true;quizShown=null;say(result.ok?t('good'):t('bad'));sync();draw();};grid.append(b);});
 }
-function doMove(dx,dy){if(!G.move(state,dx,dy))return;quiz();if(G.finish(state)){say(state.stage===5?t('all'):t('complete'));roundFinished=true;}sync();render();}
+function doMove(dx,dy){if(!G.move(state,dx,dy))return;quiz();if(G.finish(state)){say(state.stage===5?t('all'):t('complete'));roundFinished=true;}sync();draw();}
 function synth(){const result=G.craft(state,selected);say(result==='ok'?t('ready')+' '+currentRecipe().symbol:result==='activator'?t('activator')+' ★':t('nocraft'));sync();}
 function charge(){const result=G.place(state,selected);say(result==='ok'?t('charge'):result==='limit'?t('noslot'):t('nocharge'));sync();}
 function purge(){const sym=$('mazePurgeAtom').value;if(sym&&G.purge(state,sym)){say(t('purge')+': '+sym);sync();}}
