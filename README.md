@@ -1,6 +1,15 @@
-# 3D Chemistry Lab — Beta 2.10.0
+# 3D Chemistry Lab — Beta 2.10.1
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
+
+## Beta 2.10.1 — P1 gameplay and assessment fixes (2026-11-04)
+
+- **Reaction Maze:** Catalyst only accelerates player movement / charge synthesis timing; enemy patrol speed now depends solely on enemy type and temporary enemy-specific boosts.
+- **Reaction Maze quizzes:** 8–9 questions per element for H, O, C, Na, Cl, Al, K, S, Ca and Fe, with varied chemistry facts (atomic number, element symbol, periodic position, isotope, next element, electrons). Questions rotate without repeating until the bank is exhausted; each presentation shuffles the four answer positions. Wrong first answers still discard the atom permanently at that pickup location. Replenishment through the generator remains available.
+- **Chemistry Quest:** Health reaching zero now creates a persistent Game Over state; gameplay and crafting stop until the existing level-restart button is used. Previously the player immediately regenerated with three HP. The game-over overlay is localized to HU/DE/EN.
+- **Common educational assessment:** New `assets/js/game-assessment.js` (original Apache-2.0) tracks right/wrong quiz answers, successful/unsuccessful molecular synthesis, reaction problem attempts, cleared stages and defeats across Chemistry Quest, Reaction Maze and Academy Element Hunt. A responsive summary lives in the Chemistry Academy and is kept in the browser's `localStorage` when permitted. Assessment is descriptive, not an automatically assigned school grade. It does not transmit learner information to external services.
+- **Testing:** Existing 25 Reaction Maze and 24 Chemistry Quest scripted regression checks passed in a JavaScript test environment, plus 7 new P1 checks. Live mobile/browser end-to-end checks remain outstanding.
+- **Distribution:** The game remains static and GitHub Pages compatible, without any new MIT/BSD/GPL/AGPL dependencies. No external libraries or network requests are needed for the assessment.
 
 ## Beta 2.10.0 — Reaction Maze / Reakció-labirintus (2026-11-04)
 
