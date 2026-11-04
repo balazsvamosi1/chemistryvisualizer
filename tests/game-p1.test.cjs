@@ -41,7 +41,18 @@ test('shared assessment separates three games and does not grade empty attempts'
 });
 function boot(){
  const nodes=new Map();let seq=0;
- function el(id){if(!nodes.has(id))nodes.set(id,{id,hidden:false,textContent:'',style:{},value:'',classList:{contains:()=>false,add(){},remove(){}},children:[],append(...x){this.children.push(...x)},replaceChildren(...x){this.children=x},insertAdjacentElement(){},addEventListener(){},setAttribute(){},setPointerCapture(){},focus(){},getContext(){return {createLinearGradient(){return {addColorStop(){}}},fillRect(){},beginPath(){},arc(){},fill(){},save(){},restore(){},translate(){},fillText(){}}}}});return nodes.get(id)}
+ function el(id){
+  if(!nodes.has(id)){
+   const node={id,hidden:false,textContent:'',style:{},value:'',children:[],
+    classList:{contains(){return false},add(){},remove(){}},
+    append(...v){this.children.push(...v)},replaceChildren(...v){this.children=v},
+    insertAdjacentElement(){},addEventListener(){},setAttribute(){},setPointerCapture(){},focus(){},
+    getContext(){return {createLinearGradient(){return {addColorStop(){}}},fillRect(){},beginPath(){},arc(){},fill(){},save(){},restore(){},translate(){},fillText(){}}}
+   };
+   nodes.set(id,node);
+  }
+  return nodes.get(id);
+ }
  const document={hidden:false,activeElement:{tagName:'CANVAS'},getElementById:el,createElement:()=>el('_'+seq++),querySelectorAll:()=>[],addEventListener(){}};
  const events=[],context={document,window:{ChemistryEngine:{analyze(){return {issues:[]}}},ChemistryGameAssessment:{record:(...v)=>events.push(v)},addEventListener(){}},lang:'hu',requestAnimationFrame(){},setTimeout(){},Math,console};
  vm.createContext(context);vm.runInContext(repoFile('assets/js/quest.js'),context);
