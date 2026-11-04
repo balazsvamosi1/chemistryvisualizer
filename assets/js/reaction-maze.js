@@ -48,7 +48,15 @@ function quiz(){
  S:{hu:['Szilícium','Kén','Nátrium','Szelén'],de:['Silicium','Schwefel','Natrium','Selen'],en:['Silicon','Sulfur','Sodium','Selenium']}
  };
  let options=pending.question[3];const qidx=pending.question.sourceIndex??0;
- if(translated[pending.sym]&&((pending.sym==='C'&&qidx===0)||(pending.sym==='Cl'&&qidx===1)||(pending.sym==='S'&&qidx===0)))options=translated[pending.sym][lang()];
+ if(translated[pending.sym]&&((pending.sym==='C'&&qidx===0)||(pending.sym==='Cl'&&qidx===1)||(pending.sym==='S'&&qidx===0))){
+  // Preserve the randomized option order from the quiz engine when localizing answers.
+  // Each displayed button must retain the exact answer index validated by G.answer().
+  const labels=translated[pending.sym][lang()];
+  const order=pending.question.optionOrder;
+  if(Array.isArray(order)&&order.length===labels.length&&new Set(order).size===labels.length&&order.every(i=>Number.isInteger(i)&&i>=0&&i<labels.length)){
+   options=order.map(i=>labels[i]);
+  }
+ }
  options.forEach((item,i)=>{const b=$make('button','',item);b.type='button';b.onclick=()=>{const result=G.answer(state,i);window.ChemistryGameAssessment?.record('maze',result.ok?'quizCorrect':'quizWrong');host.hidden=true;quizShown=null;say(result.ok?t('good'):t('bad'));sync();draw();};grid.append(b);});
 }
 function doMove(dx,dy){if(!G.move(state,dx,dy))return;quiz();if(G.finish(state)){window.ChemistryGameAssessment?.record('maze','stagesCompleted');say(state.stage===5?t('all'):t('complete'));roundFinished=true;}sync();draw();}
