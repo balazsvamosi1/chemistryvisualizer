@@ -44,3 +44,6 @@
 .quest-rxn-coeffs input{width:100%}
 .quest-reaction-feedback{min-height:20px;color:#ffd891}
 @media(max-width:600px){.quest-rxn-coeffs label{flex-basis:65px}.quest-reaction-pane{padding:9px}}
+
+/* 0.2104: persistent question-specific learning hint after wrong answer. */
+.quest-explanation{margin:9px 0;padding:9px 12px;border-left:3px solid #85cfea;background:#16394a;color:#eff9ff;line-height:1.5}

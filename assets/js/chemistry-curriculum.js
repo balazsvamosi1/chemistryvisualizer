@@ -145,37 +145,113 @@ return Object.freeze({topics,locales,session,grade});
 'use strict';if(typeof document==='undefined')return;
 const api=window.ChemistryCurriculum,$=id=>document.getElementById(id),sec=$('curriculumSection'),tab=$('curriculumTab');if(!api||!sec||!tab)return;
 const tr={hu:{title:'Kémia Akadémia',intro:'Válassz témát, tanuld meg a leckéket, gyakorolj, majd vizsgázz. A feladatok a leckékre épülnek.',all:'Átfogó kémia',learn:'Tanulás',practice:'Gyakorlás',exam:'Vizsga',check:'Ellenőrzés',next:'Következő',restart:'Újrakezdés',open:'Nyisd meg a kapcsolódó labort',lesson:'Lecke',question:'Kérdés',correct:'Helyes.',wrong:'Nem helyes.',choose:'Válassz választ.',review:'Kapcsolódó lecke megnyitása',score:'Eredmény',report:'Ismétlendő leckék',done:'Befejezve',limit:'A modellek szemléltetők, nem helyettesítik a valós kísérleteket.',topics:'Témakör',explain:'Magyarázat',hunt:'Elemvadászat'},de:{title:'Chemie-Akademie',intro:'Thema auswählen, Lektionen lesen, üben und prüfen. Alle Aufgaben basieren auf dem Lernstoff.',all:'Chemie gesamt',learn:'Lernen',practice:'Üben',exam:'Prüfung',check:'Prüfen',next:'Weiter',restart:'Neustart',open:'Zugehöriges Labor öffnen',lesson:'Lektion',question:'Frage',correct:'Richtig.',wrong:'Nicht richtig.',choose:'Antwort wählen.',review:'Zugehörige Lektion öffnen',score:'Ergebnis',report:'Lektionen zum Wiederholen',done:'Fertig',limit:'Modelle sind Illustrationen und ersetzen keine echten Experimente.',topics:'Thema',explain:'Erklärung',hunt:'Elementjagd'},en:{title:'Chemistry Academy',intro:'Choose a topic, read lessons, practise, then take an exam. Each question is taught in the lessons.',all:'All chemistry',learn:'Learn',practice:'Practice',exam:'Exam',check:'Check',next:'Next',restart:'Restart',open:'Open related lab',lesson:'Lesson',question:'Question',correct:'Correct.',wrong:'Incorrect.',choose:'Choose an answer.',review:'Open related lesson',score:'Score',report:'Lessons to review',done:'Complete',limit:'Models are illustrative and cannot replace real experiments.',topics:'Topic',explain:'Explanation',hunt:'Element Hunt'}};
-let topic='atoms',mode='learn',index=0,answers=[],checked=false,completed=false,qs=[];
+let topic='atoms',mode='learn',index=0,answers=[],checked=false,completed=false,qs=[],recordedSession=false;
 const hunt=$('huntSection');if(hunt)sec.append(hunt);
 const lang=()=>['hu','de','en'].find(x=>$(x)?.classList.contains('active'))||'hu',t=k=>tr[lang()][k],add=(node,tag,str,cls)=>{const n=document.createElement(tag);n.textContent=str;if(cls)n.className=cls;node.append(n);return n};
-function reset(){index=0;answers=[];checked=false;completed=false;qs=mode==='learn'?[]:api.session(topic,mode==='exam');render()}
+function reset(){index=0;answers=[];checked=false;completed=false;recordedSession=false;qs=mode==='learn'||mode==='guided'?[]:api.session(topic,mode==='exam');render()}
 function jump(id){if(id==='huntSection'){mode='hunt';reset();return}const dest=$(id);if(!dest)return;const tabId=api.topics.find(x=>x.id===topic)?.tab;if(tabId&&window.ChemistryNavigation){$(tabId)?.click();window.ChemistryNavigation.activate(tabId);return}document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden'));document.querySelectorAll('.tabs > button').forEach(b=>b.classList.remove('active'));dest.classList.remove('hidden');$(tabId)?.classList.add('active')}
 function lessonButton(host,q){const b=add(host,'button',t('review')+' ('+t('lesson')+' '+(q.lessonIndex+1)+')');b.type='button';b.addEventListener('click',()=>{topic=q.topic;mode='learn';index=q.lessonIndex;qs=[];checked=false;completed=false;answers=[];render()})}
+
+const guidedTexts={
+ hu:{title:'Irányított tanulás',read:'1 · Lecke',predict:'2 · Előzetes tipp',lab:'3 · Laborfeladat',assess:'4 · Ellenőrzés',begin:'Tovább: előzetes tipp',go:'Kapcsolódó labor megnyitása',back:'Végezd el a kapcsolódó laborfeladatot, majd térj vissza az Akadémiára.',done:'Elvégeztem a laborfeladatot',unverified:'A feladat befejezését te igazolod; ez nem automatikus mérés.',verified:'A labor visszajelezte a feladat ellenőrzését.',advance:'Tovább',verify:'Válasz ellenőrzése',next:'Következő lecke',retry:'Újrapróbálás',choose:'Válassz egy választ.',predictQ:'Mit gondolsz a labor kipróbálása előtt?',assessQ:'Mit tanultál? Most válaszolj önállóan.',explain:'A kapcsolódó lecke magyarázata:',expected:'Helyes válasz:'},
+ de:{title:'Geführtes Lernen',read:'1 · Lektion',predict:'2 · Vorhersage',lab:'3 · Laboraufgabe',assess:'4 · Überprüfung',begin:'Weiter zur Vorhersage',go:'Labor öffnen',back:'Löse die Laboraufgabe und kehre zur Akademie zurück.',done:'Ich habe die Laboraufgabe bearbeitet',unverified:'Diese Bestätigung ist Selbstauskunft, keine automatische Prüfung.',verified:'Das Labor hat eine Antwort geprüft.',advance:'Weiter',verify:'Antwort prüfen',next:'Nächste Lektion',retry:'Erneut versuchen',choose:'Bitte wähle eine Antwort.',predictQ:'Was vermutest du vor dem Versuch?',assessQ:'Was hast du gelernt? Antworte selbstständig.',explain:'Erklärung aus der Lektion:',expected:'Richtige Antwort:'},
+ en:{title:'Guided learning',read:'1 · Lesson',predict:'2 · Prediction',lab:'3 · Lab task',assess:'4 · Check understanding',begin:'Continue to prediction',go:'Open related lab',back:'Complete the related lab activity and return to Academy.',done:'I completed the lab task',unverified:'This is self-reported, not an automatically verified completion.',verified:'The lab checked your response.',advance:'Continue',verify:'Check answer',next:'Next lesson',retry:'Try again',choose:'Choose an answer.',predictQ:'What do you predict before the lab?',assessQ:'What did you learn? Answer independently.',explain:'Explanation from the lesson:',expected:'Correct answer:'}
+};
+const guidedSections={atoms:'periodSection',bonds:'moleculeSection',stoich:'stoichSection',acids:'acidBaseSection',quest:'gameSection',hunt:'periodSection',materials:'materialsSection',physics:'physicsSection',speculative:'specSection','bunsen-basic':'bunsenSection','bunsen-advanced':'bunsenSection','bunsen-upper':'bunsenSection'};
+let guidedStep=0,guidedPrediction=null,guidedAnswer=null,guidedConfirmed=false,guidedVisited=false,guidedEvidence=null,guidedEvaluated=false;
+function guidedReset(){guidedStep=0;guidedPrediction=null;guidedAnswer=null;guidedConfirmed=false;guidedVisited=false;guidedEvidence=null;guidedEvaluated=false;window.ChemistryGuidedTask=null;}
+function guidedQuestion(which){
+ const node=api.topics.find(x=>x.id===topic);
+ const primary=node.bank.filter(q=>q.lessonIndex===index);
+ const pool=primary.length?primary:node.bank;
+ const item=pool[which==='prediction'?0:(pool.length>1?1:0)];
+ if(!item)return null;
+ const order=which==='prediction'?[1,2,0]:[2,0,1];
+ return {...item,choices:Object.fromEntries(api.locales.map(l=>[l,order.map(i=>item.choices[l][i])])),answer:order.indexOf(item.answer)};
+}
+function guidedButton(host,label,callback){
+ const b=add(host,'button',label);b.type='button';b.addEventListener('click',callback);return b;
+}
+function guidedChoices(host,q,value,update){
+ const group=add(host,'div','','academy-choices');group.setAttribute('role','radiogroup');group.setAttribute('aria-label',q.q[lang()]);
+ q.choices[lang()].forEach((label,i)=>{
+  const row=document.createElement('label'),radio=document.createElement('input');
+  radio.type='radio';radio.name='guidedChoice'+guidedStep;radio.value=String(i);radio.checked=i===value;radio.disabled=guidedEvaluated;
+  radio.addEventListener('change',()=>update(i));row.append(radio,document.createTextNode(' '+label));group.append(row);
+ });
+}
+function renderGuided(content){
+ const g=guidedTexts[lang()],node=api.topics.find(x=>x.id===topic),lesson=node.lesson[index];
+ $('curriculumCheck').hidden=true;$('curriculumNext').hidden=true;
+ add(content,'h3',node.title[lang()]+' · '+t('lesson')+' '+(index+1)+'/'+node.lesson.length);
+ add(content,'p',[g.read,g.predict,g.lab,g.assess][guidedStep],'academy-count');
+ if(guidedStep===0){add(content,'p',lesson[lang()],'academy-lesson');guidedButton(content,g.begin,()=>{guidedStep=1;render()});return;}
+ const q=guidedQuestion(guidedStep===1?'prediction':'assessment');
+ if(!q){add(content,'p',lesson[lang()]);return;}
+ if(guidedStep===1){
+  add(content,'h3',g.predictQ);add(content,'p',q.q[lang()]);
+  guidedChoices(content,q,guidedPrediction,i=>{guidedPrediction=i});
+  guidedButton(content,g.advance,()=>{if(guidedPrediction===null){$('curriculumFeedback').textContent=g.choose;return;}guidedStep=2;render()});return;
+ }
+ if(guidedStep===2){
+  add(content,'p',g.back);add(content,'p',guidedEvidence?g.verified:g.unverified,'hint');
+  guidedButton(content,g.go,()=>{
+   guidedVisited=true;
+   const lab=guidedSections[topic]||node.tab;
+   window.ChemistryGuidedTask={topic,lessonIndex:index,lab,step:'experiment'};
+   if(lab==='periodSection'){window.ChemistryNavigation?.activate('periodTab');return;}
+   jump(lab);
+  });
+  guidedButton(content,g.done,()=>{
+   if(!guidedVisited&&!guidedEvidence){$('curriculumFeedback').textContent=g.go;return;}
+   guidedConfirmed=true;guidedStep=3;render();
+  });
+  return;
+ }
+ add(content,'h3',g.assessQ);add(content,'p',q.q[lang()]);
+ guidedChoices(content,q,guidedAnswer,i=>{guidedAnswer=i});
+ if(!guidedEvaluated){guidedButton(content,g.verify,()=>{if(guidedAnswer===null){$('curriculumFeedback').textContent=g.choose;return;}guidedEvaluated=true;window.ChemistryLearningProgress?.record(topic,guidedAnswer===q.answer,'guided');render()});return;}
+ const correct=guidedAnswer===q.answer;
+ add(content,'p',correct?t('correct'):t('wrong')+' '+g.expected+' '+q.choices[lang()][q.answer]);
+ add(content,'p',g.explain+' '+lesson[lang()],'academy-lesson');
+ if(!correct)guidedButton(content,g.retry,()=>{guidedAnswer=null;guidedEvaluated=false;render()});
+ guidedButton(content,g.next,()=>{index=(index+1)%node.lesson.length;guidedReset();render()});
+}
+const guidedButtonMode=document.createElement('button');guidedButtonMode.type='button';guidedButtonMode.id='curriculumguided';
+$('curriculumlearn')?.parentElement?.append(guidedButtonMode);
+guidedButtonMode.addEventListener('click',()=>{topic=topic==='all'?'atoms':topic;mode='guided';guidedReset();reset()});
+window.addEventListener?.('chemistry:lab-result',event=>{
+ if(mode!=='guided'||guidedStep!==2||event.detail?.topic!==topic)return;
+ guidedEvidence={task:event.detail.task,correct:!!event.detail.correct};render();
+});
+
 function render(){
  $('curriculumhunt').textContent=t('hunt');$('curriculumhunt').setAttribute('aria-pressed',String(mode==='hunt'));
  for(const v of ['learn','practice','exam']){$('curriculum'+v).textContent=t(v);$('curriculum'+v).setAttribute('aria-pressed',String(mode===v))}
+ guidedButtonMode.textContent=guidedTexts[lang()].title;guidedButtonMode.setAttribute('aria-pressed',String(mode==='guided'));
  $('curriculumTab').textContent=t('title');
  $('curriculumTitle').textContent=t('title');$('curriculumIntro').textContent=t('intro');$('curriculumTopicLabel').textContent=t('topics');$('curriculumOpen').textContent=t('open');$('curriculumLimit').textContent=t('limit');
- const select=$('curriculumTopic'),old=topic;select.replaceChildren();for(const x of api.topics){let op=document.createElement('option');op.value=x.id;op.textContent=x.title[lang()];select.append(op)}if(mode!=='learn'){const option=document.createElement('option');option.value='all';option.textContent=t('all');select.append(option)}if(!Array.from(select.options).some(x=>x.value===old))topic='atoms';select.value=topic;
+ const select=$('curriculumTopic'),old=topic;select.replaceChildren();for(const x of api.topics){let op=document.createElement('option');op.value=x.id;op.textContent=x.title[lang()];select.append(op)}if(mode!=='learn'&&mode!=='guided'){const option=document.createElement('option');option.value='all';option.textContent=t('all');select.append(option)}if(!Array.from(select.options).some(x=>x.value===old))topic='atoms';select.value=topic;
  $('curriculumOpen').hidden=topic==='all'||mode==='hunt';
  const isHunt=mode==='hunt';for(const id of ['curriculumTopic','curriculumTopicLabel','curriculumLimit','curriculumCheck','curriculumNext','curriculumRestart','curriculumFeedback'])$(id).hidden=isHunt;
  if(hunt)hunt.classList.toggle('hidden',!isHunt);
- const content=$('curriculumContent'),feedback=$('curriculumFeedback');content.replaceChildren();feedback.textContent='';$('curriculumCheck').textContent=t('check');$('curriculumNext').textContent=t('next');$('curriculumRestart').textContent=t('restart');$('curriculumCheck').hidden=mode==='learn'||checked||completed;$('curriculumNext').hidden=completed;
+ const content=$('curriculumContent'),feedback=$('curriculumFeedback');content.replaceChildren();feedback.textContent='';$('curriculumCheck').textContent=t('check');$('curriculumNext').textContent=t('next');$('curriculumRestart').textContent=t('restart');$('curriculumCheck').hidden=mode==='learn'||mode==='guided'||checked||completed;$('curriculumNext').hidden=completed;
  if(mode==='hunt'){content.hidden=true;for(const id of ['curriculumCheck','curriculumNext','curriculumRestart'])$(id).hidden=true;return}content.hidden=false;
+ if(mode==='guided'){renderGuided(content);return;}
  if(mode==='learn'){
  const node=api.topics.find(x=>x.id===topic),lessons=node.lesson;index=Math.min(index,lessons.length-1);add(content,'h3',node.title[lang()]+' · '+t('lesson')+' '+(index+1)+'/'+lessons.length);add(content,'p',lessons[index][lang()],'academy-lesson');add(content,'p',t('limit'),'hint');$('curriculumNext').textContent=index===lessons.length-1?t('restart'):t('next');return;
  }
- if(completed){const result=api.grade(qs,answers);add(content,'h3',t('score')+': '+result.correct+'/'+result.total+' ('+result.percent+'%)');if(result.missed.length){add(content,'h4',t('report'));const seen=new Set();for(const q of result.missed){const k=q.topic+':'+q.lessonIndex;if(seen.has(k))continue;seen.add(k);lessonButton(content,q)}}const list=add(content,'ol','');for(let i=0;i<qs.length;i++)add(list,'li',qs[i].q[lang()]+' — '+(qs[i].answer===answers[i]?t('correct'):t('wrong')+' '+qs[i].choices[lang()][qs[i].answer]));$('curriculumNext').hidden=true;return}
+ if(completed){if(!recordedSession){qs.forEach((q,i)=>window.ChemistryLearningProgress?.record(q.topic,answers[i]===q.answer,mode));recordedSession=true;}const result=api.grade(qs,answers);add(content,'h3',t('score')+': '+result.correct+'/'+result.total+' ('+result.percent+'%)');if(result.missed.length){add(content,'h4',t('report'));const seen=new Set();for(const q of result.missed){const k=q.topic+':'+q.lessonIndex;if(seen.has(k))continue;seen.add(k);lessonButton(content,q)}}const list=add(content,'ol','');for(let i=0;i<qs.length;i++)add(list,'li',qs[i].q[lang()]+' — '+(qs[i].answer===answers[i]?t('correct'):t('wrong')+' '+qs[i].choices[lang()][qs[i].answer]));$('curriculumNext').hidden=true;return}
  const q=qs[index];if(!q)return;add(content,'p',t('question')+' '+(index+1)+'/'+qs.length,'academy-count');add(content,'h3',q.q[lang()]);const group=add(content,'div','','academy-choices');group.setAttribute('role','radiogroup');group.setAttribute('aria-label',q.q[lang()]);q.choices[lang()].forEach((label,i)=>{const row=document.createElement('label'),input=document.createElement('input');input.type='radio';input.name='academyAnswer';input.value=String(i);input.checked=answers[index]===i;input.disabled=checked;input.addEventListener('change',()=>{answers[index]=i});row.append(input,document.createTextNode(' '+label));group.append(row)});
  $('curriculumNext').hidden=!checked;
  if(checked){if(mode==='practice'){feedback.textContent=answers[index]===q.answer?t('correct'):t('wrong')+' '+q.choices[lang()][q.answer];lessonButton(content,q)}else feedback.textContent=''}
 }
 function show(){document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden'));document.querySelectorAll('.tabs > button').forEach(b=>b.classList.remove('active'));sec.classList.remove('hidden');tab.classList.add('active');render()}
-tab.addEventListener('click',show);$('curriculumTopic').addEventListener('change',e=>{topic=e.target.value;reset()});for(const v of ['learn','practice','exam','hunt'])$('curriculum'+v).addEventListener('click',()=>{mode=v;reset()});
+tab.addEventListener('click',show);$('curriculumTopic').addEventListener('change',e=>{topic=e.target.value;guidedReset();reset()});for(const v of ['learn','practice','exam','hunt'])$('curriculum'+v).addEventListener('click',()=>{mode=v;guidedReset();reset()});
 const topicSections={atoms:'periodSection',bonds:'moleculeSection',stoich:'stoichSection',acids:'acidBaseSection',quest:'gameSection',hunt:'huntSection',materials:'materialsSection',physics:'physicsSection',speculative:'specSection','bunsen-basic':'bunsenSection','bunsen-advanced':'bunsenSection','bunsen-upper':'bunsenSection'};
 $('curriculumOpen').addEventListener('click',()=>{if(topicSections[topic])jump(topicSections[topic])});
 $('curriculumCheck').addEventListener('click',()=>{if(!Number.isInteger(answers[index])){$('curriculumFeedback').textContent=t('choose');return}checked=true;render()});
 $('curriculumNext').addEventListener('click',()=>{if(mode==='learn'){index=(index+1)%api.topics.find(x=>x.id===topic).lesson.length;render();return}if(!checked)return;if(index+1===qs.length)completed=true;else{index++;checked=false}render()});
-$('curriculumRestart').addEventListener('click',reset);
+$('curriculumRestart').addEventListener('click',()=>{guidedReset();reset()});
 for(const id of ['hu','de','en'])$(id)?.addEventListener('click',()=>{queueMicrotask(render);requestAnimationFrame(render)});reset();
 })();
