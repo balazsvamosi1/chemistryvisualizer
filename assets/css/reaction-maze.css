@@ -1,0 +1,16 @@
+.maze-section{padding:18px!important;background:linear-gradient(135deg,#111c32,#0a1628)!important;color:#e3f4ff}
+.maze-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.maze-heading h2{margin:5px 0;font-size:26px}.maze-heading p{margin:5px 0 10px;color:#b9cfdd}
+.maze-section button,.maze-section select{font:inherit;color:#e8f6ff;background:#203e58;border:1px solid #507796;border-radius:8px;padding:9px 12px;min-height:39px}
+.maze-section button:hover:not(:disabled){background:#326987}.maze-section button:disabled{opacity:.55;cursor:not-allowed}
+.maze-hud,.maze-inventory,.maze-hint,.maze-notice{border-radius:8px;margin:9px 0;padding:9px 12px;background:#172b42;border:1px solid #2d506c;color:#d9edf9}
+.maze-hud{font:600 13px ui-monospace,monospace}.maze-inventory{color:#e1ffb9;font:600 13px ui-monospace,monospace}.maze-hint{font-size:13px;line-height:1.55}.maze-notice{border-left:3px solid #77dcf2;min-height:41px}
+#mazeCanvas{display:block;width:100%;height:auto;max-width:850px;aspect-ratio:19/13;margin:12px auto;border:2px solid #4f7391;border-radius:8px;background:#0b1829;image-rendering:pixelated;touch-action:none}
+.maze-commands{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 0}
+.maze-dpad{display:grid;gap:4px;justify-items:center}.maze-dpad>div{display:flex;gap:4px}.maze-dpad button{min-width:57px;min-height:52px;font-size:20px;touch-action:none;user-select:none}
+.maze-actions{display:flex;flex:1 1 350px;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px}
+.maze-actions label{font-size:13px}.maze-purge{display:flex;gap:6px}.maze-actions select{max-width:200px}
+.maze-quiz{padding:15px;margin:10px 0;border:2px solid #8ad5ff;border-radius:11px;background:#163c55}.maze-quiz[hidden]{display:none}.maze-quiz h3{font-size:16px;margin:0 0 7px}.maze-quiz p{margin:8px 0}
+.maze-answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.maze-answers button{text-align:left;min-height:48px}
+#mazeNext:not([hidden]){display:block;margin:8px auto;background:#1d6d59;border-color:#76efbe}
+@media(max-width:620px){.maze-section{padding:10px!important}.maze-heading h2{font-size:21px}.maze-hud{font-size:11px}.maze-inventory{font-size:12px}.maze-commands{justify-content:center}.maze-actions{justify-content:center;flex-basis:100%}.maze-dpad button{min-width:62px;min-height:49px}.maze-actions button{min-height:46px}}
