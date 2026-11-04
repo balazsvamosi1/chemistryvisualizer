@@ -82,3 +82,21 @@ test('purging unwanted atom returns capacity',()=>{
  const s=G.createLevel(0);s.inv.Na=2;
  assert.equal(G.purge(s,'Na'),true);assert.equal(s.inv.Na,1);
 });
+
+test('H2O discharge leaves temporary harmless wet tiles',()=>{
+ const s=G.createLevel(0);
+ s.bombs=[{x:s.player.x,y:s.player.y,recipe:'H2O',fuse:0}];
+ G.tick(s,.08);
+ assert.ok(s.hazards.some(h=>h.type==='wet'));
+ const hp=s.player.hp;G.tick(s,.08);assert.equal(s.player.hp,hp);
+});
+test('purging sodium on wet tile causes an adverse reaction',()=>{
+ const s=G.createLevel(0);s.inv.Na=1;
+ s.hazards=[{x:s.player.x,y:s.player.y,type:'wet',ttl:2}];
+ assert.equal(G.purge(s,'Na'),true);assert.equal(s.player.hp,2);
+});
+test('rust colossus collision is lethal',()=>{
+ const s=G.createLevel(4),e=s.enemies[0];
+ s.player.x=e.x;s.player.y=e.y;
+ G.tick(s,.08);assert.equal(s.failed,true);assert.equal(s.player.hp,0);
+});
