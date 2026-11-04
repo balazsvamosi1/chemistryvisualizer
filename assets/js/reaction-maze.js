@@ -49,10 +49,10 @@ function quiz(){
  };
  let options=pending.question[3];const qidx=G.QUIZZES[pending.sym]?.indexOf(pending.question)||0;
  if(translated[pending.sym]&&((pending.sym==='C'&&qidx===0)||(pending.sym==='Cl'&&qidx===1)||(pending.sym==='S'&&qidx===0)))options=translated[pending.sym][lang()];
- options.forEach((item,i)=>{const b=$make('button','',item);b.type='button';b.onclick=()=>{const result=G.answer(state,i);host.hidden=true;quizShown=null;say(result.ok?t('good'):t('bad'));sync();draw();};grid.append(b);});
+ options.forEach((item,i)=>{const b=$make('button','',item);b.type='button';b.onclick=()=>{const result=G.answer(state,i);window.ChemistryGameAssessment?.record('maze',result.ok?'quizCorrect':'quizWrong');host.hidden=true;quizShown=null;say(result.ok?t('good'):t('bad'));sync();draw();};grid.append(b);});
 }
-function doMove(dx,dy){if(!G.move(state,dx,dy))return;quiz();if(G.finish(state)){say(state.stage===5?t('all'):t('complete'));roundFinished=true;}sync();draw();}
-function synth(){const result=G.craft(state,selected);say(result==='ok'?t('ready')+' '+currentRecipe().symbol:result==='activator'?t('activator')+' ★':t('nocraft'));sync();}
+function doMove(dx,dy){if(!G.move(state,dx,dy))return;quiz();if(G.finish(state)){window.ChemistryGameAssessment?.record('maze','stagesCompleted');say(state.stage===5?t('all'):t('complete'));roundFinished=true;}sync();draw();}
+function synth(){const result=G.craft(state,selected);window.ChemistryGameAssessment?.record('maze',result==='ok'?'craftCorrect':'craftWrong');say(result==='ok'?t('ready')+' '+currentRecipe().symbol:result==='activator'?t('activator')+' ★':t('nocraft'));sync();}
 function charge(){const result=G.place(state,selected);say(result==='ok'?t('charge'):result==='limit'?t('noslot'):t('nocharge'));sync();}
 function purge(){const sym=$('mazePurgeAtom').value;if(sym&&G.purge(state,sym)){say(t('purge')+': '+sym);sync();}}
 function next(){if(state.completed&&state.stage<5)reset(state.stage+1,true);else if(state.completed)reset(0);else reset(state.stage);}
@@ -85,8 +85,8 @@ const controls={'mazeUp':[0,-1],'mazeDown':[0,1],'mazeLeft':[-1,0],'mazeRight':[
 $('mazeStart').onclick=()=>reset(state.stage);$('mazeCraft').onclick=synth;$('mazePlace').onclick=charge;$('mazePurge').onclick=purge;$('mazeNext').onclick=next;$('mazeRecipe').onchange=e=>choose(e.target.value);
 let swipe=null;cv.addEventListener('pointerdown',e=>{swipe={x:e.clientX,y:e.clientY};});cv.addEventListener('pointerup',e=>{if(!swipe)return;const dx=e.clientX-swipe.x,dy=e.clientY-swipe.y;swipe=null;if(Math.max(Math.abs(dx),Math.abs(dy))<15)return;Math.abs(dx)>Math.abs(dy)?doMove(Math.sign(dx),0):doMove(0,Math.sign(dy));});
 function frame(now){let dt=Math.min(.08,(now-last)/1000||.016);last=now;requestAnimationFrame(frame);if($('mazeSection').classList.contains('hidden')||document.hidden)return;
- if(!state.pending&&!state.completed&&!state.failed){moveAcc+=dt;const heldDir=Object.values(held)[0];if(heldDir&&moveAcc>Math.max(.09,.17-state.upgrades.catalyst*.025)){moveAcc=0;doMove(...heldDir);}G.tick(state,dt);if(G.finish(state)){say(t('complete'));roundFinished=true;}}
- const events=state.events.splice(0);for(const event of events){if(event.type==='generated')say(t('generator')+' '+event.sym);else if(event.type==='full')say(t('full'));else if(event.type==='empowered'||event.type==='split')say(t('misfire'));else if(event.type==='failed')say(t('over'));else if(event.type==='defeated')say(t('reagent')+' ✓');else if(event.type==='upgrade')say(t(event.kind==='shield'?'help':event.kind));else if(event.type==='activator')say(t('activator'));else if(event.type==='sodiumWater')say(t('over'));}
+ if(!state.pending&&!state.completed&&!state.failed){moveAcc+=dt;const heldDir=Object.values(held)[0];if(heldDir&&moveAcc>Math.max(.09,.17-state.upgrades.catalyst*.025)){moveAcc=0;doMove(...heldDir);}G.tick(state,dt);if(G.finish(state)){window.ChemistryGameAssessment?.record('maze','stagesCompleted');say(t('complete'));roundFinished=true;}}
+ const events=state.events.splice(0);for(const event of events){if(event.type==='generated')say(t('generator')+' '+event.sym);else if(event.type==='full')say(t('full'));else if(event.type==='empowered'||event.type==='split')say(t('misfire'));else if(event.type==='failed'){window.ChemistryGameAssessment?.record('maze','defeats');say(t('over'));}else if(event.type==='defeated')say(t('reagent')+' ✓');else if(event.type==='upgrade')say(t(event.kind==='shield'?'help':event.kind));else if(event.type==='activator')say(t('activator'));else if(event.type==='sodiumWater')say(t('over'));}
  notificationTime=Math.max(0,notificationTime-dt);if(!notificationTime)notification='';if(events.length||!state._hudClock||now-state._hudClock>350){state._hudClock=now;sync();}draw();quiz();
 }
 for(const k of ['hu','de','en'])$(k)?.addEventListener('click',()=>queueMicrotask(()=>{sync();if(state.pending){quizShown=null;quiz();}}));
