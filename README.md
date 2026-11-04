@@ -1,15 +1,23 @@
-# 3D Chemistry Lab — Beta 2.10.1
+# 3D Chemistry Lab — Beta 0.2102
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
 
-## Beta 2.10.2 — P0 answer-label hotfix (2026-11-04)
+## Version numbering
+
+- **First release:** `0.01`.
+- **Current release:** `0.2102`. Future Chemistry Lab public versions will remain below `1.0`.
+- **Historical convention:** old `A.B.C` release labels become `0.ABBC`, where A is one digit, B is zero-padded to two digits, and C is one digit. Examples: `1.9.7 → 0.1097`, `2.9.8 → 0.2098`, `2.10.0 → 0.2100`, `2.10.2 → 0.2102`. If C was omitted, use zero: `1.5 → 0.1050`. The original `0.01` is preserved unchanged.
+- **Next version:** `0.2103`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
+- Older technical asset cache keys (such as `?v=2.1.7`) and third-party dependency/API versions are **not** changed: they are not release labels.
+
+## Beta 0.2102 — P0 answer-label hotfix (2026-11-04)
 
 - **P0 fixed:** Reaction Maze now localizes C, Cl and S quiz choices using the same `optionOrder` shuffle permutation as the underlying answer checker. A displayed correct chemistry term can no longer be rejected merely because its translated label was shown at a different index; incorrect labels do not award atoms.
 - New UI-level regression suite `tests/reaction-maze-displayed-answers.test.cjs`: 9 affected question-language combinations × 24 simulated interactions = 216 correct/incorrect rendered-answer click checks. All passed in the JavaScript DOM-mock test environment.
 - Keeps the first-attempt-only atom collection rule unchanged and retains the original Apache-2.0 browser-only distribution. Bumps the Reaction Maze UI script cache key for GitHub Pages.
 - Full Android/browser end-to-end validation remains outstanding.
 
-## Beta 2.10.1 — P1 gameplay and assessment fixes (2026-11-04)
+## Beta 0.2101 — P1 gameplay and assessment fixes (2026-11-04)
 
 - **Reaction Maze:** Catalyst only accelerates player movement / charge synthesis timing; enemy patrol speed now depends solely on enemy type and temporary enemy-specific boosts.
 - **Reaction Maze quizzes:** 8–9 questions per element for H, O, C, Na, Cl, Al, K, S, Ca and Fe, with varied chemistry facts (atomic number, element symbol, periodic position, isotope, next element, electrons). Questions rotate without repeating until the bank is exhausted; each presentation shuffles the four answer positions. Wrong first answers still discard the atom permanently at that pickup location. Replenishment through the generator remains available.
@@ -18,7 +26,7 @@ A modular browser-based chemistry laboratory and ten-level Chemistry Quest educa
 - **Testing:** Existing 25 Reaction Maze and 24 Chemistry Quest scripted regression checks passed in a JavaScript test environment, plus 7 new P1 checks. Live mobile/browser end-to-end checks remain outstanding.
 - **Distribution:** The game remains static and GitHub Pages compatible, without any new MIT/BSD/GPL/AGPL dependencies. No external libraries or network requests are needed for the assessment.
 
-## Beta 2.10.0 — Reaction Maze / Reakció-labirintus (2026-11-04)
+## Beta 0.2100 — Reaction Maze / Reakció-labirintus (2026-11-04)
 
 A second independent game has been added under **Learn & Play → Reaction Maze**. The original ten-level **Chemistry Quest remains unchanged**.
 
@@ -35,7 +43,9 @@ A second independent game has been added under **Learn & Play → Reaction Maze*
 
 ## Current release
 
-**Beta 2.1.6** includes the ten-level Chemistry Quest, chemical projectile effects, and a selectable arsenal HUD. Python 3.10+ is required for the backend scientific-data features. GitHub Pages deployment is optional and **not enabled by this repository change**. Local cache/model files should not be committed.\n\n## Start
+**Beta 0.2102** is the current Chemistry Lab release (2026-11-04), including Chemistry Quest, Reaction Maze, Academy Element Hunt and the P0 localized quiz-answer hotfix. The core games and laboratories run directly on **GitHub Pages** without a backend. An optional local Python server (`python3 server.py`) supports backend-dependent scientific data features. The release notes below document the state of each historical version.
+
+## Start
 
 ```sh
 python3 server.py
@@ -68,10 +78,10 @@ VSEPR is an approximate educational model, not calculated electron density or a 
 
 ## External dependencies
 
-**None added** in this milestone. A third-party repo's top-level MIT license was verified, but no source files from that repo are included because their provenance and transitive dependencies could not be audited in this runtime. Later integration of Wartets/Molecule-Builder and other libraries must pass a file-level MIT/Apache-2.0 license audit. The existing source inherited from Beta 1.3 has not been independently licensed by its author; do not imply that upstream components are automatically relicensed.
+**None added** in this milestone. A third-party repo's top-level MIT license was verified, but no source files from that repo are included because their provenance and transitive dependencies could not be audited in this runtime. Later integration of Wartets/Molecule-Builder and other libraries must pass a file-level MIT/Apache-2.0 license audit. The existing source inherited from Beta 0.1030 has not been independently licensed by its author; do not imply that upstream components are automatically relicensed.
 
 
-## Beta 1.5 — Molecular Physics Lab
+## Beta 0.1050 — Molecular Physics Lab
 
 The original application remains intact. A new **Molecular Physics** tab is added. Run `python3 server.py`, open `http://127.0.0.1:8000`, then open that tab and press **12 referenciaanyag letöltése**. Internet access is needed **only for first-time synchronization**. The PubChem responses are cached in `cache/pubchem/*.json` and subsequently served offline. Individual additional English chemical names can be fetched by editing the built-in list or using the API `POST /api/physics/sync` with `{"names":["benzene"]}`. The UI's name field currently **reads already cached records only**, not arbitrary internet queries.
 
@@ -82,7 +92,7 @@ The PubChem API gives reference properties and 2D/3D coordinates, but not proof 
 Check with `python3 -m unittest discover -s tests -p 'test_*.py'`.
 
 
-## Beta 1.6 — Spekulatív fizika
+## Beta 0.1060 — Spekulatív fizika
 
 A separate top-level **Spekulatív fizika** tab contains **Hard**, **Extreme**, and **Soft / Sandbox** submodes. Existing tabs and the Physics Lab are retained unchanged.
 
@@ -94,7 +104,7 @@ A separate top-level **Spekulatív fizika** tab contains **Hard**, **Extreme**, 
 - No new third-party package or model is bundled. The MIT/Apache-only code policy remains intact.
 
 
-## Beta 1.7 — Scientific atom visualization
+## Beta 0.1070 — Scientific atom visualization
 
 - Existing Bohr, Quantum, isotope and chemistry features remain unchanged.
 - New **Scientific** atom view shows element-colored illustrative orbit/shell motifs, curated uses, selected visible atomic emission lines, and quick element navigation.
@@ -103,7 +113,7 @@ A separate top-level **Spekulatív fizika** tab contains **Hard**, **Extreme**, 
 - No external images or dependencies were added.
 
 
-## Beta 1.8: Scientific wavefunctions + NIST cache
+## Beta 0.1080: Scientific wavefunctions + NIST cache
 
 Scientific atom panel now includes orbital electron-probability visualization for all 118 elements. Hydrogen orbitals use analytical nonrelativistic hydrogenic shapes; all other neutral atoms use a **screened hydrogenic approximation**, not a numerical many-electron wavefunction. Electron configurations include common corrections, but heavy elements may require relativistic/experimental configuration updates. Rotation of sampled density is a camera effect, not electrons on trajectories.
 
@@ -112,7 +122,7 @@ NIST ASD neutral-atom **visible** line data can be fetched on demand with the `�
 Cache all 118 neutral-atom visible spectra (internet connection required, requests spaced apart): `python3 -m physics.nist --all --delay 2`. Every response is recorded with a status; unverified or failed results are **not** presented as valid spectra.
 
 
-## Beta 1.9 — English language + Chemistry Quest prototype
+## Beta 0.1090 — English language + Chemistry Quest prototype
 
 The original scientific tabs remain in place. A third **EN** button adds English element names for all 118 elements, the major navigation labels and core atomic/molecule controls. The Chemistry Quest game is fully localized in HU/DE/EN. Some inherited deep scientific and material explanatory text still falls back to German; full English editorial translation is a follow-up task.
 
@@ -123,7 +133,7 @@ Project assets added: `assets/js/quest.js` (MIT), `assets/js/english.js` (locali
 Launch with `python3 server.py` and visit `http://127.0.0.1:8000`. Test syntax with `node --check assets/js/quest.js` and `node --check assets/js/english.js`.
 
 
-## Chemistry Quest 1.9.2 — jump and progression fixes
+## Chemistry Quest 0.1092 — jump and progression fixes
 
 - Increased jump impulse from 540 to 600 px/s; gravitational acceleration remains 950 px/s².
 - Added jump buffering (0.20 s) and coyote time (0.13 s).
@@ -132,7 +142,7 @@ Launch with `python3 server.py` and visit `http://127.0.0.1:8000`. Test syntax w
 - E builds H₂O using two collected H atoms and one O atom; next to the fire enemy, E splashes the water.
 - Existing scientific modules and UI preserved.
 
-## Chemistry Quest 1.9.3 — two-level update
+## Chemistry Quest 0.1093 — two-level update
 
 - Fixed jump collision with raised platforms: ledges are one-way, allowing jumps from below and landing from above.
 - Jump input buffering and coyote time prevent missed jumps; Space/W/Up or touch Jump.
@@ -142,7 +152,7 @@ Launch with `python3 server.py` and visit `http://127.0.0.1:8000`. Test syntax w
 - The water/CO₂ fire suppression is a game mechanic, not a general guarantee for real-world fires; CO₂ extinguishers are unsuitable for some fire classes and situations.
 
 
-## Beta 1.9.7 — P0 Stability Fix
+## Beta 0.1097 — P0 Stability Fix
 
 - Fixed lanthanide/actinide metal category aliases (`lanth`, `act`).
 - Ammonia (NH3) is a molecular material, not an ionic lattice.
@@ -154,7 +164,7 @@ Launch with `python3 server.py` and visit `http://127.0.0.1:8000`. Test syntax w
 - Scope: P0 corrections only; no redesign or feature deletion.
 
 
-## Beta 2.0 — Chemistry Quest: 10 levels
+## Beta 0.2000 — Chemistry Quest: 10 levels
 
 The Chemistry Quest is now a ten-stage educational platform game. Controls: A/D or arrows to move, Space/W to jump, **C** to craft with a recipe dropdown, **E** to launch the selected reagent, **Q/Tab** to cycle weapons, **1–9/0** to choose an arsenal slot. Atom pickups pause the game until a correctly answered randomized middle-school chemistry question. Ammo persists between stages; level 10 needs carried-over HCl and NaOH and freshly crafted CH4 plus two O2 charges. Finish a stage and click Next Level.
 
@@ -162,11 +172,11 @@ This is an educational model, **not** an instruction for conducting reactions or
 
 Smoke test: `node --test tests/*.test.cjs && python3 -m unittest discover -s tests -p 'test_*.py'`.
 
-### Implementation scope and limitations (v2.0.0)
+### Implementation scope and limitations (v0.2000)
 The 10 stages have distinct target types, recipes, reaction rules and learning facts, but share a common retro level layout rather than ten individually illustrated level maps. The levels 3, 8, and 9 include lightweight additional movement mechanics (hydrogen boost, ghost platform, bubble pad). Complex chemistry, precise quantities, and actual combustion safety are outside the simulation; the rules are didactic abstractions. For stage 2 a water charge is provided so the player can extinguish the opening crate; stage 10 starts with one HCl and NaOH each to prevent an unsolvable boss. The projectile misses are refunded.
 
 
-## Beta 2.0.1: GitHub Ready + Craft recovery
+## Beta 0.2001: GitHub Ready + Craft recovery
 
 - `cache` downloads, local model weights and Python bytecode are excluded by `.gitignore`. Files already tracked by git require `git rm --cached` to untrack.
 - GitHub Actions checks all JavaScript syntax and runs Node and Python tests on push/PR.
@@ -176,7 +186,7 @@ The 10 stages have distinct target types, recipes, reaction rules and learning f
 - GitHub Pages provides no PubChem/NIST downloads, physics model inference, or Python API. Run locally for those.
 
 
-## Beta 2.0.2 — Quest obstacles and chemical effects
+## Beta 0.2002 — Quest obstacles and chemical effects
 
 - Restores two visible, jumpable damage hazards per level, with terrain-specific hazard types (sparks, steam, acidic pools, ice, spores, etc.). Hazard contact removes health with an invulnerability interval.
 - Eleven crafted reagents have their own projectile visual profiles: water drops, CO₂ cloud, hydrogen bubbles, alkaline droplets, acid mist, ammonia vapour, salt crystals, limewater spray, peroxide foam, methane flame, oxygen bubbles. These are illustrations, not physical computational-fluid simulations.
@@ -187,22 +197,22 @@ The 10 stages have distinct target types, recipes, reaction rules and learning f
 This is a gameplay update, not a guarantee of laboratory-grade chemistry or fire-safety guidance.
 
 
-## Beta 2.0.3 — Chemistry Quest Arsenal HUD
+## Beta 0.2003 — Chemistry Quest Arsenal HUD
 
 The molecule arsenal is displayed above the game canvas. Unlocked recipes have selectable slots with formula, available charge count, and active selection. Select by mouse/touch or keyboard (1–9, 0, Q/Tab). The additional O₂ slot can be selected by click or Q/Tab cycling. C opens crafting and E fires the selected molecule. Slots update after crafting, shooting, changing level and switching weapons. On narrow screens, the weapon bar scrolls horizontally.
 \n\n## Open-source maintenance\n\nThe repository includes `.gitignore` for local scientific-data caches, Python bytecode, and editor files. Ignore rules do not automatically untrack files previously committed; use `git rm --cached` when required. `.github/workflows/ci.yml` runs JS syntax checks, Node test suites, Python compilation, and Python unit tests. GitHub Pages is not automatically enabled.\n
 
-## Beta 2.1.0 — Interactive bond construction
+## Beta 0.2010 — Interactive bond construction
 
 In Chemistry Quest, levels 1–2 retain the simpler recipe-based crafting. From level 3, covalent recipes require the player to select pairs of atoms and their bond order (single/double/triple) in a new interactive workbench. The resulting labelled molecular graph is compared with the expected structure, treating equivalent atoms as interchangeable. Incorrect structures do not consume atom resources. Ionic compounds remain formula-unit recipes instead of misleading covalent models. This is a structural teaching model, not a realistic chemical synthesis simulator.
 
 
-## Beta 2.1.1 — Three-language Chemistry Quest
+## Beta 0.2011 — Three-language Chemistry Quest
 
 All ten Quest stages now provide Hungarian, German and English scientific stage facts, target names, messages, crafting interface, ammunition controls and science explanations. Every collectible element (H, O, C, N, Na, Cl, Ca, S, Mg, Cu, Ag) now has seven quiz question types with translated prompts and, where applicable, answer choices. Quiz state and wrong-answer disabling survive language changes. The game's language follows the existing HU/DE/EN controls; no additional language switch is required. Run `node --test tests/*.test.cjs` for localization regressions.
 
 
-## Beta 2.1.2 — Shared Reaction Engine & Quest Equation Workbench
+## Beta 0.2012 — Shared Reaction Engine & Quest Equation Workbench
 
 The existing five laboratory balance exercises now use the reusable `assets/js/reaction-engine.js` module. The module provides explicitly curated reaction models, stoichiometric atom/charge conservation checks, and composition data for additional reactions. It is loaded before `app-core.js` and `quest.js`.
 
@@ -211,7 +221,7 @@ From Quest level 4, a successful chemical hit on an applicable enemy opens a HU/
 Check `node --test tests/*.test.cjs`, including `tests/reaction_engine.test.cjs`; the game and laboratory still require browser-level integration verification.
 
 
-## Beta 2.1.3 — Escape the Burning Laboratory
+## Beta 0.2013 — Escape the Burning Laboratory
 
 Chemistry Quest is now an escape adventure set in a laboratory after a fire breaks out. Its ten stages are numbered 1-1 to 1-5 and 2-1 to 2-5, with localized mission text in HU/DE/EN.
 
@@ -220,7 +230,7 @@ From level four, crafting ammunition requires a correctly balanced, curated prep
 From the fifth stage, smaller chemical enemies patrol, attack, and use the same reaction-based defeat mechanic as main enemies. All smaller enemies and main targets must be cleared before the exit opens.
 
 
-## Beta 2.1.4 — Chemistry Science Corrections and Bunsen Lab
+## Beta 0.2014 — Chemistry Science Corrections and Bunsen Lab
 
 - Corrected sulfur's boiling-point field in `assets/js/app-core.js` to approximately 444.6 °C at standard pressure, retaining the melting-point value 115.21 °C as a representative value.
 - Added an independent, responsive **Bunsen Lab** tab, with an annotated burner (base, gas inlet, barrel, adjustable collar, air openings), gas on/off, adjustable air supply, and seven illustrative flame tests: lithium, sodium, potassium, calcium, strontium, barium and copper.
@@ -231,7 +241,7 @@ From the fifth stage, smaller chemical enemies patrol, attack, and use the same 
 Future work: stoichiometric quantity calculations, acid-base titration, chemical equilibrium and kinetics, electrochemistry and organic chemistry, retaining the same teaching-model caveats.
 
 
-## Beta 2.1.5 — Mole and Stoichiometry Lab
+## Beta 0.2015 — Mole and Stoichiometry Lab
 
 Adds a standalone **Stoichiometry Lab** tab, independent of Chemistry Quest, localized in Hungarian, German and English. It teaches:
 
@@ -243,14 +253,14 @@ Adds a standalone **Stoichiometry Lab** tab, independent of Chemistry Quest, loc
 The calculation implementation is `assets/js/stoichiometry.js` and is usable offline in the browser. For classroom interpretation, the computed yields are theoretical, not experimentally measured; the user interface explicitly states model assumptions.
 
 
-## Beta 2.1.6 — Acid–Base and Titration Laboratory
+## Beta 0.2016 — Acid–Base and Titration Laboratory
 
 A standalone, offline-capable **Acid–Base Lab** tab provides a calculated pH, an interactive titration curve, indicator color changes (methyl orange, bromothymol blue and phenolphthalein) and an equivalence-point button. It supports HCl, HNO₃, NaOH, KOH, acetic acid and ammonia in acid–base pairs. Strong electrolytes and monoprotic weak acid/base equilibria are modeled at 25 °C via charge balance and water autoionization; weak-acid/base conjugate species are included. The interface is available in HU/DE/EN. The ideal-model assumptions are explained on screen.
 
 **GitHub Actions CI was intentionally removed** at the user's request. Unit tests remain in the repository for optional manual execution. New static labs do not require the Python API, but the scientific data sync / locally hosted backend features continue to require `python3 server.py`. GitHub Pages deployment is not automatically configured.
 
 
-## Beta 2.1.7 — Bunsen Flame Visualisation Update
+## Beta 0.2017 — Bunsen Flame Visualisation Update
 
 The Bunsen flame is now dynamically generated from the air-control slider: a broad, taller yellow luminous flame at low air supply transitions to a narrower, shorter blue non-luminous flame as air intake rises. Animated flame flicker, colored glow and distinct metal-burning effects replace the former static flame paths.
 
@@ -287,7 +297,7 @@ The existing experimental Lab is retained. Three **new, built-in classroom views
 
 Automated checks: **20/20 targeted headless Bunsen and education tests passed**. Full browser visual and interaction testing is still needed. No CI workflow was added.
 
-## Bunsen Lab education 2.4.0 (2026-11-02)
+## Bunsen Lab education 0.2040 (2026-11-02)
 
 - **Learn**: six explanatory lessons per level (Basic, Advanced, Oberstufe), deliberately covering the corresponding exam question topics.
 - **Practice**: six random questions drawn from a 16-question level-specific bank, immediate correctness feedback and one-click link to the relevant lesson.
@@ -297,7 +307,7 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - **Tests**: 22 targeted headless Bunsen and education checks passed. End-to-end browser operation and classroom usability have not been independently verified.
 
 
-## Bunsen Lab 2.4.0 — education update (2026-11-02)
+## Bunsen Lab 0.2040 — education update (2026-11-02)
 - Each of the three levels has 6 structured lessons plus 16 linked questions (48 total).
 - Practice selects 6 randomized questions; exams select 10, with randomized answer ordering and final-only answer reveal.
 - Wrong answers link back to the relevant lesson, and the summary recommends relevant lessons rather than untranslated topic codes.
@@ -315,7 +325,7 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - **26/26 targeted headless checks passed** across Academy and previously existing Bunsen education. Live visual/browser verification and the full repo test suite were not performed. GitHub Actions remains intentionally disabled.
 
 
-## Chemistry Lab 2.6.2 — UX consolidation (2026-11-03)
+## Chemistry Lab 0.2062 — UX consolidation (2026-11-03)
 - Chemistry Academy appears immediately before Chemistry Quest and is the **only** Learn / Practice / Exam area. The Bunsen laboratory remains a hands-on simulator with sample spectra, and its separate quizzes / test tabs were removed.
 - The entire previous Bunsen teaching bank is available in Academy as Basic, Advanced and Oberstufe subjects: **18 lessons and 48 questions**. Across Academy: **12 subject choices, 45 lessons and 84 questions** (with randomized practice and exam sessions).
 - A shared navigation controller enforces one visible top-level laboratory at a time; the Reaction Lab stays nested and visible within Molecule Builder only. The tab bar stays accessible when scrolling, with a fixed bottom previous/next switcher.
@@ -323,7 +333,7 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Verified **26/26** Bunsen + Academy targeted headless tests. A separate simulated DOM navigation check confirmed exclusive visibility across Bunsen, Molecule Builder, Acid–Base, Academy, Quest and Periodic Table. Browser visual testing on real devices remains outstanding. CI remains intentionally disabled.
 
 
-## Chemistry Lab 2.6.3 — user-reported UI corrections (2026-11-03)
+## Chemistry Lab 0.2063 — user-reported UI corrections (2026-11-03)
 - Atom viewer: Bohr/Quantum/Scientific mode controls are positioned **above the atom canvas** instead of underneath the illustration; the instructional/model-accuracy text is now in normal document flow rather than layered over the animated atom.
 - Long headings, labels and explanatory text are allowed to wrap; existing absolute atom-view overlays have been disabled with targeted CSS rules.
 - Chemistry Academy label translates as *Kémia Akadémia / Chemie-Akademie / Chemistry Academy*, including after the global language buttons are used.
@@ -331,7 +341,7 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Checked representative HCl/NaOH 0.1 M pH values, explicit UI event simulations (dose slider, plus/minus/reset and switch to ammonia), live Academy language-selection simulations, and 26/26 pre-existing targeted tests. Complete real-browser visual and mobile layout testing remain outstanding.
 
 
-## Chemistry Lab 2.6.4 — Element Hunt in Chemistry Academy (2026-11-03)
+## Chemistry Lab 0.2064 — Element Hunt in Chemistry Academy (2026-11-03)
 - Element Hunt moves from the top-level navigation into Chemistry Academy as a fourth activity next to Learn / Practice / Exam.
 - Existing eight challenges, choices, answer feedback and in-session score logic are preserved. The former separate tab is hidden, not deleted, to retain compatibility with legacy application code.
 - The Academy's Element Hunt topic now opens the embedded activity rather than attempting to activate the hidden tab.
@@ -340,7 +350,7 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - This release **does not integrate RDKit.js or another third-party engine**. Candidate libraries require dependency/license verification and a verified, locally served browser distribution before deployment.
 
 
-## Chemistry Lab 2.7.0 — Molecule learning workshop
+## Chemistry Lab 0.2070 — Molecule learning workshop
 - Adds an original, Apache-2.0-compatible, client-side molecular analysis panel inside Molecule Builder: empirical atom counts, molecular formula, approximate molar mass, disconnected component count, and simplified covalent valence warnings.
 - Adds an interactive molar-mass question with answer feedback in Hungarian, German and English.
 - Reads a snapshot of the existing builder's atoms and bonds without replacing its editor or rendering engine.
@@ -350,7 +360,7 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Limitations: simple bond-order and valence checks are not a full chemical structure validator; formal charges, aromaticity, stereochemistry, radicals and implicit hydrogen counts are not resolved. Molar mass uses a small reference table and displayed formula counts explicitly modeled atoms only.
 
 
-## Beta 2.8.0 — Student-first focus, target pH and Bunsen diagram
+## Beta 0.2080 — Student-first focus, target pH and Bunsen diagram
 - Student-first, reduced-clutter navigation: four localized learning areas (Explore / Experiments / Learn & Play / Advanced) reveal only their relevant lab tabs, while the existing previous/next footer remains available.
 - Acid–Base Lab: inverse pH target calculator (0–14), synchronized slider and numeric input, computed titrant volume applied to the existing beaker, indicator and titration curve. The inverse uses the same 25 °C monoprotic charge-balance engine as the forward calculation. Unreachable targets are reported rather than invented.
 - Guided interactive mini missions: choose acidic/basic/neutral **before** calculating, then get feedback. No time pressure and no external services.
@@ -360,7 +370,7 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Navigation/interactivity 9/10 is a design **target**, not a validated score from real students.
 
 
-## Beta 2.8.1 — Interactive pH colour strip (2026-11-03)
+## Beta 0.2081 — Interactive pH colour strip (2026-11-03)
 - The visible colored pH scale inside Acid–Base Lab is now the **actual target-pH control**, supporting click, pointer dragging, touch dragging and keyboard (Arrow, Page Up/Down, Home/End) interaction. The redundant target-pH range slider was removed; the precise number field remains available.
 - White marker represents requested target pH; a separate darker marker represents calculated current pH. An adjacent localized readout explicitly distinguishes the two.
 - Releasing a pointer or adjusting via keyboard immediately runs the existing inverse titration calculation and updates dose, indicator, beaker and graph when reachable; unsupported target values remain visibly unreachable.
@@ -374,7 +384,7 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Navigation 9/10 and interactivity 9/10 remain desired student-evaluation targets, not measured results.
 
 
-## Beta 2.9.0 — Material families, discoveries, expanded acid exploration & Element Hunt (2026-11-03)
+## Beta 0.2090 — Material families, discoveries, expanded acid exploration & Element Hunt (2026-11-03)
 - **Material Library (68 built-in items):** groups cards in 17 curated chemical families, so related substances sit together. This is an educational taxonomy inspired by periodic-table organization, **not** a claim that compounds have elemental periods/groups or that similarity is rigorously computed from molecular fingerprints.
 - Optional extended HU/DE/EN explanations combine a family-level property note with each material's existing description and 29 expanded material-specific scientific notes. Explanations, discovery prompts, answers, and side-by-side material comparison are expandable rather than always visible.
 - **Acid–Base Lab:** expanded the 25 °C monoprotic equilibrium solver to 13 supported reagent entries; added a collapsible explanation of pH, strong/weak dissociation, indicator endpoints, equivalence points and model limits.
@@ -384,7 +394,7 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Added `tests/material-families-discovery.test.cjs` and performed JavaScript syntax checks and direct module-data verification. Full Node/browser UI testing is still outstanding.
 
 
-## Beta 2.9.1 — Material Library accordion
+## Beta 0.2091 — Material Library accordion
 - All 17 chemical families are collapsed by default, showing only descriptive group names and item counts.
 - Expanding one family shows only its related material tiles; multiple families may be opened independently.
 - Selecting an item now opens its material details immediately below the tile grid inside the selected family, with no automatic scroll to the bottom of the library. Clicking the same tile again closes details.
@@ -393,7 +403,7 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Added a dedicated regression test file `tests/material-collapsible-ui.test.cjs` and verified syntax of changed JavaScript/test files. Real-browser mobile interaction testing has not yet been performed.
 
 
-## Beta 2.9.4 — Student-centered Material Library browsing (2026-11-03)
+## Beta 0.2094 — Student-centered Material Library browsing (2026-11-03)
 - Refined after reviewing [PubChem structure searches](https://pubchem.ncbi.nlm.nih.gov/docs/structure-search) and [MolView's 2D/3D split viewer](https://molview.com/): make related chemistry easy to discover and compare without loading third-party code or presenting the catalog as an algorithmic similarity search.
 - Material details open **directly after the clicked tile inside the same family grid**, spanning the available width. The page does not automatically jump to the end of a family.
 - The primary interface now offers a search field, collapsed chemical families and a short discovery prompt. Category filters and JSON import/export remain available behind optional disclosure controls.
@@ -403,7 +413,7 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Code-level JS syntax and direct module-data checks were performed. Browser interaction, accessibility and end-to-end test suite execution remain to be verified.
 
 
-## Beta 2.9.5 — Periodic-table-style Material Family map
+## Beta 0.2095 — Periodic-table-style Material Family map
 - Replaced redundant category filters and long collapsible family bars with 17 color-accented **square category cells**, laid out in a compact responsive grid (six columns on desktop, three on narrow phones).
 - Each cell uses a short educational chemical mnemonic, family name and count. These mnemonics are category labels **not periodic-table element symbols or a claim of periodic regularity**.
 - Selecting a family shows its materials in a single expanded panel below the category grid; selecting a material opens its detailed science and comparison immediately after the selected material tile.
@@ -411,7 +421,7 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Static JavaScript syntax and source-level regression assertions checked; browser-level/mobile visual verification remains outstanding.
 
 
-## Beta 2.9.6 — Family-square labels and local expansion
+## Beta 0.2096 — Family-square labels and local expansion
 - Material-family square tiles now contain **only the chemical family name and number of listed materials**, not an arbitrary example molecular formula.
 - Selecting a family inserts the expanded materials area immediately **after the visual grid row of the clicked square**, rather than below every family square. Responsive calculation matches six/five/three columns at the CSS breakpoints.
 - The individual material squares still display their own chemical formula and name. Existing educational comparisons, discovery prompts and JSON import/export remain untouched.
@@ -419,14 +429,14 @@ Automated checks: **20/20 targeted headless Bunsen and education tests passed**.
 - Syntax and source-level invariants checked; no live browser interaction test has been performed.
 
 
-## Beta 2.9.7 — Fixed vanishing Material Library and structure-model access
+## Beta 0.2097 — Fixed vanishing Material Library and structure-model access
 - Root cause: the `#materialDetail` DOM node was moved inside the dynamic family grid, then removed together with the grid when the family changed. Subsequent `getElementById` calls returned null and aborted the UI render. The node now returns to a stable position whenever its content closes, and an absent node is recreated defensively.
 - The material grid is built in a detached `DocumentFragment` and only swaps into the page after construction, preventing a partial redraw from leaving an empty catalogue. A responsive-column fallback is available without `matchMedia`.
 - Material 2D/interactive structural views are still present. The 'open structure' action now explicitly activates the modern Molecule tab before centering the selected structure.
 - Added regression assertions for detail-node preservation, structure-tab activation and defensive rendering. Validated JavaScript syntax and source-level invariants; live browser/mobile E2E regression not yet run.
 
 
-## Beta 2.9.8 — Inline interactive structure previews and comparison
+## Beta 0.2098 — Inline interactive structure previews and comparison
 - A selected material's existing catalogue structure now appears directly in its material details as an **interactive, lightweight SVG 2D viewer**: pan with mouse/touch, zoom with wheel or accessible +/- controls, reset, and keyboard pan/zoom (arrow keys, +/- or Home). Its geometry is explicitly an educational, schematic 2D representation rather than a molecular energy minimization.
 - The full existing Molecule laboratory remains available from the material card. No 3D data or imported structure models are removed.
 - For the ten curated learning pairs, an expanded comparison displays two independent structural viewers when both catalogue models exist, alongside the existing prediction question and scientific explanation.
