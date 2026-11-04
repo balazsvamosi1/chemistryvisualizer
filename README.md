@@ -1,6 +1,21 @@
-# 3D Chemistry Lab — Beta 2.1.7
+# 3D Chemistry Lab — Beta 2.10.0
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
+
+## Beta 2.10.0 — Reaction Maze / Reakció-labirintus (2026-11-04)
+
+A second independent game has been added under **Learn & Play → Reaction Maze**. The original ten-level **Chemistry Quest remains unchanged**.
+
+- Six top-down, grid-based tactical maze stages with walls, destructible obstacles, a central replenishing ion generator, moving enemies, an exit and a separately controlled chemistry robot.
+- Atomic pickup uses a four-choice chemistry quiz. **Only a correct FIRST answer grants the atom; an incorrect answer removes that pickup permanently.** The generator later emits fresh opportunities to avoid softlocking the game.
+- Recipe synthesis consumes exact inventory ratios and creates timed charges; cross-shaped beams stop at solid walls, destroy fragile walls, can trigger other charges and damage the player. Charges are limited by the multi-flask upgrade.
+- Countermeasure stages: H₂O / Fire Eater; CO₂ / Spark Golem; NaOH / Acid Slime; HCl / Alkaline Crystal; Al + ★ fictional activator / Rust Colossus; K₂S / Heavy-metal Shade.
+- Power-ups: range, multi-flask capacity, catalyst and shield. Reactor capacity is twelve atoms; unwanted atoms can be discarded. Wet tiles and discarding sodium on them have a game-specific adverse effect.
+- Keyboard: arrow keys or WASD to move, C to synthesize, Space/E to place a charge, 1–6 to select unlocked recipes, P to discard the selected atom. Touch-screen arrow buttons and swipe on the board are supported.
+- HU / DE / EN UI, with translated scientific multiple-choice items where needed.
+- Scientific caveats: blast patterns and fictional enemy effects are a game model, not practical chemical experiments. The level-five ★ activator is fictional, and the game intentionally gives **no genuine thermite recipe**. Potassium sulfide is K₂S rather than KS; HCl is hydrogen chloride, with hydrochloric acid arising in water.
+- Apache-2.0 original JavaScript/CSS, **no MIT/BSD-3/GPL/LGPL/AGPL dependencies** needed; browser-only execution remains compatible with GitHub Pages.
+- Tests: `node --test tests/reaction-maze.test.cjs` — 25 core assertions verified in a JavaScript execution environment. Full visual-browser/mobile testing remains outstanding.
 
 ## Current release
 
