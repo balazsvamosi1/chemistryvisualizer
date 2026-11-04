@@ -30,7 +30,7 @@ function sync(){
  $('mazeHint').textContent=t('goal')+' '+stage.description[li()]+'  '+t('reagent')+': '+G.RECIPES[state.stage].symbol+' ('+parts(G.RECIPES[state.stage])+') · '+remaining()+' '+(lang()==='hu'?'anomália':lang()==='de'?'Anomalien':'anomalies');
  $('mazeInfo').textContent=r.symbol+' = '+parts(r)+' · '+(state.ammo[r.id]||0)+' '+t('ready')+' · '+r.explain[li()];
  const select=$('mazeRecipe');select.replaceChildren();for(let i=0;i<=state.stage;i++){const rec=G.RECIPES[i],o=$make('option','',rec.symbol+' · '+rec.name[li()]);o.value=rec.id;select.append(o);}select.value=selected;
- const purge=$('mazePurgeAtom');purge.replaceChildren();for(const [sym,n] of Object.entries(state.inv))if(n>0&&sym!=='ACT'){const o=$make('option','',sym+' ×'+n);o.value=sym;purge.append(o);}
+ const purge=$('mazePurgeAtom'),previousPurge=purge.value;purge.replaceChildren();for(const [sym,n] of Object.entries(state.inv))if(n>0&&sym!=='ACT'){const o=$make('option','',sym+' ×'+n);o.value=sym;purge.append(o);}if([...purge.options].some(o=>o.value===previousPurge))purge.value=previousPurge;
  $('mazePurge').disabled=!purge.children.length;
  $('mazePlace').disabled=!(state.ammo[selected]>0)||state.pending||state.failed||state.completed;
  $('mazeNext').hidden=!state.completed;$('mazeNext').textContent=state.stage===5?t('all'):t('next');
