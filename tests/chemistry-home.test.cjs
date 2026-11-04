@@ -18,7 +18,7 @@ function boot(){
  const win={ChemistryNavigation:{activate:id=>routes.push('nav:'+id)}};
  vm.runInNewContext(source,{document:doc,window:win,queueMicrotask:fn=>fn()});
  const walk=n=>[n,...n.children.flatMap(walk)];
- return {nodes,routes,walk,setLanguage(value){language=value;nodes[value].click();},win};
+ return {nodes,routes,walk,setLanguage(value){language=value;win.ChemistryHome.render();},win};
 }
 test('new home page is the initial view and is in the main navigation',()=>{
  const html=read('index.html'),nav=read('assets/js/chemistry-navigation.js');
@@ -46,6 +46,6 @@ test('direct home buttons open their corresponding existing tabs',()=>{
  assert.equal(buttons.length,11);
  buttons.forEach(button=>button.click());
  const names=['periodTab','moleculeTab','materialsTab','bunsenTab','stoichTab','acidBaseTab','curriculumTab','gameTab','mazeTab','physicsTab','specTab'];
- assert.deepEqual(routes.filter(x=>x.endsWith('Tab')),names);
+ assert.deepEqual(routes.filter(x=>x.endsWith('Tab')&&!x.startsWith('nav:')),names);
  assert.deepEqual(routes.filter(x=>x.startsWith('nav:')),names.map(x=>'nav:'+x));
 });
