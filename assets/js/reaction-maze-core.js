@@ -110,7 +110,8 @@ function tick(state,dt){if(state.failed||state.completed||state.pending)return;d
  for(const b of state.bombs)b.fuse-=dt;
  let loops=0;while(loops++<20){const at=state.bombs.findIndex(b=>b.fuse<=0);if(at<0)break;const [b]=state.bombs.splice(at,1);strike(state,b);}
  for(const enemy of state.enemies){if(!enemy.alive)continue;enemy.clock+=dt;enemy.boost=Math.max(0,enemy.boost-dt);const interval=Math.max(.22,STAGES[state.stage].speed-(enemy.boost>0?.3:0)-state.upgrades.catalyst*.035);if(enemy.clock>=interval){enemy.clock=0;enemyStep(state,enemy);}}
- if(state.hitCooldown<=0&&(state.hazards.some(h=>h.x===state.player.x&&h.y===state.player.y&&h.type!=='wet')||state.enemies.some(e=>e.alive&&e.x===state.player.x&&e.y===state.player.y))){damage(state);state.hitCooldown=1.6;}
+ const touching=state.enemies.find(e=>e.alive&&e.x===state.player.x&&e.y===state.player.y);
+ if(state.hitCooldown<=0&&(state.hazards.some(h=>h.x===state.player.x&&h.y===state.player.y&&h.type!=='wet')||touching)){if(touching?.type==='rust'){state.player.hp=0;state.failed=true;state.events.push({type:'failed'});}else damage(state);state.hitCooldown=1.6;}
  // Safe periodic ion generator: after missed quizzes/expended charges a new quiz-able atom becomes available.
  state.generatorTimer-=dt;if(state.generatorTimer<=0){state.generatorTimer=8;const syms=Object.keys(RECIPES[state.stage].atoms);const sym=syms[Math.floor(state.rnd()*syms.length)];const pos=[state.gen,...neighbors(state.gen.x,state.gen.y).map(([x,y])=>({x,y}))].find(p=>open(state,p.x,p.y)&&!(p.x===state.player.x&&p.y===state.player.y)&&!state.atoms.some(a=>a.x===p.x&&a.y===p.y));if(pos){state.atoms.push({id:state.elapsed,x:pos.x,y:pos.y,sym});state.events.push({type:'generated',sym});}}
 }
