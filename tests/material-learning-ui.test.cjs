@@ -40,8 +40,8 @@ test('original scientific data, offline hosting and legacy modules remain intact
  assert.match(app,/function activateMaterialModel\(/);
  assert.match(app,/window\.ChemistryMaterialLearning\.renderMaterial/);
  assert.match(discovery,/const recommended=window\.ChemistryMaterialLearning\?\.related/);
- assert.match(html,/Beta 2\.9\.8/);
- const appPosition=html.indexOf('app-core.js?v=2.9.8');
+ assert.match(html,/Beta 0\.2104/);
+ const appPosition=html.indexOf('app-core.js?v=2.10.1');
  assert.ok(html.indexOf('material-learning.js?v=2.9.8')<appPosition);
  assert.ok(html.indexOf('chemistry-discovery.js?v=2.9.4')<appPosition);
 });
