@@ -1,11 +1,18 @@
-# 3D Chemistry Lab — Beta 0.2103
+# 3D Chemistry Lab — Beta 0.2105
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
+
+## Beta 0.2105 – start page
+
+- Trilingual introductory start page (HU/DE/EN) opens by default and is always accessible via Home.
+- Short explanations and direct links for all existing laboratories, science modules, Academy and games.
+- Clear warnings: simplified models, fictional game mechanics, no real-lab instructions or grading, some physics features require local Python backend.
+- No changes to the science engines or games in this release.
 
 ## Version numbering
 
 - **First release:** `0.01`.
-- **Current release:** `0.2103`. Future Chemistry Lab public versions will remain below `1.0`.
+- **Current release:** `0.2105`. Future Chemistry Lab public versions will remain below `1.0`.
 - **Historical convention:** old `A.B.C` release labels become `0.ABBC`, where A is one digit, B is zero-padded to two digits, and C is one digit. Examples: `1.9.7 → 0.1097`, `2.9.8 → 0.2098`, `2.10.0 → 0.2100`, `2.10.2 → 0.2102`. If C was omitted, use zero: `1.5 → 0.1050`. The original `0.01` is preserved unchanged.
 - **Next version:** `0.2104`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
 - Older technical asset cache keys (such as `?v=2.1.7`) and third-party dependency/API versions are **not** changed: they are not release labels.

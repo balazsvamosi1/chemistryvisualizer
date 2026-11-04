@@ -11,12 +11,14 @@ class Element{
  scrollIntoView(){}
 }
 test('Bunsen and other laboratories never remain simultaneously visible',()=>{
- const panels={periodTab:'periodSection',moleculeTab:'moleculeSection',reactionTab:'reactionSection',huntTab:'huntSection',materialsTab:'materialsSection',bunsenTab:'bunsenSection',stoichTab:'stoichSection',acidBaseTab:'acidBaseSection',physicsTab:'physicsSection',specTab:'specSection',curriculumTab:'curriculumSection',gameTab:'gameSection'};
+ const panels={homeTab:'homeSection',periodTab:'periodSection',moleculeTab:'moleculeSection',reactionTab:'reactionSection',huntTab:'huntSection',materialsTab:'materialsSection',bunsenTab:'bunsenSection',stoichTab:'stoichSection',acidBaseTab:'acidBaseSection',physicsTab:'physicsSection',specTab:'specSection',curriculumTab:'curriculumSection',gameTab:'gameSection'};
  const nodes={};for(const [k,v] of Object.entries(panels)){nodes[k]=new Element(k);nodes[v]=new Element(v)}nodes.atomDetail=new Element('atomDetail');for(const l of ['hu','de','en'])nodes[l]=new Element(l);
  let footer;
  const document={getElementById:id=>nodes[id]||null,createElement:()=>new Element(),querySelector:()=>null,body:{append:el=>footer=el},addEventListener:()=>{}};
  const window={};vm.runInNewContext(source,{document,window,queueMicrotask:fn=>fn(),requestAnimationFrame:fn=>fn()});
- for(const tab of ['bunsenTab','acidBaseTab','curriculumTab','gameTab','periodTab']){
+ assert.equal(nodes.homeSection.classList.contains('hidden'),false);
+ assert.equal(nodes.periodSection.classList.contains('hidden'),true);
+ for(const tab of ['homeTab','bunsenTab','acidBaseTab','curriculumTab','gameTab','periodTab']){
   nodes[tab].click();
   const visible=Object.values(panels).filter(section=>!nodes[section].classList.contains('hidden'));
   assert.deepEqual(visible,tab==='moleculeTab'?[panels.moleculeTab,panels.reactionTab]:[panels[tab]]);
