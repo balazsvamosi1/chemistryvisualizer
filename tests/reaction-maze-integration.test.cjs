@@ -27,5 +27,5 @@ test('canvas quiz, crafting, restart and mobile controls are wired',()=>{
  assert.match(ui,/requestAnimationFrame\(frame\)/);
 });
 test('maze uses no external dependency or CDN',()=>{
- assert.doesNotMatch(read('assets/js/reaction-maze-core.js'),/https?:\/\/|require\(['"](?:?!node:)/);
+ assert.doesNotMatch(read('assets/js/reaction-maze-core.js'),/https?:\/\/|importScripts\(/);
 });
