@@ -1,0 +1,23 @@
+/* Chemistry Lab 0.2105 – readable responsive start page. */
+#homeSection{max-width:1140px;margin:0 auto;padding:clamp(14px,3vw,27px);line-height:1.55}
+#homeSection h2,#homeSection h3,#homeSection h4,#homeSection h5{line-height:1.32;margin:0}
+#homeSection h2{font-size:clamp(27px,4vw,40px);margin:7px 0 12px}
+#homeSection h3{font-size:21px;margin:0 0 12px}
+#homeSection h4{font-size:18px;color:#a8e9f7;margin-bottom:12px}
+#homeSection h5{font-size:16px;color:#f0faff}
+.home-hero{padding:2px 0 22px;border-bottom:1px solid #3b5c70}
+.home-kicker{margin:0;font-size:12px;font-weight:750;letter-spacing:.1em;color:#a5d9f3}
+.home-intro{font-size:clamp(15px,1.6vw,18px);max-width:75ch;margin:0;color:#d9eaf4}
+.home-how{background:#152e42;border:1px solid #426079;border-radius:12px;padding:18px;margin:22px 0}
+.home-how ol{margin:0;padding-left:23px;display:grid;gap:8px;font-size:15px}
+.home-features-title{margin:22px 0 15px!important}
+.home-group{margin:20px 0 26px}
+.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:13px}
+.home-card{display:flex;flex-direction:column;gap:8px;padding:16px;background:#132d41;border:1px solid #40617a;border-radius:12px;min-width:0}
+.home-card p{margin:0 0 10px;flex:1;color:#d5e6f2;font-size:14px}
+.home-open{align-self:flex-start;min-height:44px;max-width:100%;white-space:normal;text-align:left;padding:9px 12px;border:1px solid #76c4da;border-radius:9px;background:#20566d;color:#f3fcff;font:inherit;font-weight:700;cursor:pointer}
+.home-open:hover,.home-open:focus-visible{background:#2d728a;outline-offset:3px}
+.home-limits{border-top:1px solid #426079;padding-top:24px;margin-top:24px}
+.home-limits ul{max-width:88ch;padding-left:23px;display:grid;gap:10px}
+.home-footer{color:#acd0e4;font-weight:650;margin-top:23px}
+@media(max-width:640px){#homeSection{padding:13px}.home-how{padding:14px}.home-grid{grid-template-columns:1fr}.home-card{padding:14px}}
