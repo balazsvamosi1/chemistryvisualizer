@@ -87,6 +87,7 @@ function damage(state){if(state.failed)return;if(state.player.shield>0){state.pl
 function strike(state,b){const result=beam(state,b),now=state.elapsed,combo=state.waves.some(w=>w.cells.some(c=>result.cells.some(v=>v.x===c.x&&v.y===c.y)));state.stats.detonations++;state.waves.push({cells:result.cells,ttl:combo?0.95:0.7,recipe:b.recipe,combo});for(const p of result.broken){state.grid[p.y][p.x]='.';if(state.rnd()<0.42){const kinds=['range','flask','catalyst','shield'];state.bonuses.push({x:p.x,y:p.y,type:kinds[Math.floor(state.rnd()*kinds.length)]});}}
  for(const a of state.enemies){if(!a.alive)continue;if(!result.cells.some(c=>c.x===a.x&&c.y===a.y))continue;const target=RECIPES[state.stage].id;if(b.recipe===target){a.alive=false;state.stats.defeated++;state.events.push({type:'defeated'});}else if(a.type==='spark'&&b.recipe==='H2O'){a.boost=8;state.events.push({type:'empowered'});}else if(a.type==='heavy'){const spot=neighbors(a.x,a.y).find(([x,y])=>canWalk(state,x,y)&&!state.enemies.some(e=>e.alive&&e.x===x&&e.y===y));if(spot&&state.enemies.length<5){state.enemies.push({id:state.enemies.length,x:spot[0],y:spot[1],type:'heavy',alive:true,clock:0,dir:0,boost:0});state.events.push({type:'split'});}}}
  for(const h of state.hazards)if(result.cells.some(c=>c.x===h.x&&c.y===h.y)&&((b.recipe==='H2O'&&h.type==='flame')||(b.recipe==='NaOH'&&h.type==='acid')||(b.recipe==='HCl'&&h.type==='alkaline')))h.ttl=0;
+ if(b.recipe==='H2O')for(const c of result.cells)state.hazards.push({x:c.x,y:c.y,type:'wet',ttl:2.0});
  if(result.cells.some(c=>c.x===state.player.x&&c.y===state.player.y))damage(state);
  for(const other of state.bombs)if(other!==b&&result.cells.some(c=>c.x===other.x&&c.y===other.y))other.fuse=0;
  state.events.push({type:'detonation',combo});return result;
@@ -98,8 +99,9 @@ function enemyStep(state,enemy){if(!enemy.alive)return;const p=state.player;cons
  let next=chasing?moves[0]:moves[Math.floor(state.rnd()*moves.length)];
  if(enemy.type==='spark'&&state.rnd()<0.12){const far=state.enemies.filter(e=>e.alive&&e!==enemy);const candidates=neighbors(enemy.x,enemy.y).filter(([x,y])=>canWalk(state,x,y)&&!far.some(e=>e.x===x&&e.y===y));if(candidates.length)next=candidates[Math.floor(state.rnd()*candidates.length)];}
  const [oldx,oldy]=[enemy.x,enemy.y];enemy.x=next[0];enemy.y=next[1];
- if(['fire','acid','alkaline'].includes(enemy.type))state.hazards.push({x:oldx,y:oldy,type:enemy.type==='fire'?'flame':enemy.type,ttl:enemy.type==='fire'?2.5:3.5});
- if(enemy.x===p.x&&enemy.y===p.y&&(!state.hitCooldown||state.hitCooldown<=0)){damage(state);state.hitCooldown=1.6;}
+ if(['fire','acid','alkaline','spark'].includes(enemy.type))state.hazards.push({x:oldx,y:oldy,type:enemy.type==='fire'?'flame':enemy.type,ttl:enemy.type==='fire'?2.5:3.5});
+ if(enemy.type==='acid'&&state.rnd()<0.22){const weak=neighbors(enemy.x,enemy.y).filter(([x,y])=>state.grid[y][x]==='%');if(weak.length){const [wx,wy]=weak[0];state.grid[wy][wx]='.';state.events.push({type:'eroded'});}}
+ if(enemy.x===p.x&&enemy.y===p.y&&(!state.hitCooldown||state.hitCooldown<=0)){if(enemy.type==='rust'){state.player.hp=0;state.failed=true;state.events.push({type:'failed'});}else damage(state);state.hitCooldown=1.6;}
 }
 function tick(state,dt){if(state.failed||state.completed||state.pending)return;dt=Math.min(.08,Math.max(0,dt));state.elapsed+=dt;state.hitCooldown=Math.max(0,(state.hitCooldown||0)-dt);
  for(const h of state.hazards)h.ttl-=dt;state.hazards=state.hazards.filter(h=>h.ttl>0);
@@ -108,11 +110,11 @@ function tick(state,dt){if(state.failed||state.completed||state.pending)return;d
  for(const b of state.bombs)b.fuse-=dt;
  let loops=0;while(loops++<20){const at=state.bombs.findIndex(b=>b.fuse<=0);if(at<0)break;const [b]=state.bombs.splice(at,1);strike(state,b);}
  for(const enemy of state.enemies){if(!enemy.alive)continue;enemy.clock+=dt;enemy.boost=Math.max(0,enemy.boost-dt);const interval=Math.max(.22,STAGES[state.stage].speed-(enemy.boost>0?.3:0)-state.upgrades.catalyst*.035);if(enemy.clock>=interval){enemy.clock=0;enemyStep(state,enemy);}}
- if(state.hitCooldown<=0&&(state.hazards.some(h=>h.x===state.player.x&&h.y===state.player.y)||state.enemies.some(e=>e.alive&&e.x===state.player.x&&e.y===state.player.y))){damage(state);state.hitCooldown=1.6;}
+ if(state.hitCooldown<=0&&(state.hazards.some(h=>h.x===state.player.x&&h.y===state.player.y&&h.type!=='wet')||state.enemies.some(e=>e.alive&&e.x===state.player.x&&e.y===state.player.y))){damage(state);state.hitCooldown=1.6;}
  // Safe periodic ion generator: after missed quizzes/expended charges a new quiz-able atom becomes available.
  state.generatorTimer-=dt;if(state.generatorTimer<=0){state.generatorTimer=8;const syms=Object.keys(RECIPES[state.stage].atoms);const sym=syms[Math.floor(state.rnd()*syms.length)];const pos=[state.gen,...neighbors(state.gen.x,state.gen.y).map(([x,y])=>({x,y}))].find(p=>open(state,p.x,p.y)&&!(p.x===state.player.x&&p.y===state.player.y)&&!state.atoms.some(a=>a.x===p.x&&a.y===p.y));if(pos){state.atoms.push({id:state.elapsed,x:pos.x,y:pos.y,sym});state.events.push({type:'generated',sym});}}
 }
 function finish(state){if(state.failed||state.completed||state.pending||state.enemies.some(e=>e.alive))return false;if(state.player.x!==state.exit.x||state.player.y!==state.exit.y)return false;state.completed=true;state.events.push({type:'completed'});return true;}
-function purge(state,sym){if(!(state.inv[sym]>0))return false;state.inv[sym]--;state.stats.purged++;state.events.push({type:'purged',sym});if(sym==='Na'&&state.hazards.some(h=>h.type==='steam'&&h.x===state.player.x&&h.y===state.player.y))damage(state);return true;}
+function purge(state,sym){if(!(state.inv[sym]>0))return false;state.inv[sym]--;state.stats.purged++;state.events.push({type:'purged',sym});if(sym==='Na'&&state.hazards.some(h=>h.type==='wet'&&h.x===state.player.x&&h.y===state.player.y)){damage(state);state.events.push({type:'sodiumWater'});}return true;}
 return{W,H,MAX_INV,RECIPES,STAGES,QUIZZES,createLevel,questionFor,collect,answer,move,craft,place,beam,tick,finish,purge,damage,countInv};
 });
