@@ -31,6 +31,37 @@ S:[['Melyik elem vegyjele S?','Welches Element ist S?','Which element has symbol
 Ca:[['Mi a kalcium vegyjele?','Was ist das Symbol für Calcium?','What is calcium’s symbol?',['C','Ca','Cl','Cu'],1]],
 Fe:[['Mi a vas vegyjele?','Was ist das Symbol für Eisen?','What is the symbol for iron?',['F','Fe','Fr','Fl'],1]]
 };
+// Scientific quiz facts: isotope mass numbers refer to the most abundant natural isotope.
+const QUIZ_FACTS={
+ H:[1,1,1,1,'He',['hidrogén','Wasserstoff','hydrogen']],
+ O:[8,2,16,16,'F',['oxigén','Sauerstoff','oxygen']],
+ C:[6,2,14,12,'N',['szén','Kohlenstoff','carbon']],
+ Na:[11,3,1,23,'Mg',['nátrium','Natrium','sodium']],
+ Cl:[17,3,17,35,'Ar',['klór','Chlor','chlorine']],
+ Al:[13,3,13,27,'Si',['alumínium','Aluminium','aluminum']],
+ K:[19,4,1,39,'Ca',['kálium','Kalium','potassium']],
+ S:[16,3,16,32,'Cl',['kén','Schwefel','sulfur']],
+ Ca:[20,4,2,40,'Sc',['kalcium','Calcium','calcium']],
+ Fe:[26,4,8,56,'Co',['vas','Eisen','iron']]
+};
+const QUIZ_SYMBOLS=['H','He','Li','Be','B','C','N','O','F','Ne','Na','Mg','Al','Si','P','S','Cl','Ar','K','Ca','Sc','Fe','Co','Cu'];
+function numberChoices(n,min=1,max=150){const out=[String(n)];for(let delta=1;out.length<4&&delta<15;delta++)for(const candidate of [n+delta,n-delta])if(candidate>=min&&candidate<=max&&out.length<4)out.push(String(candidate));return out;}
+function optionQuestion(prompt,options,correct){return [prompt[0],prompt[1],prompt[2],options,options.indexOf(String(correct))];}
+for(const [sym,[z,period,group,isotope,next,names]] of Object.entries(QUIZ_FACTS)){
+ const opts=n=>numberChoices(n);
+ const symbolOpts=[sym,...QUIZ_SYMBOLS.filter(x=>x!==sym).slice(z%10,z%10+3)];
+ const nextOpts=[next,...QUIZ_SYMBOLS.filter(x=>x!==next&&x!==sym).slice(z%8,z%8+3)];
+ QUIZZES[sym].push(
+ optionQuestion(['Mennyi a(z) '+names[0]+' rendszáma?','Welche Ordnungszahl hat '+names[1]+'?','What is the atomic number of '+names[2]+'?'],opts(z),z),
+ optionQuestion(['Mi a(z) '+names[0]+' vegyjele?','Welches Symbol hat '+names[1]+'?','What is the symbol for '+names[2]+'?'],symbolOpts,sym),
+ optionQuestion(['Melyik periódusban található a(z) '+names[0]+'?','In welcher Periode steht '+names[1]+'?','Which period contains '+names[2]+'?'],numberChoices(period,1,7),period),
+ optionQuestion(['Hányadik IUPAC-csoportban van a(z) '+names[0]+'?','Welche IUPAC-Gruppennummer hat '+names[1]+'?','What is the IUPAC group number of '+names[2]+'?'],numberChoices(group,1,18),group),
+ optionQuestion(['Melyik tömegszámú természetes izotópja a leggyakoribb a(z) '+names[0]+' elemnek?','Welche Massenzahl hat das häufigste natürliche Isotop von '+names[1]+'?','What is the mass number of the most abundant natural isotope of '+names[2]+'?'],opts(isotope),isotope),
+ optionQuestion(['Melyik elem következik a(z) '+names[0]+' után rendszám szerint?','Welches Elementsymbol folgt nach '+names[1]+' nach Ordnungszahl?','Which element symbol follows '+names[2]+' by atomic number?'],nextOpts,next),
+ optionQuestion(['Hány elektronja van egy semleges '+sym+'-atomnak?','Wie viele Elektronen hat ein neutrales '+sym+'-Atom?','How many electrons does a neutral '+sym+' atom have?'],opts(z),z)
+ );
+}
+
 const TYPES=['fire','spark','acid','alkaline','rust','heavy'];
 function random(seed){let x=(seed||1)>>>0;return function(){x+=0x6D2B79F5;let t=x;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;};}
 const key=(x,y)=>x+','+y;
@@ -69,7 +100,18 @@ function createLevel(stage=0,upgrades=null,seed=null){
  return {stage,grid:g.grid,gen:g.gen,exit:g.exit,enemies:g.enemies,atoms:g.atoms,activator:g.activator,rnd:g.rnd,inv,ammo,stats,player:{x:1,y:1,hp:3,shield:upgrades?.shield||0},upgrades:{range:upgrades?.range||0,flask:upgrades?.flask||0,catalyst:upgrades?.catalyst||0,shield:0},bombs:[],waves:[],hazards:[],bonuses:[],pending:null,completed:false,failed:false,generatorTimer:10,elapsed:0,events:[]};
 }
 function countInv(inv){return Object.values(inv).reduce((a,b)=>a+b,0);}
-function questionFor(state,sym){const pool=QUIZZES[sym]||QUIZZES.H;return pool[state.stats.attempts%pool.length];}
+function questionFor(state,sym){
+ const pool=QUIZZES[sym]||QUIZZES.H,history=state.quizSeen||(state.quizSeen={}),seen=history[sym]||(history[sym]=[]);
+ if(seen.length>=pool.length)seen.length=0;
+ const available=pool.map((_,i)=>i).filter(i=>!seen.includes(i));
+ const sourceIndex=available[Math.floor(state.rnd()*available.length)];seen.push(sourceIndex);
+ const original=pool[sourceIndex],order=original[3].map((_,i)=>i);
+ for(let i=order.length-1;i>0;i--){const j=Math.floor(state.rnd()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+ const options=order.map(i=>original[3][i]),correct=order.indexOf(original[4]);
+ const question=[original[0],original[1],original[2],options,correct];
+ question.sourceIndex=sourceIndex;question.optionOrder=order;
+ return question;
+}
 function collect(state){if(state.pending||state.failed||state.completed)return null;const p=state.player;
  if(state.activator&&p.x===state.activator.x&&p.y===state.activator.y){state.activator=null;state.inv.ACT=(state.inv.ACT||0)+1;state.events.push({type:'activator'});}
  const j=state.atoms.findIndex(a=>a.x===p.x&&a.y===p.y);if(j<0)return null;
@@ -109,7 +151,7 @@ function tick(state,dt){if(state.failed||state.completed||state.pending)return;d
  // Fuse expiry can cause a real same-frame chain reaction; remove each detonated charge exactly once.
  for(const b of state.bombs)b.fuse-=dt;
  let loops=0;while(loops++<20){const at=state.bombs.findIndex(b=>b.fuse<=0);if(at<0)break;const [b]=state.bombs.splice(at,1);strike(state,b);}
- for(const enemy of state.enemies){if(!enemy.alive)continue;enemy.clock+=dt;enemy.boost=Math.max(0,enemy.boost-dt);const interval=Math.max(.22,STAGES[state.stage].speed-(enemy.boost>0?.3:0)-state.upgrades.catalyst*.035);if(enemy.clock>=interval){enemy.clock=0;enemyStep(state,enemy);}}
+ for(const enemy of state.enemies){if(!enemy.alive)continue;enemy.clock+=dt;enemy.boost=Math.max(0,enemy.boost-dt);const interval=Math.max(.22,STAGES[state.stage].speed-(enemy.boost>0?.3:0));if(enemy.clock>=interval){enemy.clock=0;enemyStep(state,enemy);}}
  const touching=state.enemies.find(e=>e.alive&&e.x===state.player.x&&e.y===state.player.y);
  if(state.hitCooldown<=0&&(state.hazards.some(h=>h.x===state.player.x&&h.y===state.player.y&&h.type!=='wet')||touching)){if(touching?.type==='rust'){state.player.hp=0;state.failed=true;state.events.push({type:'failed'});}else damage(state);state.hitCooldown=1.6;}
  // Safe periodic ion generator: after missed quizzes/expended charges a new quiz-able atom becomes available.
