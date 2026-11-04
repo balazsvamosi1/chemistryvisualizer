@@ -37,6 +37,21 @@ function sync(){
  $('mazeNotice').textContent=notification||t('levelinfo');
  $('mazeNote').textContent=t('science');
 }
+function quizExplanation(sym,q,correctLabel){
+ const ix=q.sourceIndex??0,base=(sym==='Ca'||sym==='Fe')?1:2,kind=ix-base;
+ const generic={
+  hu:['A rendszám az atommag protonjainak száma.','A vegyjel az elem nemzetközi rövidítése.','A periódus a periódusos rendszer vízszintes sora.','A csoport a periódusos rendszer függőleges oszlopa.','A tömegszám a protonok és neutronok száma együtt; itt a leggyakoribb természetes izotóp szerepel.','Az elemek rendszám szerint követik egymást.','Semleges atomban az elektronok száma megegyezik a protonokéval.'],
+  de:['Die Ordnungszahl zählt die Protonen im Kern.','Das Elementsymbol ist eine international gebräuchliche Abkürzung.','Eine Periode ist eine waagerechte Reihe.','Eine Gruppe ist eine senkrechte Spalte des Periodensystems.','Die Massenzahl ist Protonenzahl plus Neutronenzahl; gefragt ist das häufigste natürliche Isotop.','Elemente folgen einander nach steigender Ordnungszahl.','Ein neutrales Atom hat gleich viele Elektronen wie Protonen.'],
+  en:['Atomic number counts protons in the nucleus.','An element symbol is an internationally used abbreviation.','A period is a horizontal row.','A group is a vertical column of the periodic table.','Mass number equals protons plus neutrons; this refers to the most abundant natural isotope.','Elements are ordered by increasing atomic number.','A neutral atom has as many electrons as protons.']
+ };
+ const basic={
+  hu:'A vegyjel az elem rövidítése; a rendszám a protonszám. A klór a halogénekhez tartozik.',
+  de:'Das Symbol bezeichnet ein Element; die Ordnungszahl ist seine Protonenzahl. Chlor ist ein Halogen.',
+  en:'The symbol identifies an element; atomic number equals proton count. Chlorine is a halogen.'
+ };
+ const prefix={hu:'Helyes válasz: ',de:'Richtige Antwort: ',en:'Correct answer: '}[lang()];
+ return prefix+correctLabel+'. '+(kind>=0?generic[lang()][kind]:basic[lang()]);
+}
 function quiz(){
  const pending=state.pending,host=$('mazeQuiz');if(!pending){host.hidden=true;quizShown=null;return;}if(quizShown===pending)return;quizShown=pending;host.hidden=false;host.replaceChildren();
  const question=$make('h3','',t('quiz'));host.append(question,$make('p','',pending.question[li()]));
@@ -57,10 +72,10 @@ function quiz(){
    options=order.map(i=>labels[i]);
   }
  }
- options.forEach((item,i)=>{const b=$make('button','',item);b.type='button';b.onclick=()=>{const result=G.answer(state,i);window.ChemistryGameAssessment?.record('maze',result.ok?'quizCorrect':'quizWrong');host.hidden=true;quizShown=null;say(result.ok?t('good'):t('bad'));sync();draw();};grid.append(b);});
+ options.forEach((item,i)=>{const b=$make('button','',item);b.type='button';b.onclick=()=>{const result=G.answer(state,i);window.ChemistryGameAssessment?.record('maze',result.ok?'quizCorrect':'quizWrong');host.hidden=true;quizShown=null;say((result.ok?t('good'):t('bad'))+' '+quizExplanation(pending.sym,pending.question,options[pending.question[4]]));notificationTime=18;sync();draw();};grid.append(b);});
 }
 function doMove(dx,dy){if(!G.move(state,dx,dy))return;quiz();if(G.finish(state)){window.ChemistryGameAssessment?.record('maze','stagesCompleted');say(state.stage===5?t('all'):t('complete'));roundFinished=true;}sync();draw();}
-function synth(){const result=G.craft(state,selected);window.ChemistryGameAssessment?.record('maze',result==='ok'?'craftCorrect':'craftWrong');say(result==='ok'?t('ready')+' '+currentRecipe().symbol:result==='activator'?t('activator')+' ★':t('nocraft'));sync();}
+function synth(){const result=G.craft(state,selected);if(result==='ok')window.ChemistryGameAssessment?.record('maze','craftCorrect');say(result==='ok'?t('ready')+' '+currentRecipe().symbol:result==='activator'?t('activator')+' ★':t('nocraft'));sync();}
 function charge(){const result=G.place(state,selected);say(result==='ok'?t('charge'):result==='limit'?t('noslot'):t('nocharge'));sync();}
 function purge(){const sym=$('mazePurgeAtom').value;if(sym&&G.purge(state,sym)){say(t('purge')+': '+sym);sync();}}
 function next(){if(state.completed&&state.stage<5)reset(state.stage+1,true);else if(state.completed)reset(0);else reset(state.stage);}
@@ -102,7 +117,7 @@ document.addEventListener('keydown',e=>{if($('mazeSection').classList.contains('
  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();handleKey(e.code);});
 const controls={'mazeUp':[0,-1],'mazeDown':[0,1],'mazeLeft':[-1,0],'mazeRight':[1,0]};for(const [id,[dx,dy]] of Object.entries(controls)){const b=$(id);if(!b)continue;b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);held[id]=[dx,dy];doMove(dx,dy);});for(const end of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(end,()=>{delete held[id];});}
 $('mazeStart').onclick=()=>reset(state.stage);$('mazeCraft').onclick=synth;$('mazePlace').onclick=charge;$('mazePurge').onclick=purge;$('mazeNext').onclick=next;$('mazeRecipe').onchange=e=>choose(e.target.value);
-let swipe=null;cv.addEventListener('pointerdown',e=>{swipe={x:e.clientX,y:e.clientY};});cv.addEventListener('pointerup',e=>{if(!swipe)return;const dx=e.clientX-swipe.x,dy=e.clientY-swipe.y;swipe=null;if(Math.max(Math.abs(dx),Math.abs(dy))<15)return;Math.abs(dx)>Math.abs(dy)?doMove(Math.sign(dx),0):doMove(0,Math.sign(dy));});
+let swipe=null;cv.addEventListener('pointerdown',e=>{if(window.matchMedia?.('(max-width:700px)').matches){swipe=null;return;}swipe={x:e.clientX,y:e.clientY};});cv.addEventListener('pointerup',e=>{if(!swipe)return;const dx=e.clientX-swipe.x,dy=e.clientY-swipe.y;swipe=null;if(Math.max(Math.abs(dx),Math.abs(dy))<15)return;Math.abs(dx)>Math.abs(dy)?doMove(Math.sign(dx),0):doMove(0,Math.sign(dy));});
 function frame(now){let dt=Math.min(.08,(now-last)/1000||.016);last=now;requestAnimationFrame(frame);if($('mazeSection').classList.contains('hidden')||document.hidden)return;
  if(!state.pending&&!state.completed&&!state.failed){moveAcc+=dt;const heldDir=Object.values(held)[0];if(heldDir&&moveAcc>Math.max(.09,.17-state.upgrades.catalyst*.025)){moveAcc=0;doMove(...heldDir);}G.tick(state,dt);if(G.finish(state)){window.ChemistryGameAssessment?.record('maze','stagesCompleted');say(t('complete'));roundFinished=true;}}
  const events=state.events.splice(0);for(const event of events){if(event.type==='generated')say(t('generator')+' '+event.sym);else if(event.type==='full')say(t('full'));else if(event.type==='empowered'||event.type==='split')say(t('misfire'));else if(event.type==='failed'){window.ChemistryGameAssessment?.record('maze','defeats');say(t('over'));}else if(event.type==='defeated')say(t('reagent')+' ✓');else if(event.type==='upgrade')say(t(event.kind==='shield'?'help':event.kind));else if(event.type==='activator')say(t('activator'));else if(event.type==='activatorGenerated')say(lang()==='hu'?'Új ★ aktivátor jelent meg egy másik folyosón!':lang()==='de'?'Ein neuer ★-Aktivator ist in einem anderen Gang erschienen!':'A new ★ activator appeared in a different corridor!');else if(event.type==='sodiumWater')say(t('over'));}

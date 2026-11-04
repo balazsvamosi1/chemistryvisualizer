@@ -73,3 +73,11 @@ main>section{scroll-margin-top:82px;min-width:0}
 .chem-quick-nav button[aria-current="true"]{border-color:#8debd2;background:#235866;box-shadow:inset 0 0 0 1px #8debd2}
 .tabs{top:64px!important;scroll-padding-inline:10px}
 @media(max-width:650px){.chem-quick-nav{gap:4px;padding:5px 0}.chem-quick-nav button{font-size:12px;min-height:48px}.tabs{top:58px!important}}
+
+/* 0.2104: guided lessons and local science competency summary */
+#curriculumguided{min-height:42px;padding:9px 14px;border-radius:8px;background:#17394f;color:#e7f4fc;border:1px solid #4d7188}
+#curriculumguided[aria-pressed="true"]{border:2px solid #70d0eb;background:#174961}
+#learningProgress{margin:18px 0;padding:15px;border:1px solid #45677b;border-radius:12px;background:#10283b}
+.competency-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:9px}
+.competency-item{display:grid;gap:3px;border:1px solid #35566b;border-radius:8px;padding:10px}
+.competency-item span{font-size:.88rem}

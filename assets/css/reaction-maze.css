@@ -14,3 +14,8 @@
 .maze-answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.maze-answers button{text-align:left;min-height:48px}
 #mazeNext:not([hidden]){display:block;margin:8px auto;background:#1d6d59;border-color:#76efbe}
 @media(max-width:620px){.maze-section{padding:10px!important}.maze-heading h2{font-size:21px}.maze-hud{font-size:11px}.maze-inventory{font-size:12px}.maze-commands{justify-content:center}.maze-actions{justify-content:center;flex-basis:100%}.maze-dpad button{min-width:62px;min-height:49px}.maze-actions button{min-height:46px}}
+
+/* 0.2104: readable native-size game field with horizontal pan on small screens. */
+.maze-canvas-scroll{max-width:850px;width:100%;margin:12px auto;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;border-radius:8px}
+.maze-canvas-scroll #mazeCanvas{margin:0 auto}
+@media(max-width:700px){.maze-canvas-scroll #mazeCanvas{width:684px!important;max-width:none!important;touch-action:pan-x;}.maze-quiz,.maze-notice{font-size:15px}}

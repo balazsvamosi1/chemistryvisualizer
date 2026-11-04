@@ -100,13 +100,13 @@ const questionEl=document.createElement('div');questionEl.id='questAtomicQuiz';q
 const craftEl=document.createElement('div');craftEl.id='questCraftMenu';craftEl.className='quest-quiz';craftEl.hidden=true;cv.insertAdjacentElement('beforebegin',craftEl);
 const arsenalEl=$('questArsenal'); // Stable HUD container in index.html; never create duplicates.
 
-const next=document.createElement('button');next.id='questNext';next.textContent=tr('next');next.hidden=true;cv.insertAdjacentElement('afterend',next);next.onclick=()=>{if(level<9)loadLevel(level+1)};
+const next=document.createElement('button');next.id='questNext';next.textContent=tr('next');next.hidden=true;cv.insertAdjacentElement('afterend',next);next.onclick=()=>{if(level<9)loadLevel(level+1,{keepArsenal:true})};
 const fireButton=document.createElement('button');fireButton.id='questFire';fireButton.textContent='E · 🧯';fireButton.type='button';$('questCraft').insertAdjacentElement('afterend',fireButton);fireButton.onclick=fire;
 function say(s){notification=s;$('questMessage').textContent=s}
 function nameFor(arr){return arr[langNow()==='hu'?0:langNow()==='de'?1:2]}
 function createAtoms(){const entries=[];let i=0;for(const [sym,n] of Object.entries(L[level].atoms)){for(let j=0;j<n;j++){const group=Math.floor(i/3),off=i%3;entries.push({s:sym,x:150+i*Math.min(145,1450/Math.max(1,Object.values(L[level].atoms).reduce((a,b)=>a+b,0)-1)),y:310-(off===1?55:off===2?20:0),taken:false,respawnAt:0});i++}}return entries}
 function freshArsenal(){return Object.fromEntries(RECIPES.map(r=>[r.id,0]))}
-function loadLevel(n){gameOver=false;level=n;player={x:48,y:373,w:25,h:36,vx:0,vy:0,ground:false,hp:3};atoms=createAtoms();if(n>0){const all=new Set();for(const recipe of RECIPES.slice(0,n+1)){for(const sym of Object.keys(recipe.atoms))all.add(sym)}for(const sym of all){if(!atoms.some(a=>a.s===sym))atoms.push({s:sym,x:220+atoms.length*64%1250,y:300,taken:false,respawnAt:0})}}minions=makeMinions(n);enemyShots=[];targets=L[level].targets.map(([type,hu,en],i)=>({type,name:[hu,QUEST_TARGET_NAMES.de[type]||hu,en],x:level===6?1560+i*180:level===9?1850:1780+i*190,y:388,w:40,h:37,alive:true,dir:1,phase:i}));inventory=Object.fromEntries(Object.keys(atomMeta).map(s=>[s,0]));if(!arsenal)arsenal=freshArsenal();if(level===1)arsenal.H2O=Math.max(1,arsenal.H2O);if(level===9){arsenal.HCl=Math.max(1,arsenal.HCl);arsenal.NaOH=Math.max(1,arsenal.NaOH)}selected=R[L[level].recipe].id;keys={};camera=0;elapsed=0;damageCooldown=0;shootCooldown=0;jumpBuffer=0;coyote=0;face=1;shots=[];specialPlatforms=[];springPads=[];particles=[];levelObstacles=createObstacles(n);modal='';pendingAtom=null;activeQuestQuestion=null;pendingReaction=null;pendingCraftReaction=null;rxnPane.hidden=true;completed=false;gameOver=false;transition=0;questionEl.hidden=true;craftEl.hidden=true;next.hidden=true;cv.focus({preventScroll:true});say(stageCode(level)+' · '+tr('mission')+' '+nameFor(L[level].title)+' · '+levelFact());hud()}
+function loadLevel(n,options={}){gameOver=false;level=n;player={x:48,y:373,w:25,h:36,vx:0,vy:0,ground:false,hp:3};atoms=createAtoms();if(n>0){const all=new Set();for(const recipe of RECIPES.slice(0,n+1)){for(const sym of Object.keys(recipe.atoms))all.add(sym)}for(const sym of all){if(!atoms.some(a=>a.s===sym))atoms.push({s:sym,x:220+atoms.length*64%1250,y:300,taken:false,respawnAt:0})}}minions=makeMinions(n);enemyShots=[];targets=L[level].targets.map(([type,hu,en],i)=>({type,name:[hu,QUEST_TARGET_NAMES.de[type]||hu,en],x:level===6?1560+i*180:level===9?1850:1780+i*190,y:388,w:40,h:37,alive:true,dir:1,phase:i}));inventory=Object.fromEntries(Object.keys(atomMeta).map(s=>[s,0]));if(!arsenal||!options.keepArsenal)arsenal=freshArsenal();if(level===1)arsenal.H2O=Math.max(1,arsenal.H2O);if(level===9){arsenal.HCl=Math.max(1,arsenal.HCl);arsenal.NaOH=Math.max(1,arsenal.NaOH)}selected=R[L[level].recipe].id;keys={};camera=0;elapsed=0;damageCooldown=0;shootCooldown=0;jumpBuffer=0;coyote=0;face=1;shots=[];specialPlatforms=[];springPads=[];particles=[];levelObstacles=createObstacles(n);modal='';pendingAtom=null;activeQuestQuestion=null;pendingReaction=null;pendingCraftReaction=null;rxnPane.hidden=true;completed=false;gameOver=false;transition=0;questionEl.hidden=true;craftEl.hidden=true;next.hidden=true;cv.focus({preventScroll:true});say(stageCode(level)+' · '+tr('mission')+' '+nameFor(L[level].title)+' · '+levelFact());hud()}
 function clearModal(){modal='';activeQuestQuestion=null;pendingReaction=null;pendingCraftReaction=null;rxnPane.hidden=true;questionEl.hidden=true;craftEl.hidden=true;cv.focus({preventScroll:true})}
 function questionPool(symbol){const z=atomMeta[symbol],n={hu:atomName(symbol,'hu'),de:atomName(symbol,'de'),en:atomName(symbol,'en')};
  const period=x=>String(x),category={hu:z[3],en:z[4],de:z[5]};
@@ -124,16 +124,23 @@ function questionPool(symbol){const z=atomMeta[symbol],n={hu:atomName(symbol,'hu
  ]}
 const questionAnswerText=value=>typeof value==='string'?value:value?.[langNow()]||'';
 let activeQuestQuestion=null;
+function questQuizHint(type){
+ const hints={
+  hu:['A rendszám a protonok számát adja meg.','A protonok száma határozza meg, melyik elemről van szó.','A periódus a periódusos rendszer vízszintes sora.','Semleges atomban az elektronok száma megegyezik a protonokéval.','Az elemeket kémiai tulajdonságok szerint elemcsaládokba csoportosítjuk.','A vegyjel az elem nemzetközi rövidítése.','Az elem neve és vegyjele ugyanarra az elemre utal.'],
+  de:['Die Ordnungszahl entspricht der Protonenzahl.','Die Anzahl der Protonen legt das Element fest.','Eine Periode ist eine waagerechte Zeile des Periodensystems.','Ein neutrales Atom besitzt genauso viele Elektronen wie Protonen.','Elementfamilien zeigen oft ähnliche chemische Eigenschaften.','Das Elementsymbol ist eine internationale Abkürzung.','Name und Symbol bezeichnen dasselbe Element.'],
+  en:['Atomic number equals proton count.','The number of protons defines the element.','A period is a horizontal row in the periodic table.','A neutral atom has the same number of electrons as protons.','An element family often shares chemical properties.','An element symbol is an internationally used abbreviation.','The element name and symbol identify the same element.']
+ };return hints[langNow()]?.[type]||'';
+}
 function renderQuestQuestion(){
  if(!activeQuestQuestion)return;
- const {atom,q,options}=activeQuestQuestion;
+ const {atom,q,options,questionIndex}=activeQuestQuestion;
  questionEl.replaceChildren();
  const title=document.createElement('strong');title.textContent=atom.s+' · '+q.q[langNow()];questionEl.append(title);
  const row=document.createElement('div');row.className='quest-options';
  for(const option of options){const b=document.createElement('button');b.textContent=questionAnswerText(option.value);b.disabled=!!option.disabled;
- b.onclick=()=>{if(!option.correct){window.ChemistryGameAssessment?.record('quest','quizWrong');option.disabled=true;b.disabled=true;say(tr('wrong'));return}
- window.ChemistryGameAssessment?.record('quest','quizCorrect');atom.taken=true;atom.respawnAt=elapsed+5;inventory[atom.s]=(inventory[atom.s]||0)+1;pendingAtom=null;activeQuestQuestion=null;clearModal();say(tr('collected')+': '+atom.s);hud()};row.append(b)}
- questionEl.append(row);
+ b.onclick=()=>{if(!option.correct){window.ChemistryGameAssessment?.record('quest','quizWrong');option.disabled=true;b.disabled=true;activeQuestQuestion.hintShown=true;renderQuestQuestion();say(tr('wrong'));return}
+ window.ChemistryGameAssessment?.record('quest','quizCorrect');atom.taken=true;atom.respawnAt=elapsed+5;inventory[atom.s]=(inventory[atom.s]||0)+1;pendingAtom=null;activeQuestQuestion=null;clearModal();say(tr('collected')+': '+atom.s+' · '+questQuizHint(questionIndex));hud()};row.append(b)}
+ questionEl.append(row);if(activeQuestQuestion.hintShown){const hint=document.createElement('p');hint.className='quest-explanation';hint.textContent=questQuizHint(questionIndex);questionEl.append(hint);}
 }
 function showQuestion(atom){
  if(modal)return;
@@ -142,7 +149,7 @@ function showQuestion(atom){
  const avail=pool.map((_,i)=>i).filter(i=>!used.has(i)),index=avail[Math.floor(Math.random()*avail.length)];used.add(index);usedQuestions.set(atom.s,used);
  const q=pool[index],options=[q.a,...q.bad].map((value,i)=>({value,correct:i===0,disabled:false}));
  for(let i=options.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[options[i],options[j]]=[options[j],options[i]]}
- activeQuestQuestion={atom,q,options};renderQuestQuestion();say(tr('question'));
+ activeQuestQuestion={atom,q,options,questionIndex:index,hintShown:false};renderQuestQuestion();say(tr('question'));
 }
 function validRecipe(r){if(r.kind==='ionic')return true;const nodes=[],edges=[];let i=0;const put=s=>{const id='n'+i++;nodes.push({id,s});return id};if(r.id==='H2O'){const o=put('O');for(let j=0;j<2;j++)edges.push({a:o,b:put('H'),order:1,kind:'covalent'})}else if(r.id==='CO2'){const c=put('C');for(let j=0;j<2;j++)edges.push({a:c,b:put('O'),order:2,kind:'covalent'})}else if(r.id==='NH3'||r.id==='CH4'){const center=put(r.id==='NH3'?'N':'C');for(let j=0;j<(r.id==='NH3'?3:4);j++)edges.push({a:center,b:put('H'),order:1,kind:'covalent'})}else if(r.id==='H2O2'){const o1=put('O'),o2=put('O');edges.push({a:o1,b:o2,order:1,kind:'covalent'},{a:o1,b:put('H'),order:1,kind:'covalent'},{a:o2,b:put('H'),order:1,kind:'covalent'})}else if(r.id==='HCl'){edges.push({a:put('H'),b:put('Cl'),order:1,kind:'covalent'})}else if(r.id==='H2'||r.id==='O2'){edges.push({a:put(r.id==='H2'?'H':'O'),b:put(r.id==='H2'?'H':'O'),order:r.id==='H2'?1:2,kind:'covalent'})}else return false;
 try{const result=window.ChemistryEngine?.analyze(nodes,edges);return !result?.issues?.length}catch{return false}}

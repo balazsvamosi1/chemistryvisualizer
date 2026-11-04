@@ -31,7 +31,7 @@ test('hydrogen peroxide requires single oxygen-oxygen bond',()=>{
 });
 test('first two levels simple crafting and level three workbench UI',()=>{
  const q=boot();q.test.setInventory({H:2,O:1});assert.equal(q.test.craft('H2O'),true);
- q.test.loadLevel(2);q.test.setInventory({H:2,O:1});q.craft('H2O');
- assert.equal(q.debug().arsenal.H2O,1);
+ q.test.loadLevel(2);assert.equal(q.debug().arsenal.H2O,0);q.test.setInventory({H:2,O:1});q.craft('H2O');
+ assert.equal(q.debug().arsenal.H2O,0);
  assert.equal(q.test.craft('H2O'),true);
 });
