@@ -1,14 +1,23 @@
-# 3D Chemistry Lab — Beta 0.2102
+# 3D Chemistry Lab — Beta 0.2103
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
 
 ## Version numbering
 
 - **First release:** `0.01`.
-- **Current release:** `0.2102`. Future Chemistry Lab public versions will remain below `1.0`.
+- **Current release:** `0.2103`. Future Chemistry Lab public versions will remain below `1.0`.
 - **Historical convention:** old `A.B.C` release labels become `0.ABBC`, where A is one digit, B is zero-padded to two digits, and C is one digit. Examples: `1.9.7 → 0.1097`, `2.9.8 → 0.2098`, `2.10.0 → 0.2100`, `2.10.2 → 0.2102`. If C was omitted, use zero: `1.5 → 0.1050`. The original `0.01` is preserved unchanged.
-- **Next version:** `0.2103`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
+- **Next version:** `0.2104`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
 - Older technical asset cache keys (such as `?v=2.1.7`) and third-party dependency/API versions are **not** changed: they are not release labels.
+
+## Beta 0.2103 — Arcade maze and renewable resources (2026-11-04)
+
+- Replaced random tree-like levels with six distinct, connected, Pac-Man-inspired corridor maps featuring loops, junctions, a central hub and limited breakable blocks.
+- Both correctly and incorrectly attempted atom pickups now return approximately 8–12 seconds later at a **different, reachable corridor**, rather than the old location. Wrong first answers still grant no atom.
+- The ion generator also distributes additional atoms around the maze rather than clustering them next to its center.
+- Stage five now regenerates the fictional ★ activator on a different reachable corridor after a wasted Al + ★ charge, eliminating the unrecoverable resource softlock.
+- Arcade-style glowing wall contours improve visual readability. Original Apache-2.0 browser-only gameplay and GitHub Pages support remain unchanged.
+- 10 new regression tests added to `tests/reaction-maze-arcade.test.cjs`; all 51 targeted Reaction Maze/P0/P1 tests passed in a JavaScript test environment. Live mobile/browser E2E validation remains outstanding.
 
 ## Beta 0.2102 — P0 answer-label hotfix (2026-11-04)
 
@@ -43,7 +52,7 @@ A second independent game has been added under **Learn & Play → Reaction Maze*
 
 ## Current release
 
-**Beta 0.2102** is the current Chemistry Lab release (2026-11-04), including Chemistry Quest, Reaction Maze, Academy Element Hunt and the P0 localized quiz-answer hotfix. The core games and laboratories run directly on **GitHub Pages** without a backend. An optional local Python server (`python3 server.py`) supports backend-dependent scientific data features. The release notes below document the state of each historical version.
+**Beta 0.2103** is the current Chemistry Lab release (2026-11-04), including Chemistry Quest, Reaction Maze, Academy Element Hunt and the P0 localized quiz-answer hotfix. The core games and laboratories run directly on **GitHub Pages** without a backend. An optional local Python server (`python3 server.py`) supports backend-dependent scientific data features. The release notes below document the state of each historical version.
 
 ## Start
 
