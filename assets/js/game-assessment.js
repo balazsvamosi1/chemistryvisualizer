@@ -1,0 +1,22 @@
+/* Shared learning assessment for three Chemistry Lab games. Original Apache-2.0. No dependencies. */
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.ChemistryGameAssessment=api;})(typeof window!=='undefined'?window:null,function(){
+'use strict';
+const IDS=['quest','maze','hunt'];
+function fresh(){return {version:1,games:Object.fromEntries(IDS.map(id=>[id,{quizCorrect:0,quizWrong:0,craftCorrect:0,craftWrong:0,reactionCorrect:0,reactionWrong:0,stagesCompleted:0,defeats:0}]))};}
+let state=fresh();
+const keys=['quizCorrect','quizWrong','craftCorrect','craftWrong','reactionCorrect','reactionWrong','stagesCompleted','defeats'];
+function validSnapshot(data){if(!data||data.version!==1||!data.games)return false;return IDS.every(id=>keys.every(k=>Number.isSafeInteger(data.games[id]?.[k])&&data.games[id][k]>=0));}
+try{const raw=window?.localStorage?.getItem('chemistryGameAssessmentV1');if(raw){const data=JSON.parse(raw);if(validSnapshot(data))state=data;}}catch{}
+function snapshot(){return JSON.parse(JSON.stringify(state));}
+function record(id,event){if(!IDS.includes(id)||!keys.includes(event))return false;state.games[id][event]++;try{window?.localStorage?.setItem('chemistryGameAssessmentV1',JSON.stringify(state));}catch{}if(typeof document!=='undefined')render();return true;}
+function stats(id){const r=state.games[id];if(!r)return null;const quizAttempts=r.quizCorrect+r.quizWrong;const labAttempts=r.craftCorrect+r.craftWrong+r.reactionCorrect+r.reactionWrong;return {...r,quizAttempts,quizAccuracy:quizAttempts?Math.round(100*r.quizCorrect/quizAttempts):null,labAttempts};}
+function clear(){state=fresh();try{window?.localStorage?.setItem('chemistryGameAssessmentV1',JSON.stringify(state));}catch{}if(typeof document!=='undefined')render();}
+const labels={hu:{title:'Tanulói eredmények',intro:'A három játék helyi tanulási mutatói. Nem tanári osztályzat; ugyanazon böngészőben tárolódik.',games:['Chemistry Quest','Reakció-labirintus','Elemvadászat'],quiz:'Kvízpontosság',labs:'Sikeres kémiai feladatok',stages:'Teljesített pályák',defeats:'Vereségek',empty:'Nincs próbálkozás',clear:'Statisztika törlése'},de:{title:'Lernergebnisse',intro:'Lokale Lernmetriken der drei Spiele, keine Schulnote; Speicherung im Browser.',games:['Chemistry Quest','Reaktionslabyrinth','Elementjagd'],quiz:'Quizgenauigkeit',labs:'Gelöste Chemieaufgaben',stages:'Abgeschlossene Level',defeats:'Niederlagen',empty:'Noch keine Versuche',clear:'Statistik löschen'},en:{title:'Learning results',intro:'Local learning metrics across three games; not a school grade. Stored in this browser.',games:['Chemistry Quest','Reaction Maze','Element Hunt'],quiz:'Quiz accuracy',labs:'Chemistry tasks solved',stages:'Stages completed',defeats:'Defeats',empty:'No attempts yet',clear:'Clear statistics'}};
+function language(){return ['hu','de','en'].find(id=>document.getElementById(id)?.classList.contains('active'))||'hu';}
+function render(){const host=document.getElementById('gameAssessment');if(!host)return;const tr=labels[language()];host.replaceChildren();const h=document.createElement('h3');h.textContent=tr.title;host.append(h);const intro=document.createElement('p');intro.textContent=tr.intro;host.append(intro);const list=document.createElement('div');list.className='game-assessment-grid';host.append(list);
+ IDS.forEach((id,i)=>{const s=stats(id),box=document.createElement('article'),head=document.createElement('strong');head.textContent=tr.games[i];box.append(head);for(const line of [tr.quiz+': '+(s.quizAccuracy===null?tr.empty:s.quizCorrect+'/'+s.quizAttempts+' ('+s.quizAccuracy+'%)'),tr.labs+': '+(s.craftCorrect+s.reactionCorrect)+'/'+s.labAttempts,tr.stages+': '+s.stagesCompleted,tr.defeats+': '+s.defeats]){const p=document.createElement('p');p.textContent=line;box.append(p);}list.append(box);});
+ const button=document.createElement('button');button.type='button';button.textContent=tr.clear;button.onclick=()=>{if(typeof window.confirm==='function'&&!window.confirm(tr.clear+'?'))return;clear();};host.append(button);
+}
+if(typeof document!=='undefined'){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{render();for(const id of ['hu','de','en'])document.getElementById(id)?.addEventListener('click',()=>queueMicrotask(render));});else{render();for(const id of ['hu','de','en'])document.getElementById(id)?.addEventListener('click',()=>queueMicrotask(render));}}
+return Object.freeze({record,snapshot,stats,clear});
+});
