@@ -69,9 +69,20 @@ function draw(){
  const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a1724';ctx.fillRect(0,0,W,H);
  const cell=(x,y,color)=>{ctx.fillStyle=color;ctx.fillRect(x*TILE+1,y*TILE+1,TILE-2,TILE-2);};
  for(let y=0;y<ROW;y++)for(let x=0;x<COL;x++){const type=state.grid[y][x],ox=x*TILE,oy=y*TILE;
- if(type==='#'){ctx.fillStyle='#344b66';ctx.fillRect(ox,oy,TILE,TILE);ctx.fillStyle='#4d6c88';ctx.fillRect(ox+3,oy+3,TILE-6,5);ctx.fillStyle='#21364c';ctx.fillRect(ox+3,oy+TILE-7,TILE-6,5);}
+ if(type==='#'){
+  // Classic arcade corridor silhouette: dark solid blocks with glowing borders facing walkways.
+  ctx.fillStyle='#102047';ctx.fillRect(ox,oy,TILE,TILE);
+  ctx.strokeStyle=['#4577f5','#58b3f8','#8a7df5','#62c6f3','#ef9c69','#b89bfc'][state.stage];
+  ctx.lineWidth=2.5;ctx.beginPath();
+  const free=(a,b)=>a>=0&&a<COL&&b>=0&&b<ROW&&state.grid[b][a]!=='#';
+  if(free(x,y-1)){ctx.moveTo(ox+3,oy+3);ctx.lineTo(ox+TILE-3,oy+3);}
+  if(free(x,y+1)){ctx.moveTo(ox+3,oy+TILE-3);ctx.lineTo(ox+TILE-3,oy+TILE-3);}
+  if(free(x-1,y)){ctx.moveTo(ox+3,oy+3);ctx.lineTo(ox+3,oy+TILE-3);}
+  if(free(x+1,y)){ctx.moveTo(ox+TILE-3,oy+3);ctx.lineTo(ox+TILE-3,oy+TILE-3);}
+  ctx.stroke();
+ }
  else if(type==='%'){cell(x,y,'#705f87');ctx.strokeStyle='#ded0f6';ctx.beginPath();ctx.moveTo(ox+8,oy+5);ctx.lineTo(ox+16,oy+18);ctx.lineTo(ox+10,oy+29);ctx.moveTo(ox+16,oy+18);ctx.lineTo(ox+28,oy+14);ctx.stroke();}
- else{cell(x,y,(x+y)%2?'#142737':'#112331');}}
+ else{cell(x,y,(x+y)%2?'#0b172e':'#0d1931');}}
  const text=(s,x,y,size=17,color='#fff')=>{ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold '+size+'px system-ui';ctx.fillText(s,(x+.5)*TILE,(y+.5)*TILE);};
  cell(state.gen.x,state.gen.y,'#234b60');text('◎',state.gen.x,state.gen.y,27,'#80e9fb');
  cell(state.exit.x,state.exit.y,remaining()===0?'#205f45':'#4c4858');text('⇥',state.exit.x,state.exit.y,28,remaining()===0?'#a3ffbe':'#9b92a2');
@@ -94,7 +105,7 @@ $('mazeStart').onclick=()=>reset(state.stage);$('mazeCraft').onclick=synth;$('ma
 let swipe=null;cv.addEventListener('pointerdown',e=>{swipe={x:e.clientX,y:e.clientY};});cv.addEventListener('pointerup',e=>{if(!swipe)return;const dx=e.clientX-swipe.x,dy=e.clientY-swipe.y;swipe=null;if(Math.max(Math.abs(dx),Math.abs(dy))<15)return;Math.abs(dx)>Math.abs(dy)?doMove(Math.sign(dx),0):doMove(0,Math.sign(dy));});
 function frame(now){let dt=Math.min(.08,(now-last)/1000||.016);last=now;requestAnimationFrame(frame);if($('mazeSection').classList.contains('hidden')||document.hidden)return;
  if(!state.pending&&!state.completed&&!state.failed){moveAcc+=dt;const heldDir=Object.values(held)[0];if(heldDir&&moveAcc>Math.max(.09,.17-state.upgrades.catalyst*.025)){moveAcc=0;doMove(...heldDir);}G.tick(state,dt);if(G.finish(state)){window.ChemistryGameAssessment?.record('maze','stagesCompleted');say(t('complete'));roundFinished=true;}}
- const events=state.events.splice(0);for(const event of events){if(event.type==='generated')say(t('generator')+' '+event.sym);else if(event.type==='full')say(t('full'));else if(event.type==='empowered'||event.type==='split')say(t('misfire'));else if(event.type==='failed'){window.ChemistryGameAssessment?.record('maze','defeats');say(t('over'));}else if(event.type==='defeated')say(t('reagent')+' ✓');else if(event.type==='upgrade')say(t(event.kind==='shield'?'help':event.kind));else if(event.type==='activator')say(t('activator'));else if(event.type==='sodiumWater')say(t('over'));}
+ const events=state.events.splice(0);for(const event of events){if(event.type==='generated')say(t('generator')+' '+event.sym);else if(event.type==='full')say(t('full'));else if(event.type==='empowered'||event.type==='split')say(t('misfire'));else if(event.type==='failed'){window.ChemistryGameAssessment?.record('maze','defeats');say(t('over'));}else if(event.type==='defeated')say(t('reagent')+' ✓');else if(event.type==='upgrade')say(t(event.kind==='shield'?'help':event.kind));else if(event.type==='activator')say(t('activator'));else if(event.type==='activatorGenerated')say(lang()==='hu'?'Új ★ aktivátor jelent meg egy másik folyosón!':lang()==='de'?'Ein neuer ★-Aktivator ist in einem anderen Gang erschienen!':'A new ★ activator appeared in a different corridor!');else if(event.type==='sodiumWater')say(t('over'));}
  notificationTime=Math.max(0,notificationTime-dt);if(!notificationTime)notification='';if(events.length||!state._hudClock||now-state._hudClock>350){state._hudClock=now;sync();}draw();quiz();
 }
 for(const k of ['hu','de','en'])$(k)?.addEventListener('click',()=>queueMicrotask(()=>{sync();if(state.pending){quizShown=null;quiz();}}));
