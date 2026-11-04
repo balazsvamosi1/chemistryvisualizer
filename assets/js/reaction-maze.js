@@ -47,7 +47,7 @@ function quiz(){
  Cl:{hu:['Nemesgáz','Halogén','Alkálifém','Alkáliföldfém'],de:['Edelgas','Halogen','Alkalimetall','Erdalkalimetall'],en:['Noble gas','Halogen','Alkali metal','Alkaline earth metal']},
  S:{hu:['Szilícium','Kén','Nátrium','Szelén'],de:['Silicium','Schwefel','Natrium','Selen'],en:['Silicon','Sulfur','Sodium','Selenium']}
  };
- let options=pending.question[3];const qidx=G.QUIZZES[pending.sym]?.indexOf(pending.question)||0;
+ let options=pending.question[3];const qidx=pending.question.sourceIndex??0;
  if(translated[pending.sym]&&((pending.sym==='C'&&qidx===0)||(pending.sym==='Cl'&&qidx===1)||(pending.sym==='S'&&qidx===0)))options=translated[pending.sym][lang()];
  options.forEach((item,i)=>{const b=$make('button','',item);b.type='button';b.onclick=()=>{const result=G.answer(state,i);window.ChemistryGameAssessment?.record('maze',result.ok?'quizCorrect':'quizWrong');host.hidden=true;quizShown=null;say(result.ok?t('good'):t('bad'));sync();draw();};grid.append(b);});
 }
