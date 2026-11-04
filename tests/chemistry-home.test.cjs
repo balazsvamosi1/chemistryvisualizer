@@ -32,7 +32,7 @@ test('new home page is the initial view and is in the main navigation',()=>{
 });
 test('home explains scope and limitations in all three languages',()=>{
  const {nodes,walk,setLanguage}=boot();
- const examples={hu:['Fedezd fel a kémiát!','Mire nem való?','Nem valódi laboratórium'],de:['Entdecke die Chemie!','Wofür ist es nicht gedacht?','Kein echtes Labor'],en:['Explore chemistry!','What is it not for?','Not a real laboratory']};
+ const examples={hu:['Fedezd fel a kémiát!','Mire nem való?','Ez nem valódi laboratórium'],de:['Entdecke die Chemie!','Wofür ist es nicht gedacht?','Kein echtes Labor'],en:['Explore chemistry!','What is it not for?','Not a real laboratory']};
  for(const language of ['hu','de','en']){
   setLanguage(language);
   const txt=walk(nodes.homeSection).map(x=>x.textContent).join(' | ');
