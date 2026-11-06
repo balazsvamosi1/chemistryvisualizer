@@ -10,11 +10,11 @@ const strings={
  hu:{
   title:'Sűrűség – mi fér el ugyanakkora helyen?',intro:'Hasonlíts össze két anyagot. Változtasd a tömeget vagy a térfogatot, majd nézd meg az anyagok belső szerkezetének egyszerűsített modelljét.',
   mode:'Összehasonlítás',volume:'Azonos térfogat',mass:'Azonos tömeg',shape:'Test alakja',cube:'Kocka',cuboid:'Téglatest',quantityVolume:'Közös térfogat',quantityMass:'Közös tömeg',particles:'Részecskeszerkezet megjelenítése',
-  chooseA:'Első anyag',chooseB:'Második anyag',density:'Sűrűség',materialMass:'Tömeg',materialVolume:'Térfogat',dimensions:'Méretek',condition:'Referenciaállapot',
+  chooseA:'Első anyag',chooseB:'Második anyag',density:'Sűrűség',materialMass:'Tömeg',materialVolume:'Térfogat',dimensions:'Méretek',condition:'Referenciaállapot',molarMass:'Moláris tömeg (gáz)',groupNames:["Szilárd anyagok","Folyadékok","Gázok"],gasInfo:"A gázoknál 20 °C-on és 1 atmoszféra nyomáson azonos térfogatban közel ugyanannyi részecske található. A sűrűségkülönbség fő oka a részecskék eltérő tömege. A gázok modelljében ezért hasonló számú molekula látszik, nem több „golyó” a nehezebb gázban.",gasCaution:"A gázok sűrűségét közelítő ideálisgáz-modell adja 20 °C-on, 1 atm mellett; a valós gázok kissé eltérhetnek. Az ólom mérgező, a gázok belélegzése veszélyes lehet: a példák kizárólag virtuálisak.",
   formula:'Sűrűség = tömeg / térfogat',meterMass:'A tömegek összehasonlítása',meterVolume:'A térfogatok összehasonlítása',ofLargest:' a nagyobbikhoz viszonyítva',summaryMass:'Azonos térfogat mellett a(z) ',summaryMassEnd:'-szor akkora tömegű, mint a(z) ',summaryVolume:'Azonos tömeg mellett a(z) ',summaryVolumeEnd:'-szor akkora térfogatú, mint a(z) ',summaryEqual:'A két anyag tömege és térfogata megegyezik a kiválasztott összehasonlításban.',eqVolume:'Azonos térfogat mellett a nagyobb sűrűségű anyag nehezebb.',eqMass:'Azonos tömeg mellett a kisebb sűrűségű anyag több helyet foglal.',equal:'A két anyag sűrűsége egyenlő.',times:'-szer akkora a sűrűsége, mint a(z) ',drag:'Forgasd a modellt egérrel vagy ujjal. Billentyűzeten a nyilakkal is lehet forgatni.',notScale:'A testek egymáshoz viszonyított mérete a térfogatkülönbséget mutatja. Nagyon nagy eltérésnél a kisebb test minimális rajzméretet kap; a pontos arányt a sáv és a számok jelzik. A részecskék nem méretarányosak.',
   schematic:'A részecskék száma és mérete csak szemléltetés: nem a kocka valódi atomszámát vagy a valós távolságokat mutatja. A sűrűség függ a részecskék tömegétől ÉS térbeli elrendezésétől.',
-  source:'Tájékoztató értékek: OpenStax Chemistry és NIST; a fa sűrűsége típustól és nedvességtől függ. Az adatokat nem hőmérséklet-változási szimuláció számítja.',
-  compare:'Próbáld ki',preset1:'Víz és jég',preset2:'Víz és alumínium',preset3:'Vas és réz',preset4:'Levegő és víz',
+  source:'Szilárd anyagok: RSC és PubChem referencia-sűrűségek. Gázok: ideálisgáz-számítás (20 °C, 1 atm). A fa sűrűsége nedvességfüggő; itt nincs hőmérséklet- vagy nyomásszimuláció.',
+  compare:'Próbáld ki',preset1:'Víz és jég',preset2:'Víz és alumínium',preset3:'Vas és réz',preset4:'Levegő és víz',preset5:"Ólom és alumínium",preset6:"Magnézium és ólom",preset7:"Hélium és szén-dioxid",preset8:"Grafit és gyémánt",preset9:"Hidrogén és kén-hexafluorid",
   structure:'Mit mutat a részecskekép?',struct:{
    fcc:'Egyszerűsített lapközepes köbös (FCC) fémrács: a fématomok rendezett helyeken helyezkednek el.',
    bcc:'Egyszerűsített térközepes köbös (BCC) rács: ilyen a szobahőmérsékletű tiszta vas.',
@@ -22,7 +22,8 @@ const strings={
    ice:'Nyitott hidrogénkötéses háló szemléltetése. Ezért a jég sűrűsége kisebb a folyékony vízénél.',
    liquid:'Rendezetlen, egymás közelében lévő molekulák. A részecskék valójában folyamatosan mozognak.',
    gas:'Gázmolekulák messze egymástól. A valódi távolságok és a mozgás nem méretarányosak.',
-   porous:'Fa: sejtfalak és üregek leegyszerűsített képe. A fa nem egyetlen homogén kristály.'
+   porous:'Fa: sejtfalak és üregek leegyszerűsített képe. A fa nem egyetlen homogén kristály.',
+   hcp:"Hatszöges, szorosan illeszkedő rétegek (HCP) egyszerűsített fémrácsa.",layered:"Grafit: szénatomokból álló rétegek, amelyek között nagyobb a távolság; ez nem molekularács.",diamond:"Gyémánt: háromdimenziós, tetraéderes szénatomháló szemléltetése."
   },
   water:'Vízben',floats:'úszna (átlagos sűrűsége kisebb a vízénél)',sinks:'elsüllyedne (átlagos sűrűsége nagyobb a vízénél)',dissolves:'oldódhat, ezért a süllyedés önmagában nem jó példa',notApplicable:'folyadékra vagy gázra nem ilyen egyszerűen értelmezhető',
   caveat:'Az ábrák oktatási modellek, nem molekuladinamikai szimulációk vagy pontos kristályszerkezeti koordináták.'
@@ -30,12 +31,12 @@ const strings={
  de:{
   title:'Dichte – wie viel steckt im gleichen Raum?',intro:'Vergleiche zwei Stoffe. Ändere die Masse oder das Volumen und sieh dir ein vereinfachtes Modell des inneren Aufbaus an.',
   mode:'Vergleich',volume:'Gleiches Volumen',mass:'Gleiche Masse',shape:'Körperform',cube:'Würfel',cuboid:'Quader',quantityVolume:'Gemeinsames Volumen',quantityMass:'Gemeinsame Masse',particles:'Teilchenmodell anzeigen',
-  chooseA:'Erster Stoff',chooseB:'Zweiter Stoff',density:'Dichte',materialMass:'Masse',materialVolume:'Volumen',dimensions:'Abmessungen',condition:'Referenzzustand',
+  chooseA:'Erster Stoff',chooseB:'Zweiter Stoff',density:'Dichte',materialMass:'Masse',materialVolume:'Volumen',dimensions:'Abmessungen',condition:'Referenzzustand',molarMass:'Molare Masse (Gas)',groupNames:["Feststoffe","Flüssigkeiten","Gase"],gasInfo:"Bei gleicher Temperatur (20 °C) und gleichem Druck (1 atm) enthalten gleiche Gasvolumina ungefähr gleich viele Teilchen. Unterschiedliche Dichten entstehen vor allem durch unterschiedliche Teilchenmassen. Darum zeigt die Grafik nicht einfach mehr Teilchen im schwereren Gas.",gasCaution:"Gasdichten sind idealisierte Näherungen bei 20 °C und 1 atm; reale Gase können abweichen. Blei ist giftig und das Einatmen von Gasen kann gefährlich sein: nur virtuelle Beispiele.",
   formula:'Dichte = Masse / Volumen',meterMass:'Massen vergleichen',meterVolume:'Volumen vergleichen',ofLargest:' relativ zum größeren Wert',summaryMass:'Bei gleichem Volumen hat ',summaryMassEnd:'-mal so viel Masse wie ',summaryVolume:'Bei gleicher Masse braucht ',summaryVolumeEnd:'-mal so viel Volumen wie ',summaryEqual:'Beide Stoffe haben bei dieser Einstellung die gleiche Masse und das gleiche Volumen.',eqVolume:'Bei gleichem Volumen hat der dichtere Stoff mehr Masse.',eqMass:'Bei gleicher Masse braucht der Stoff mit kleinerer Dichte mehr Platz.',equal:'Die beiden Stoffe haben die gleiche Dichte.',times:'-mal so dicht wie ',
   drag:'Mit Maus oder Finger drehen. Mit den Pfeiltasten geht es ebenfalls.',notScale:'Die Körpergrößen zeigen den Volumenunterschied. Bei sehr großen Unterschieden bleibt der kleinere Körper mindestens sichtbar. Balken und Zahlen zeigen das genaue Verhältnis; Teilchen sind nicht maßstabsgetreu.',
   schematic:'Teilchenzahl und Teilchengröße sind schematisch. Sie zeigen weder die reale Atomzahl noch echte Abstände. Die Dichte hängt von der Masse der Teilchen UND ihrer räumlichen Anordnung ab.',
-  source:'Näherungswerte aus OpenStax Chemistry und NIST; Holzdichte hängt von Holzart und Feuchte ab. Keine Berechnung veränderlicher Temperaturen.',
-  compare:'Beispiele',preset1:'Wasser und Eis',preset2:'Wasser und Aluminium',preset3:'Eisen und Kupfer',preset4:'Luft und Wasser',
+  source:'Feststoffe: RSC/PubChem-Referenzwerte. Gase: ideales Gasgesetz (20 °C, 1 atm). Holzdichte hängt von Holzart und Feuchte ab; keine variable Temperatur- oder Drucksimulation.',
+  compare:'Beispiele',preset1:'Wasser und Eis',preset2:'Wasser und Aluminium',preset3:'Eisen und Kupfer',preset4:'Luft und Wasser',preset5:"Blei und Aluminium",preset6:"Magnesium und Blei",preset7:"Helium und Kohlenstoffdioxid",preset8:"Graphit und Diamant",preset9:"Wasserstoff und Schwefelhexafluorid",
   structure:'Was zeigt das Teilchenbild?',struct:{
    fcc:'Vereinfachtes kubisch-flächenzentriertes Metallgitter (FCC) mit regelmäßigen Atompositionen.',
    bcc:'Vereinfachtes kubisch-raumzentriertes Gitter (BCC), wie es reines Eisen bei Raumtemperatur hat.',
@@ -43,7 +44,8 @@ const strings={
    ice:'Schematisches offenes Wasserstoffbrückennetz; Eis ist deshalb weniger dicht als flüssiges Wasser.',
    liquid:'Ungeordnete Moleküle nah beieinander. In Wirklichkeit bewegen sie sich ständig.',
    gas:'Gasmoleküle weit voneinander entfernt; Abstände und Bewegung sind nicht maßstabsgetreu.',
-   porous:'Holz: vereinfachte Zellwände und Hohlräume; kein einzelner homogener Kristall.'
+   porous:'Holz: vereinfachte Zellwände und Hohlräume; kein einzelner homogener Kristall.',
+   hcp:"Vereinfachte hexagonal dichteste Kugelpackung (HCP) im Metall.",layered:"Graphit: Schichten aus Kohlenstoffatomen mit größeren Abständen zwischen den Schichten; kein Molekülgitter.",diamond:"Diamant: schematisches dreidimensionales tetraedrisches Netz aus Kohlenstoffatomen."
   },
   water:'In Wasser',floats:'würde schwimmen (mittlere Dichte kleiner als Wasser)',sinks:'würde sinken (mittlere Dichte größer als Wasser)',dissolves:'kann sich auflösen, daher ist Sinken kein gutes Beispiel',notApplicable:'für Flüssigkeiten oder Gase nicht so einfach vergleichbar',
   caveat:'Didaktische Modelle, keine Molekulardynamik oder exakten Kristallkoordinaten.'
@@ -51,12 +53,12 @@ const strings={
  en:{
   title:'Density – what fits into the same space?',intro:'Compare two materials. Change mass or volume, then look inside a simplified model of their particle arrangements.',
   mode:'Compare',volume:'Same volume',mass:'Same mass',shape:'Solid shape',cube:'Cube',cuboid:'Rectangular prism',quantityVolume:'Shared volume',quantityMass:'Shared mass',particles:'Show particle structures',
-  chooseA:'First material',chooseB:'Second material',density:'Density',materialMass:'Mass',materialVolume:'Volume',dimensions:'Dimensions',condition:'Reference conditions',
+  chooseA:'First material',chooseB:'Second material',density:'Density',materialMass:'Mass',materialVolume:'Volume',dimensions:'Dimensions',condition:'Reference conditions',molarMass:'Molar mass (gas)',groupNames:["Solids","Liquids","Gases"],gasInfo:"At the same temperature (20 °C) and pressure (1 atm), equal volumes of gases contain approximately equal numbers of particles. Their different densities mainly reflect different particle masses, so the heavier gas is not drawn with more particles.",gasCaution:"Gas densities are ideal-gas estimates at 20 °C and 1 atm; real gases differ slightly. Lead is toxic and inhaling gases can be hazardous: virtual examples only.",
   formula:'Density = mass / volume',meterMass:'Compare masses',meterVolume:'Compare volumes',ofLargest:' of the larger value',summaryMass:'With equal volume, ',summaryMassEnd:' times the mass of ',summaryVolume:'With equal mass, ',summaryVolumeEnd:' times the volume of ',summaryEqual:'Both materials have the same mass and volume in this comparison.',eqVolume:'For the same volume, the denser material has more mass.',eqMass:'For the same mass, the less dense material occupies more space.',equal:'These materials have the same density.',times:' times as dense as ',
   drag:'Drag with mouse or finger to rotate; arrow keys also rotate.',notScale:'Relative cube sizes show volume differences. For extreme ratios, the smaller object stays minimally visible. Bars and values give the exact ratio; individual particles are not to scale.',
   schematic:'Particle counts and sizes are schematic, not the real number of atoms or distances. Density depends on BOTH particle mass and spatial arrangement.',
-  source:'Approximate reference values from OpenStax Chemistry and NIST. Wood varies with species and moisture. No temperature-change physics is simulated.',
-  compare:'Try these',preset1:'Water and ice',preset2:'Water and aluminium',preset3:'Iron and copper',preset4:'Air and water',
+  source:'Solids: RSC/PubChem reference densities. Gases: ideal gas law (20 °C, 1 atm). Wood depends on species and moisture; no temperature or pressure changes are simulated.',
+  compare:'Try these',preset1:'Water and ice',preset2:'Water and aluminium',preset3:'Iron and copper',preset4:'Air and water',preset5:"Lead and aluminium",preset6:"Magnesium and lead",preset7:"Helium and carbon dioxide",preset8:"Graphite and diamond",preset9:"Hydrogen and sulfur hexafluoride",
   structure:'What does the particle view show?',struct:{
    fcc:'Simplified face-centered cubic (FCC) metal lattice with ordered atomic positions.',
    bcc:'Simplified body-centered cubic (BCC) lattice, as for pure iron at room temperature.',
@@ -64,7 +66,8 @@ const strings={
    ice:'Schematic open hydrogen-bond network. Ice has lower density than liquid water.',
    liquid:'Disordered, closely spaced molecules, which are actually constantly moving.',
    gas:'Widely separated gas molecules; true spacing and movement are not to scale.',
-   porous:'Wood: simplified cell walls and voids, not one uniform crystal.'
+   porous:'Wood: simplified cell walls and voids, not one uniform crystal.',
+   hcp:"Simplified hexagonal close-packed (HCP) metal layers.",layered:"Graphite: layered carbon atom networks, with wider spacing between layers; not individual molecules.",diamond:"Diamond: schematic three-dimensional tetrahedral carbon atom network."
   },
   water:'In water',floats:'would float (average density lower than water)',sinks:'would sink (average density higher than water)',dissolves:'may dissolve, so sinking is not a useful comparison',notApplicable:'not as straightforward for liquids or gases',
   caveat:'Teaching illustrations only, not molecular dynamics or exact crystallographic coordinates.'
@@ -75,7 +78,7 @@ const ui={section:$('densitySection'),mode:$('densityMode'),shape:$('densityShap
  canvases:[$('densityCanvasA'),$('densityCanvasB')],outputs:[$('densityResultA'),$('densityResultB')]};
 const pose={yaw:-.58,pitch:.32},cached={};let comparison;
 const number=(n,max=2)=>new Intl.NumberFormat(lang()==='de'?'de-DE':lang()==='hu'?'hu-HU':'en-US',{maximumFractionDigits:max}).format(n);
-function densityString(rho){return number(rho,rho<.01?5:3)+' g/cm³';}
+function densityString(rho){return rho<.01?number(rho*1000,3)+' g/L ('+number(rho,7)+' g/cm³)':number(rho,3)+' g/cm³';}
 function massString(mass){return mass>=1000?number(mass/1000,3)+' kg':number(mass,3)+' g';}
 function volumeString(volume){return volume>=1000000?number(volume/1000000,3)+' m³':volume>=1000?number(volume/1000,3)+' L':number(volume,2)+' cm³';}
 function project(x,y,z,w,h,scale,dx,dy,dz){
@@ -105,7 +108,20 @@ const s=Math.min(w/(dims[0]*1.85),h/(dims[1]*1.8))*1.38*relative*sliderScale;
   const sorted=p.map(a=>({...project(a.x,a.y,a.z,w,h,s,...dims),type:a.type})).sort((a,b)=>a.z-b.z);
   const base=material.color;
   for(const atom of sorted){
-   const r=(material.structure==='gas'?6.1:material.structure==='ionic'?6.7:5.8)*Math.min(1,Math.max(.55,relative));
+   const r=(material.structure==='gas'?5.0:material.structure==='ionic'?6.7:5.8)*Math.min(1,Math.max(.55,relative));
+   if(material.structure==='gas'){
+    // Molecular icons are schematic; each point represents one molecule, not one atom.
+    const n=material.atoms||1;
+    const dots=n===1?[[0,0]]:n===2?[[-3,0],[3,0]]:n===3?[[-5,0],[0,0],[5,0]]:
+      n===5?[[0,0],[-4,-4],[4,-4],[-4,4],[4,4]]:
+      [[0,0],[-6,0],[6,0],[0,-6],[0,6],[-4,-4],[4,4]];
+    for(const [dx,dy] of dots){
+     ctx.beginPath();ctx.arc(atom.x+dx,atom.y+dy,n===1?r:r*.58,0,2*Math.PI);
+     ctx.fillStyle=base;ctx.globalAlpha=.9;ctx.fill();ctx.globalAlpha=1;
+     ctx.strokeStyle='#072238';ctx.lineWidth=.75;ctx.stroke();
+    }
+    continue;
+   }
    ctx.beginPath();ctx.arc(atom.x,atom.y,r,0,2*Math.PI);
    ctx.fillStyle=material.structure==='ionic'&&atom.type===1?'#f0b979':base;ctx.globalAlpha=.83+Math.min(.14,(atom.z+1)/9);ctx.fill();ctx.globalAlpha=1;
    ctx.strokeStyle='#072238';ctx.lineWidth=1.25;ctx.stroke();
@@ -143,6 +159,8 @@ function render(){
    [s.dimensions,d+' cm'],
    [s.condition,body.material.condition]
   ];
+  if(body.material.phase==='gas'&&Number.isFinite(body.material.molarMass))
+   info.push([s.molarMass,number(body.material.molarMass,3)+' g/mol']);
   const result=ui.outputs[i];result.replaceChildren();
   for(const [name,value] of info){const row=document.createElement('div'),a=document.createElement('span'),b=document.createElement('strong');row.className='density-stat';a.textContent=name;b.textContent=value;row.append(a,b);result.append(row);}
   // A bar of equal full width represents the larger sample's mass or volume.
@@ -163,6 +181,11 @@ function render(){
  const denser=comparison.left.density>=comparison.right.density?comparison.left:comparison.right,less=comparison.left.density>=comparison.right.density?comparison.right:comparison.left;
  const ratio=document.createElement('p');ratio.textContent=same?s.equal:denser.material.labels[li()]+' '+number(denser.density/less.density,1)+s.times+less.material.labels[li()]+'.';explanation.append(ratio);
  const note=document.createElement('p');note.className='density-scale-note';note.textContent=s.notScale;explanation.append(note);
+ if(comparison.left.material.phase==='gas'||comparison.right.material.phase==='gas'){
+  const gasNote=document.createElement('p');gasNote.className='density-gas-note';gasNote.textContent=s.gasInfo;explanation.append(gasNote);
+ }
+ const caution=document.getElementById('densityCaution');
+ if(caution)caution.textContent=s.gasCaution;
  $('densityStructureA').textContent=s.struct[comparison.left.material.structure];
  $('densityStructureB').textContent=s.struct[comparison.right.material.structure];
  $('densityWaterA').textContent=s.water+': '+waterWord(a,s);
@@ -177,10 +200,20 @@ function localize(){
  ['densityStructureTitleA',s.structure],['densityStructureTitleB',s.structure],['densityDisclaimer',s.caveat]
  ])$(id).textContent=v;
  for(const [id,value] of [['densityVolumeOption',s.volume],['densityMassOption',s.mass],['densityCubeOption',s.cube],['densityCuboidOption',s.cuboid],
- ['densityPreset1',s.preset1],['densityPreset2',s.preset2],['densityPreset3',s.preset3],['densityPreset4',s.preset4]])$(id).textContent=value;
+ ...Array.from({length:9},(_,i)=>['densityPreset'+(i+1),s['preset'+(i+1)]])])$(id).textContent=value;
  for(const [i,select] of [ui.A,ui.B].entries()){
   const value=select.value;select.replaceChildren();
-  for(const material of engine.MATERIALS){const option=document.createElement('option');option.value=material.id;option.textContent=material.labels[li()];select.append(option);}
+  // School-friendly grouping keeps a 27-material catalogue easy to browse.
+  for(const [groupIndex,phase] of ['solid','liquid','gas'].entries()){
+   const group=document.createElement('optgroup');
+   group.label=s.groupNames[groupIndex];
+   for(const material of engine.MATERIALS.filter(m=>m.phase===phase)){
+    const option=document.createElement('option');
+    option.value=material.id;option.textContent=material.labels[li()];
+    group.append(option);
+   }
+   select.append(group);
+  }
   select.value=engine.material(value)?value:(i===0?'water':'aluminum');
  }
  ui.canvases.forEach((canvas,i)=>canvas.setAttribute('aria-label',(i===0?s.chooseA:s.chooseB)+' – '+s.drag));
@@ -193,7 +226,7 @@ function changedMode(){
 }
 for(const input of [ui.mode,ui.shape,ui.A,ui.B,ui.particles])input.addEventListener('change',input===ui.mode?changedMode:render);
 ui.slider.addEventListener('input',render);
-const presets=[['water','ice'],['water','aluminum'],['iron','copper'],['air','water']];
+const presets=[['water','ice'],['water','aluminum'],['iron','copper'],['air','water'],['lead','aluminum'],['magnesium','lead'],['helium','carbonDioxide'],['graphite','diamond'],['hydrogen','sulfurHexafluoride']];
 presets.forEach(([a,b],i)=>$('densityPreset'+(i+1)).addEventListener('click',()=>{ui.A.value=a;ui.B.value=b;render();}));
 for(const canvas of ui.canvases){
  let dragging=false,lastX=0,lastY=0;

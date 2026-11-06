@@ -46,6 +46,17 @@ window.addEventListener('load',()=>{
    slider.value='100';slider.dispatchEvent(new Event('input',{bubbles:true}));
    const at100=sample('densityCanvasA');
    if(!(at100.width<at1000*.75))throw new Error('Changing quantity should visibly shrink both cubes: '+JSON.stringify({at100,at1000}));
+   document.getElementById('densityPreset5').click();
+   if(document.getElementById('densityMaterialA').value!=='lead'||document.getElementById('densityMaterialB').value!=='aluminum')
+     throw new Error('Lead preset did not change material selections');
+   document.getElementById('densityPreset7').click();
+   if(document.getElementById('densityMaterialA').value!=='helium'||document.getElementById('densityMaterialB').value!=='carbonDioxide')
+     throw new Error('Gas preset did not change material selections');
+   const gasInfo=document.getElementById('densityExplanation').textContent;
+   if(!gasInfo.includes('gázok')&&document.getElementById('hu')?.classList.contains('active'))
+     throw new Error('Gas law explanation is missing');
+   const gasA=sample('densityCanvasA'),gasB=sample('densityCanvasB');
+   if(gasA.count<100||gasB.count<100)throw new Error('Gas diagrams are blank: '+JSON.stringify({gasA,gasB}));
    document.documentElement.setAttribute('data-density-smoke','PASS');
  }catch(error){document.documentElement.setAttribute('data-density-smoke','FAIL: '+error.message);console.error(error);}
 });

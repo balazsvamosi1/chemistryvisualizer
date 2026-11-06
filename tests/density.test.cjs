@@ -2,11 +2,34 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const E=require('../assets/js/density-engine.js'),read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
 test('reference densities are positive, labeled and scientifically distinguished',()=>{
- assert.equal(E.MATERIALS.length,10);
+ assert.equal(E.MATERIALS.length,27);
  for(const m of E.MATERIALS){assert(m.rho>0,m.id);assert.equal(m.labels.length,3);assert(m.condition);}
  assert.equal(E.material('air').phase,'gas');assert.equal(E.material('iron').structure,'bcc');
  assert.equal(E.material('salt').structure,'ionic');assert.equal(E.material('aluminum').structure,'fcc');
  assert.equal(E.material('unknown'),null);
+ assert.equal(E.MATERIALS.filter(m=>m.phase==='gas').length,10);
+ for(const id of ['lead','magnesium','zinc','silver','tungsten','osmium','graphite','diamond','hydrogen','helium','nitrogen','oxygen','carbonDioxide','argon','methane','xenon','sulfurHexafluoride']) assert(E.material(id),id);
+ assert.equal(E.material('osmium').rho,22.59);
+ assert.equal(E.material('lead').rho,11.34);
+ assert.equal(E.material('diamond').rho,3.513);
+});
+test('gas densities follow ideal-gas model at 20°C and 1 atm',()=>{
+ const H=E.material('hydrogen'),He=E.material('helium'),CO2=E.material('carbonDioxide');
+ assert(Math.abs(H.rho*1000-.083803)<.00001);
+ assert(Math.abs(He.rho*1000-.166393)<.00001);
+ assert(Math.abs(CO2.rho*1000-1.829528)<.00001);
+ assert(CO2.rho>He.rho&&He.rho>H.rho);
+ const a=E.compute('helium','carbonDioxide','volume',1000);
+ assert(a.right.mass/a.left.mass>10);
+ assert.equal(E.particles('helium').length,E.particles('carbonDioxide').length);
+});
+test('high-density metals and carbon allotropes are distinguishable',()=>{
+ assert(E.compute('magnesium','lead','volume',1000).right.mass>11000);
+ assert(E.compute('osmium','magnesium','mass',1000).left.volume<100);
+ assert(E.material('diamond').rho>E.material('graphite').rho);
+ assert.equal(E.material('lead').structure,'fcc');
+ assert.equal(E.material('magnesium').structure,'hcp');
+ assert.equal(E.material('graphite').structure,'layered');
 });
 test('same volume: 1 litre water vs aluminium, mass = density times volume',()=>{
  const x=E.compute('water','aluminum','volume',1000);
@@ -80,6 +103,12 @@ test('browser UI boots without backend, renders both samples and reacts to contr
  assert.equal(nodes.get('densityMeterFillA').style.width,'100.000%');
  assert.equal(nodes.get('densityMeterFillB').style.width,'36.963%');
  assert(nodes.get('densityComparisonLead').textContent.includes('térfogatú'));
+ nodes.get('densityPreset5').emit('click');
+ assert.equal(win.ChemistryDensityLab.getComparison().left.id,'lead');
+ nodes.get('densityPreset7').emit('click');
+ assert.equal(win.ChemistryDensityLab.getComparison().left.id,'helium');
+ assert.equal(win.ChemistryDensityLab.getComparison().right.id,'carbonDioxide');
+ assert(nodes.get('densityExplanation').children.some(child=>child.className==='density-gas-note'));
  nodes.get('densityPreset1').emit('click');
  assert.equal(win.ChemistryDensityLab.getComparison().right.id,'ice');
  nodes.get('densityShape').value='cuboid';nodes.get('densityShape').emit('change');
