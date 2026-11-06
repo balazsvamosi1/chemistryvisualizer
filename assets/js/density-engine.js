@@ -173,7 +173,7 @@ function particleMarkers(id,count){
  const m=material(id);if(!m)throw new RangeError('Unknown material');
  if(!Number.isSafeInteger(count)||count<1||count>MAX_MARKERS)throw new RangeError('Invalid marker count');
  const structured=!['gas','liquid','porous'].includes(m.structure);
- const side=Math.ceil(Math.cbrt(count*1.28));
+ const side=Math.ceil(Math.cbrt(MAX_MARKERS*1.28)); // stable lattice geometry as quantity changes
  const out=[];
  if(structured){
   const sites=[];
@@ -182,7 +182,7 @@ function particleMarkers(id,count){
    const px=Math.min(.94,(x+.5+stagger)/side),py=(y+.5)/side,pz=(z+.5)/side;
    sites.push({x:px,y:py,z:pz,type:m.structure==='ionic'?(x+y+z)%2:0});
   }
-  let state=Array.from(id).reduce((a,ch)=>(Math.imul(a,33)+ch.charCodeAt(0))>>>0,7)+count;
+  let state=Array.from(id).reduce((a,ch)=>(Math.imul(a,33)+ch.charCodeAt(0))>>>0,7);
   for(let i=sites.length-1;i>0;i--){
    state=(Math.imul(state,1664525)+1013904223)>>>0;
    const j=state%(i+1);[sites[i],sites[j]]=[sites[j],sites[i]];
