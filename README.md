@@ -1,6 +1,13 @@
-# 3D Chemistry Lab — Beta 0.2113
+# 3D Chemistry Lab — Beta 0.2114
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
+
+## Beta 0.2114 – density controls and live cubes visible together
+- Rebuilt the desktop Density Explorer as an interactive workspace: a compact sticky left sidebar with comparison, shape, quantity slider, view switches and a live summary, and two adjacent 3D models on the right.
+- The important visual feedback is immediately beside the controls, removing the need to scroll between the slider and the cubes on desktop (widths above 1050 px).
+- Moved the explanatory non-quantum-model note beneath the two models; it remains readable but no longer pushes the 3D previews below the first screen.
+- Tablet/mobile retains a responsive stacked layout with all original numerical information and controls; no physics or formula changes.
+- Includes a Chromium desktop layout regression with bounding-box verification. Static HTML/CSS, fully compatible with GitHub Pages.
 
 ## Beta 0.2113 – classroom-first density illustrations with optional advanced view
 - Default mode is a simple **equal-mass-per-dot density illustration** for grades 7–8. Every dot represents the same number of grams of bulk material, not one atom or molecule, so lead looks denser than aluminium at the same volume. With equal mass, both samples show equal numbers of dots in different-sized boxes.
@@ -72,9 +79,9 @@ A modular browser-based chemistry laboratory and ten-level Chemistry Quest educa
 ## Version numbering
 
 - **First release:** `0.01`.
-- **Current release:** `0.2113`. Future Chemistry Lab public versions will remain below `1.0`.
+- **Current release:** `0.2114`. Future Chemistry Lab public versions will remain below `1.0`.
 - **Historical convention:** old `A.B.C` release labels become `0.ABBC`, where A is one digit, B is zero-padded to two digits, and C is one digit. Examples: `1.9.7 → 0.1097`, `2.9.8 → 0.2098`, `2.10.0 → 0.2100`, `2.10.2 → 0.2102`. If C was omitted, use zero: `1.5 → 0.1050`. The original `0.01` is preserved unchanged.
-- **Next version:** `0.2114`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
+- **Next version:** `0.2115`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
 - Older technical asset cache keys (such as `?v=2.1.7`) and third-party dependency/API versions are **not** changed: they are not release labels.
 
 ## Beta 0.2103 — Arcade maze and renewable resources (2026-11-04)

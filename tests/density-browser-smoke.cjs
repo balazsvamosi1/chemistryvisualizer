@@ -134,6 +134,23 @@ window.addEventListener('load',()=>{
    document.getElementById('densityPreset5').click();
    if(!(Number(beginnerA.getAttribute('data-markers'))>Number(beginnerB.getAttribute('data-markers'))*3.5))
      throw new Error('Switching back to simple mode did not restore mass-based markers');
+   // Desktop viewport must place both 3D canvases next to the live controls,
+   // not below a tall toolbar that forces the student to scroll.
+   const workspace=document.querySelector('#densitySection .density-workspace');
+   const controls=document.querySelector('#densitySection .density-workspace > .density-controls');
+   const modelA=document.getElementById('densityCanvasA');
+   const modelB=document.getElementById('densityCanvasB');
+   const wr=workspace.getBoundingClientRect(),cr=controls.getBoundingClientRect();
+   const ar=modelA.getBoundingClientRect(),br=modelB.getBoundingClientRect();
+   if(window.innerWidth>=1100){
+     if(!(ar.left>=cr.right-3&&br.left>ar.left&&Math.abs(ar.top-br.top)<6))
+       throw new Error('Desktop workspace must show two cubes alongside controls: '+JSON.stringify({viewport:window.innerWidth,controls:[cr.x,cr.y,cr.width,cr.height],a:[ar.x,ar.y,ar.width,ar.height],b:[br.x,br.y,br.width,br.height]}));
+     if(!(ar.top<cr.bottom&&br.top<cr.bottom))
+       throw new Error('Canvas starts too low: student would have to scroll from the slider to see cubes');
+     const summary=document.getElementById('densityComparisonLead').getBoundingClientRect();
+     if(!(summary.x>=cr.x-2&&summary.right<=cr.right+2))
+       throw new Error('Live comparison summary no longer near the controls');
+   }
    document.documentElement.setAttribute('data-density-smoke','PASS');
  }catch(error){document.documentElement.setAttribute('data-density-smoke','FAIL: '+error.message);console.error(error);}
 });
@@ -156,7 +173,7 @@ const server=http.createServer((req,res)=>{
 (async()=>{
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
  const url='http://127.0.0.1:'+server.address().port+'/';
- const args=['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--hide-scrollbars','--no-first-run','--no-default-browser-check','--virtual-time-budget=3500','--dump-dom',url];
+ const args=['--headless=new','--window-size=1440,900','--force-device-scale-factor=1','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--hide-scrollbars','--no-first-run','--no-default-browser-check','--virtual-time-budget=3500','--dump-dom',url];
  const child=spawn(chrome,args,{stdio:['ignore','pipe','pipe']});
  let output='',errors='';child.stdout.setEncoding('utf8');child.stderr.setEncoding('utf8');
  child.stdout.on('data',chunk=>output+=chunk);

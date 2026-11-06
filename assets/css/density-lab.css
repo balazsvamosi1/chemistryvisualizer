@@ -52,3 +52,53 @@
 /* 0.2113: a visibly separate classroom vs. advanced illustration. */
 .density-classroom-note{margin:12px 0 16px;padding:12px 15px;background:#163c4b;border-left:4px solid #82d4be;border-radius:8px;line-height:1.5;font-weight:620;color:#e3f7f0}
 #densitySection .density-controls label:has(#densityAdvanced){background:#193c54;border-color:#5d94b0}
+
+
+/* Beta 0.2114: always-visible controls beside both live models on desktop.
+   Explanations and reference data stay below the interactive workspace. */
+#densitySection{max-width:1480px;scroll-margin-top:136px}
+#densitySection .density-heading h2{font-size:clamp(21px,2.4vw,27px);margin-bottom:4px}
+#densitySection .density-heading p{margin:0 0 12px;font-size:13px;line-height:1.45}
+.density-workspace{display:grid;grid-template-columns:minmax(242px,286px) minmax(0,1fr);gap:14px;align-items:start}
+.density-workspace>.density-controls{
+ display:flex;flex-direction:column;gap:8px;margin:0;padding:8px;
+ position:sticky;top:138px;z-index:4;align-self:start;
+ max-height:calc(100vh - 155px);max-height:calc(100dvh - 155px);
+ overflow-y:auto;scrollbar-width:thin;
+ background:#0e2539;border:1px solid #365a72;border-radius:12px
+}
+.density-workspace>.density-controls>label{min-width:0;padding:8px 10px;gap:5px;font-size:13px;line-height:1.3}
+.density-workspace>.density-controls select{min-width:0;min-height:38px;padding:6px 9px}
+.density-workspace>.density-controls label:has(input[type=checkbox]){
+ flex-direction:row;justify-content:flex-start;align-items:center;gap:10px;min-height:46px
+}
+.density-workspace>.density-controls label:has(input[type=checkbox]) span{min-width:0;flex:1}
+.density-workspace>.density-controls input[type=checkbox]{flex:0 0 22px;min-width:0;margin:0}
+.density-workspace>.density-controls input[type=range]{min-width:0;padding:0;margin:2px 0 0;border:0;background:transparent}
+.density-workspace .density-comparison-lead{
+ margin:2px 0 0;padding:10px;font-size:14px;line-height:1.45;border-width:1px
+}
+.density-workspace>.density-comparison{margin:0;gap:12px;min-width:0}
+.density-workspace .density-card{padding:12px}
+.density-workspace .density-canvas{margin:9px auto}
+.density-workspace .density-particle-count{margin:7px 0;padding:7px 9px}
+.density-classroom-note{font-size:13px;font-weight:550;margin:13px 0 8px}
+@media(max-width:1050px){
+ .density-workspace{display:block}
+ .density-workspace>.density-controls{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));
+  position:static;max-height:none;overflow:visible;margin:10px 0;padding:0;border:0;background:transparent
+ }
+ .density-workspace>.density-controls>.density-comparison-lead{grid-column:1/-1}
+ .density-workspace>.density-comparison{margin:12px 0}
+}
+@media(max-width:680px){
+ .density-workspace>.density-controls{grid-template-columns:1fr 1fr;gap:8px}
+ .density-workspace>.density-controls>label:nth-child(3),
+ .density-workspace>.density-controls>.density-comparison-lead{grid-column:1/-1}
+ .density-workspace>.density-controls select{font-size:13px}
+}
+@media(max-width:420px){
+ .density-workspace>.density-controls{grid-template-columns:1fr}
+ .density-workspace>.density-controls>*{grid-column:1/-1}
+}
