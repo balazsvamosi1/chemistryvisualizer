@@ -14,7 +14,6 @@ const cards=[
 [0,'periodTab',['Atomok és periódusos rendszer','Atome und Periodensystem','Atoms and periodic table'],['Keress elemeket, nézd meg az atomokat és az izotópokat.','Finde Elemente und erkunde Atome und Isotope.','Find elements and explore atoms and isotopes.']],
 [0,'moleculeTab',['Molekulaépítő','Moleküleditor','Molecule builder'],['Építs molekulákat és vizsgáld a kötéseket.','Baue Moleküle und untersuche Bindungen.','Build molecules and explore bonds.']],
 [0,'materialsTab',['Anyagkönyvtár','Stoffbibliothek','Materials library'],['Hasonlíts össze hétköznapi anyagokat.','Vergleiche alltägliche Stoffe.','Compare familiar substances.']],
-[0,'densityTab',['Sűrűség','Dichte','Density'],['Hasonlíts össze kockákat és téglatesteket, nézz bele az anyagok belsejébe.','Vergleiche Würfel und Quader und entdecke den inneren Aufbau von Stoffen.','Compare cubes and rectangular prisms and explore how particles are arranged.']],
 [1,'bunsenTab',['Bunsen Lab','Bunsen-Labor','Bunsen Lab'],['Ismerd meg virtuálisan a labor eszközeit.','Entdecke Laborgeräte in einer Simulation.','Explore lab equipment in a simulation.']],
 [1,'stoichTab',['Sztöchiometria','Stöchiometrie','Stoichiometry'],['Próbálj ki kémiai számításokat.','Übe chemische Berechnungen.','Try chemical calculations.']],
 [1,'acidBaseTab',['Sav–bázis labor','Säure-Base-Labor','Acid–base lab'],['Kísérletezz virtuálisan a pH-val.','Experimentiere virtuell mit dem pH-Wert.','Explore pH through virtual activities.']],

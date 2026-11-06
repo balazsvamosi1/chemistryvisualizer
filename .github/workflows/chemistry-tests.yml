@@ -14,3 +14,5 @@ jobs:
           node-version: '22'
       - name: Run JavaScript regression tests
         run: node --test tests/*.test.cjs
+      - name: Verify real density canvas pixels in Chromium
+        run: node tests/density-browser-smoke.cjs
