@@ -80,7 +80,7 @@ function massString(mass){return mass>=1000?number(mass/1000,3)+' kg':number(mas
 function volumeString(volume){return volume>=1000000?number(volume/1000000,3)+' m³':volume>=1000?number(volume/1000,3)+' L':number(volume,2)+' cm³';}
 function project(x,y,z,w,h,scale,dx,dy,dz){
  x=(x-.5)*dx;y=(y-.5)*dy;z=(z-.5)*dz;
- const a=x*Math.cos(pose.yaw)-z*Math.sin(pose.y),b=x*Math.sin(pose.yaw)+z*Math.cos(pose.yaw);
+ const a=x*Math.cos(pose.yaw)-z*Math.sin(pose.yaw),b=x*Math.sin(pose.yaw)+z*Math.cos(pose.yaw);
  const v=y*Math.cos(pose.pitch)-b*Math.sin(pose.pitch),depth=y*Math.sin(pose.pitch)+b*Math.cos(pose.pitch);
  return {x:w/2+a*scale,y:h/2-v*scale,z:depth};
 }
@@ -89,20 +89,24 @@ function draw(canvas,body,showParticles){
  canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
  const ctx=canvas.getContext('2d');if(!ctx)return;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
  ctx.fillStyle='#0b2032';ctx.fillRect(0,0,w,h);
- const dims=comparison.shape==='cuboid'?[1.36,.85,.87]:[1,1,1],s=Math.min(w/(dims[0]*2.12),h/(dims[1]*1.95))*1.42;
+ const dims=comparison.shape==='cuboid'?[1.36,.85,.87]:[1,1,1];
+// Each sample shares the same physical volume scale; keep very small specimens visible.
+const largestVolume=Math.max(comparison.left.volume,comparison.right.volume);
+const relative=Math.max(0.15,Math.cbrt(body.volume/largestVolume));
+const s=Math.min(w/(dims[0]*1.85),h/(dims[1]*1.8))*1.45*relative;
  const v=[];for(let z=0;z<2;z++)for(let y=0;y<2;y++)for(let x=0;x<2;x++)v.push(project(x,y,z,w,h,s,...dims));
  const faces=[[0,1,3,2],[4,5,7,6],[0,1,5,4],[2,3,7,6],[0,2,6,4],[1,3,7,5]].map(p=>({p,depth:p.reduce((s,i)=>s+v[i].z,0)/4})).sort((a,b)=>a.depth-b.depth);
- ctx.fillStyle='rgba(85,157,205,.09)';
+ ctx.fillStyle='rgba(85,157,205,.19)';
  for(const {p} of faces){ctx.beginPath();p.forEach((i,j)=>j?ctx.lineTo(v[i].x,v[i].y):ctx.moveTo(v[i].x,v[i].y));ctx.closePath();ctx.fill();}
  if(showParticles){
   const material=body.material,p=cached[material.id]||(cached[material.id]=engine.particles(material.id));
   const sorted=p.map(a=>({...project(a.x,a.y,a.z,w,h,s,...dims),type:a.type})).sort((a,b)=>a.z-b.z);
   const base=material.color;
   for(const atom of sorted){
-   const r=material.structure==='gas'?5:material.structure==='ionic'?5.8:4.8;
+   const r=(material.structure==='gas'?6.1:material.structure==='ionic'?6.7:5.8)*Math.min(1,Math.max(.55,relative));
    ctx.beginPath();ctx.arc(atom.x,atom.y,r,0,2*Math.PI);
    ctx.fillStyle=material.structure==='ionic'&&atom.type===1?'#f0b979':base;ctx.globalAlpha=.83+Math.min(.14,(atom.z+1)/9);ctx.fill();ctx.globalAlpha=1;
-   ctx.strokeStyle='#122d43';ctx.lineWidth=1;ctx.stroke();
+   ctx.strokeStyle='#072238';ctx.lineWidth=1.25;ctx.stroke();
   }
  }else{
   ctx.fillStyle=body.material.color;ctx.globalAlpha=.28;
@@ -110,7 +114,7 @@ function draw(canvas,body,showParticles){
   ctx.globalAlpha=1;
  }
  const edges=[[0,1],[1,3],[3,2],[2,0],[4,5],[5,7],[7,6],[6,4],[0,4],[1,5],[2,6],[3,7]];
- ctx.strokeStyle='#b3dfff';ctx.lineWidth=1.8;ctx.globalAlpha=.95;
+ ctx.strokeStyle='#e2f6ff';ctx.lineWidth=2.6;ctx.globalAlpha=1;
  for(const [a,b] of edges){ctx.beginPath();ctx.moveTo(v[a].x,v[a].y);ctx.lineTo(v[b].x,v[b].y);ctx.stroke();}
  ctx.globalAlpha=1;
 }
@@ -154,10 +158,10 @@ function localize(){
  ])$(id).textContent=v;
  for(const [id,value] of [['densityVolumeOption',s.volume],['densityMassOption',s.mass],['densityCubeOption',s.cube],['densityCuboidOption',s.cuboid],
  ['densityPreset1',s.preset1],['densityPreset2',s.preset2],['densityPreset3',s.preset3],['densityPreset4',s.preset4]])$(id).textContent=value;
- for(const select of [ui.A,ui.B]){
+ for(const [i,select] of [ui.A,ui.B].entries()){
   const value=select.value;select.replaceChildren();
   for(const material of engine.MATERIALS){const option=document.createElement('option');option.value=material.id;option.textContent=material.labels[li()];select.append(option);}
-  select.value=value||'water';
+  select.value=engine.material(value)?value:(i===0?'water':'aluminum');
  }
  ui.canvases.forEach((canvas,i)=>canvas.setAttribute('aria-label',(i===0?s.chooseA:s.chooseB)+' – '+s.drag));
  render();
@@ -178,9 +182,15 @@ for(const canvas of ui.canvases){
  for(const name of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(name,()=>dragging=false);
  canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();pose.yaw+=(e.key==='ArrowLeft'?-0.12:e.key==='ArrowRight'?.12:0);pose.pitch=Math.max(-1.12,Math.min(1.12,pose.pitch+(e.key==='ArrowUp'?.12:e.key==='ArrowDown'?-0.12:0)));render();});
 }
-$('densityTab').addEventListener('click',()=>requestAnimationFrame(render));
+$('densityTab').addEventListener('click',()=>{
+ requestAnimationFrame(()=>{render();requestAnimationFrame(render);});
+});
+if(typeof ResizeObserver!=='undefined'){
+ const observer=new ResizeObserver(()=>{if(!ui.section.classList.contains('hidden'))render();});
+ ui.canvases.forEach(canvas=>observer.observe(canvas));
+}
 window.addEventListener('resize',()=>{if(!ui.section.classList.contains('hidden'))render();});
 for(const id of ['hu','de','en'])$(id)?.addEventListener('click',()=>queueMicrotask(localize));
-ui.A.value='water';ui.B.value='aluminum';localize();
+localize();
 window.ChemistryDensityLab={render,localize,getComparison:()=>comparison};
 })();
