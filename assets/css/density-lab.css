@@ -45,3 +45,6 @@
 
 /* 0.2110 – accurate representative particle counts, explicitly labeled zoom. */
 .density-particle-count{font-size:13px;line-height:1.55;color:#d6f6e4;background:#12413e;border:1px solid #3c887c;border-radius:9px;padding:9px 11px;margin:9px 0 13px;overflow-wrap:anywhere}
+
+/* Beta 0.2111: constant g/cm³ readout beside each selected material. */
+.density-selected-rho{display:block;color:#b9f3e4;background:#163d44;padding:6px 10px;border-left:3px solid #70d5bb;border-radius:5px;font-variant-numeric:tabular-nums;letter-spacing:.02em}

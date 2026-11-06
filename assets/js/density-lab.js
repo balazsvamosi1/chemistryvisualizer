@@ -78,7 +78,9 @@ const ui={section:$('densitySection'),mode:$('densityMode'),shape:$('densityShap
  canvases:[$('densityCanvasA'),$('densityCanvasB')],outputs:[$('densityResultA'),$('densityResultB')]};
 const pose={yaw:-.58,pitch:.32};let comparison,particleDisplay;
 const number=(n,max=2)=>new Intl.NumberFormat(lang()==='de'?'de-DE':lang()==='hu'?'hu-HU':'en-US',{maximumFractionDigits:max}).format(n);
-function densityString(rho){return rho<.01?number(rho*1000,3)+' g/L ('+number(rho,7)+' g/cm³)':number(rho,3)+' g/cm³';}
+// All material labels and selected values use g/cm³, including small gas densities.
+function densityCm3(rho){return number(rho,rho<.0001?8:rho<.01?7:3)+' g/cm³';}
+function densityString(rho){return densityCm3(rho)+(rho<.01?' ('+number(rho*1000,3)+' g/L)':'');}
 function massString(mass){return mass>=1000?number(mass/1000,3)+' kg':number(mass,3)+' g';}
 function volumeString(volume){return volume>=1000000?number(volume/1000000,3)+' m³':volume>=1000?number(volume/1000,3)+' L':number(volume,2)+' cm³';}
 function project(x,y,z,w,h,scale,dx,dy,dz){
@@ -97,7 +99,9 @@ function draw(canvas,body,showParticles,plan){
 const largestVolume=Math.max(comparison.left.volume,comparison.right.volume);
 const relative=Math.max(0.15,Math.cbrt(body.volume/largestVolume));
 // Fixed reference at 1000 g or 1000 cm³ makes the slider visibly resize the specimens.
-const sliderScale=Math.max(.48,Math.min(1.12,Math.cbrt(comparison.quantity/1000)));
+const sliderScale=Math.cbrt(comparison.quantity/Number(ui.slider.max||5000));
+// No clamping at the high end: doubling the displayed volume must always
+// enlarge every linear dimension by cubeRoot(2). Maximum slider value fits canvas.
 const s=Math.min(w/(dims[0]*1.85),h/(dims[1]*1.8))*1.38*relative*sliderScale;
  const v=[];for(let z=0;z<2;z++)for(let y=0;y<2;y++)for(let x=0;x<2;x++)v.push(project(x,y,z,w,h,s,...dims));
  const faces=[[0,1,3,2],[4,5,7,6],[0,1,5,4],[2,3,7,6],[0,2,6,4],[1,3,7,5]].map(p=>({p,depth:p.reduce((s,i)=>s+v[i].z,0)/4})).sort((a,b)=>a.depth-b.depth);
@@ -180,6 +184,9 @@ function render(){
   ];
   if(body.material.phase==='gas'&&Number.isFinite(body.material.molarMass))
    info.push([s.molarMass,number(body.material.molarMass,3)+' g/mol']);
+  // Keep a constant density visible next to the chosen material, independent
+  // of the mass/volume slider. It is also present in every dropdown option.
+  $('densitySelected'+(i===0?'A':'B')).textContent='ρ = '+densityCm3(body.density);
   const result=ui.outputs[i];result.replaceChildren();
   for(const [name,value] of info){const row=document.createElement('div'),a=document.createElement('span'),b=document.createElement('strong');row.className='density-stat';a.textContent=name;b.textContent=value;row.append(a,b);result.append(row);}
   // A bar of equal full width represents the larger sample's mass or volume.
@@ -241,7 +248,7 @@ function localize(){
    group.label=s.groupNames[groupIndex];
    for(const material of engine.MATERIALS.filter(m=>m.phase===phase)){
     const option=document.createElement('option');
-    option.value=material.id;option.textContent=material.labels[li()];
+    option.value=material.id;option.textContent=material.labels[li()]+' · ρ = '+densityCm3(material.rho);
     group.append(option);
    }
    select.append(group);

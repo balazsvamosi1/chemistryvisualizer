@@ -1,6 +1,12 @@
-# 3D Chemistry Lab — Beta 0.2110
+# 3D Chemistry Lab — Beta 0.2111
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
+
+## Beta 0.2111 – always-visible density and continuous cube size
+- Fixed an artificial upper clamp on the displayed cube edge length. Across the complete mass/volume slider (100–5000), edge lengths now follow the cube root of the chosen quantity, while the bulk density remains constant.
+- Display density beside both selected materials and within every dropdown option, consistently in g/cm³ (with enough significant digits for gases). The results panel also retains its density and optional g/L reading.
+- Added unit and headless-Chromium pixel tests to reject flat cube size at any part of the slider, and to verify the g/cm³ labels.
+- Remains fully static and GitHub Pages compatible; no backend or new library.
 
 ## Beta 0.2110 – proportional, chemistry-grounded particle illustration
 - Particle symbols now change in count when the mass or volume slider is adjusted. They represent a labeled *number of moles per icon*, not literal individual atoms.
@@ -52,9 +58,9 @@ A modular browser-based chemistry laboratory and ten-level Chemistry Quest educa
 ## Version numbering
 
 - **First release:** `0.01`.
-- **Current release:** `0.2110`. Future Chemistry Lab public versions will remain below `1.0`.
+- **Current release:** `0.2111`. Future Chemistry Lab public versions will remain below `1.0`.
 - **Historical convention:** old `A.B.C` release labels become `0.ABBC`, where A is one digit, B is zero-padded to two digits, and C is one digit. Examples: `1.9.7 → 0.1097`, `2.9.8 → 0.2098`, `2.10.0 → 0.2100`, `2.10.2 → 0.2102`. If C was omitted, use zero: `1.5 → 0.1050`. The original `0.01` is preserved unchanged.
-- **Next version:** `0.2111`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
+- **Next version:** `0.2112`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
 - Older technical asset cache keys (such as `?v=2.1.7`) and third-party dependency/API versions are **not** changed: they are not release labels.
 
 ## Beta 0.2103 — Arcade maze and renewable resources (2026-11-04)

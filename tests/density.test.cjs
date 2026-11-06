@@ -51,6 +51,16 @@ test('increasing volume must increase icons; shared unit remains constant for a 
  assert.equal(b.left.perMarker,c.left.perMarker);
  assert(c.left.count<=E.MAX_MARKERS);
 });
+test('bulk density never changes while volume and particle counts increase',()=>{
+ for(const id of ['water','lead','helium','wood']){
+  const series=[100,500,1000,2500,5000].map(q=>E.compute(id,id,'volume',q));
+  for(let i=1;i<series.length;i++){
+   assert.equal(series[i].left.density,series[0].left.density);
+   assert(series[i].left.mass>series[i-1].left.mass);
+   assert(series[i].left.volume>series[i-1].left.volume);
+  }
+ }
+});
 test('equal mass: molecular count depends on molar mass',()=>{
  const p=E.particlePlan(E.compute('water','lead','mass',1000));
  assert(p.left.count>p.right.count*7);
@@ -140,6 +150,10 @@ test('browser UI boots without backend, renders both samples and reacts to contr
  let result=win.ChemistryDensityLab.getComparison();
  assert.equal(result.left.mass,998);assert.equal(result.right.mass,2700);
  assert(nodes.get('densityResultA').children.length>=5);
+ assert(nodes.get('densitySelectedA').textContent.includes('0,998 g/cm³'));
+ assert(nodes.get('densitySelectedB').textContent.includes('2,7 g/cm³'));
+ assert(nodes.get('densityMaterialA').children.some(group=>group.children.some(o=>o.textContent.includes('g/cm³'))));
+
  assert(nodes.get('densityParticleInfoA').textContent.includes('Részecskejelek'));
  assert(nodes.get('densityParticleInfoB').textContent.includes('mol'));
  assert.equal(nodes.get('densityMeterFillA').style.width,'36.963%');
@@ -156,6 +170,8 @@ test('browser UI boots without backend, renders both samples and reacts to contr
  nodes.get('densityPreset7').emit('click');
  assert.equal(win.ChemistryDensityLab.getComparison().left.id,'helium');
  assert.equal(win.ChemistryDensityLab.getComparison().right.id,'carbonDioxide');
+ assert.match(nodes.get('densitySelectedA').textContent,/0,00016\d+ g\/cm³/);
+ assert(nodes.get('densitySelectedB').textContent.endsWith('g/cm³'));
  assert(nodes.get('densityExplanation').children.some(child=>child.className==='density-gas-note'));
  nodes.get('densityPreset1').emit('click');
  assert.equal(win.ChemistryDensityLab.getComparison().right.id,'ice');
