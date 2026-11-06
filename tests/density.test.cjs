@@ -31,6 +31,44 @@ test('high-density metals and carbon allotropes are distinguishable',()=>{
  assert.equal(E.material('magnesium').structure,'hcp');
  assert.equal(E.material('graphite').structure,'layered');
 });
+test('classroom dots represent equal grams, not literal atoms',()=>{
+ const c=E.compute('lead','aluminum','volume',5000);
+ const p=E.teachingPlan(c);
+ assert.equal(p.left.gramsPerMarker,p.right.gramsPerMarker);
+ assert(p.left.count>=p.right.count*3.8&&p.left.count<=p.right.count*4.5,
+  'Lead should visibly look denser than aluminium with identical sized dots');
+ assert(c.left.density>c.right.density);
+ const wood=E.teachingPlan(E.compute('wood','water','volume',5000));
+ assert.equal(wood.left.gramsPerMarker,wood.right.gramsPerMarker);
+});
+test('same mass gives the same number of simple dots in differently sized boxes',()=>{
+ const c=E.compute('lead','aluminum','mass',1000);
+ const p=E.teachingPlan(c);
+ assert.equal(p.left.count,p.right.count);
+ assert(c.left.volume<c.right.volume);
+});
+test('larger specimens add simple dots, not change bulk density',()=>{
+ const quantities=[100,500,1000,2500,5000];
+ for(const pair of [['lead','aluminum'],['water','argon'],['water','wood']]){
+  const plans=quantities.map(q=>E.teachingPlan(E.compute(pair[0],pair[1],'volume',q)));
+  for(let i=1;i<plans.length;i++){
+   assert(plans[i].left.count>=plans[i-1].left.count);
+   assert(plans[i].right.count>=plans[i-1].right.count);
+   assert.equal(plans[i].gramsPerMarker,plans[0].gramsPerMarker);
+  }
+  assert(plans.at(-1).left.count<=E.MAX_MARKERS);
+  assert(plans.at(-1).right.count<=E.MAX_MARKERS);
+ }
+});
+test('a shared deterministic dot grid is independent of material and bounded',()=>{
+ for(const count of [1,15,90,180,250]){
+  const a=E.teachingMarkers(count),b=E.teachingMarkers(count);
+  assert.deepEqual(a,b);
+  assert(a.every(point=>[point.x,point.y,point.z].every(v=>v>=0&&v<=1)));
+  if(count>1)assert.deepEqual(a.slice(0,1),E.teachingMarkers(1));
+ }
+ assert.throws(()=>E.teachingMarkers(251));
+});
 test('proportional particle icons: water and lead have similar number density, not similar mass',()=>{
  const x=E.compute('water','lead','volume',1000);
  const p=E.particlePlan(x);
@@ -171,8 +209,20 @@ test('browser UI boots without backend, renders both samples and reacts to contr
  assert(nodes.get('densitySelectedB').textContent.includes('2,7 g/cm³'));
  assert(nodes.get('densityMaterialA').children.some(group=>group.children.some(o=>o.textContent.includes('g/cm³'))));
 
+ assert(nodes.get('densityParticleInfoA').textContent.includes('Szemléltető pontok'));
+ assert(nodes.get('densityParticleInfoA').textContent.includes('1 pont ='));
+ assert(!nodes.get('densityParticleInfoB').textContent.includes('mol'));
+ assert(nodes.get('densityModelInfo').textContent.includes('NEM kvantumfizikai'));
+ assert.equal(nodes.get('densityAdvanced').checked,false);
+ nodes.get('densityPreset5').emit('click');
+ const simple=win.ChemistryDensityLab.getDisplayPlan();
+ assert(simple.left.count>simple.right.count*3.5);
+ nodes.get('densityAdvanced').checked=true;nodes.get('densityAdvanced').emit('change');
  assert(nodes.get('densityParticleInfoA').textContent.includes('Részecskejelek'));
  assert(nodes.get('densityParticleInfoB').textContent.includes('mol'));
+ assert(nodes.get('densityModelInfo').textContent.includes('nem kvantumfizikai'));
+ nodes.get('densityMaterialA').value='water';nodes.get('densityMaterialB').value='aluminum';
+ nodes.get('densityMaterialB').emit('change');
  assert.equal(nodes.get('densityMeterFillA').style.width,'36.963%');
  assert.equal(nodes.get('densityMeterFillB').style.width,'100.000%');
  assert(nodes.get('densityComparisonLead').textContent.includes('2,71'));
@@ -203,7 +253,11 @@ test('browser UI boots without backend, renders both samples and reacts to contr
  result=win.ChemistryDensityLab.getComparison();
  assert(Math.abs(result.left.dimensions.reduce((a,x)=>a*x,1)-result.left.volume)<1e-7);
  setLanguage('de');assert.equal(nodes.get('densityTab').textContent,'Dichte');
+ assert(nodes.get('densityAdvancedLabel').textContent.includes('Erweitert'));
  setLanguage('en');assert.equal(nodes.get('densityTab').textContent,'Density');
+ assert(nodes.get('densityAdvancedLabel').textContent.includes('Advanced'));
+ nodes.get('densityAdvanced').checked=false;nodes.get('densityAdvanced').emit('change');
+ assert(nodes.get('densityParticleInfoA').textContent.includes('Illustrative dots'));
 });
 test('all density assets are local and the Explore navigation includes density',()=>{
  const html=read('index.html'),navigation=read('assets/js/chemistry-navigation.js'),home=read('assets/js/chemistry-home.js'),module=read('assets/js/density-lab.js');

@@ -48,3 +48,7 @@
 
 /* Beta 0.2111: constant g/cm³ readout beside each selected material. */
 .density-selected-rho{display:block;color:#b9f3e4;background:#163d44;padding:6px 10px;border-left:3px solid #70d5bb;border-radius:5px;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+
+/* 0.2113: a visibly separate classroom vs. advanced illustration. */
+.density-classroom-note{margin:12px 0 16px;padding:12px 15px;background:#163c4b;border-left:4px solid #82d4be;border-radius:8px;line-height:1.5;font-weight:620;color:#e3f7f0}
+#densitySection .density-controls label:has(#densityAdvanced){background:#193c54;border-color:#5d94b0}

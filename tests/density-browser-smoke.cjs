@@ -32,6 +32,33 @@ window.addEventListener('load',()=>{
    if(beforeA.count<100||beforeB.count<100)throw new Error('Canvas blank: '+JSON.stringify({beforeA,beforeB}));
    const selectA=document.getElementById('densityMaterialA'),selectB=document.getElementById('densityMaterialB');
    if(selectA.value!=='water'||selectB.value!=='aluminum')throw new Error('Wrong default materials: '+selectA.value+'/'+selectB.value);
+   // School view is the DEFAULT. Lead must look denser than aluminium in
+   // equal volumes; each dot is a constant mass, NOT a literal atom.
+   const advanced=document.getElementById('densityAdvanced');
+   if(!advanced||advanced.checked)throw new Error('Classroom mode must be the default');
+   if(!document.getElementById('densityModelInfo').textContent.includes('NEM kvantumfizikai'))
+     throw new Error('Missing explicit non-quantum-model disclaimer');
+   document.getElementById('densityPreset5').click();
+   const beginnerA=document.getElementById('densityParticleInfoA'),beginnerB=document.getElementById('densityParticleInfoB');
+   const countPb=Number(beginnerA.getAttribute('data-markers')),countAl=Number(beginnerB.getAttribute('data-markers'));
+   if(!(countPb>countAl*3.5))throw new Error('Lead fails to look denser in classroom mode: '+countPb+'/'+countAl);
+   if(!beginnerA.textContent.includes('1 pont = ')||beginnerA.textContent.includes('mol'))
+     throw new Error('Default points falsely described as atoms/moles: '+beginnerA.textContent);
+   const firstScale=beginnerA.getAttribute('data-marker-scale'),secondScale=beginnerB.getAttribute('data-marker-scale');
+   if(firstScale!==secondScale)throw new Error('Classroom samples use different grams-per-dot');
+   const modeEqualMass=document.getElementById('densityMode');
+   modeEqualMass.value='mass';modeEqualMass.dispatchEvent(new Event('change',{bubbles:true}));
+   if(Number(beginnerA.getAttribute('data-markers'))!==Number(beginnerB.getAttribute('data-markers')))
+     throw new Error('Equal-mass classroom samples must contain equal dot counts');
+   const packedLead=sample('densityCanvasA'),looseAl=sample('densityCanvasB');
+   if(!(packedLead.width<looseAl.width*.82))
+     throw new Error('Lead box is not visibly smaller in equal-mass mode');
+   // Old, scientifically focused tests still run with Advanced explicitly ON.
+   advanced.checked=true;advanced.dispatchEvent(new Event('change',{bubbles:true}));
+   document.getElementById('densityMaterialA').value='water';
+   document.getElementById('densityMaterialB').value='aluminum';
+   document.getElementById('densityMode').value='volume';
+   document.getElementById('densityMode').dispatchEvent(new Event('change',{bubbles:true}));
    const fillA=document.getElementById('densityMeterFillA'),fillB=document.getElementById('densityMeterFillB');
    const massFraction=parseFloat(fillA.style.width),metalMassPercent=parseFloat(fillB.style.width);
    if(!(massFraction>30&&massFraction<40&&metalMassPercent===100))
@@ -103,6 +130,10 @@ window.addEventListener('load',()=>{
    if(!piB.textContent.includes('egyenérték'))throw new Error('Argon fractional indicator missing');
    if(!document.getElementById('densityExplanation').textContent.includes('Közös részecskeszámskála'))throw new Error('Shared scale explanation missing');
    if(!document.getElementById('densitySelectedB').textContent.includes('0,0016607'))throw new Error('Argon density changed unexpectedly');
+   advanced.checked=false;advanced.dispatchEvent(new Event('change',{bubbles:true}));
+   document.getElementById('densityPreset5').click();
+   if(!(Number(beginnerA.getAttribute('data-markers'))>Number(beginnerB.getAttribute('data-markers'))*3.5))
+     throw new Error('Switching back to simple mode did not restore mass-based markers');
    document.documentElement.setAttribute('data-density-smoke','PASS');
  }catch(error){document.documentElement.setAttribute('data-density-smoke','FAIL: '+error.message);console.error(error);}
 });

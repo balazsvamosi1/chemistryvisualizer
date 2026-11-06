@@ -178,6 +178,42 @@ function particlePlan(comparison){
  return Object.freeze({left:plans.left,right:plans.right,scales:Object.freeze(scales)});
 }
 
+
+/*
+ * Classroom density model for ages 12–14.
+ * Every drawn dot represents the SAME MASS of bulk material in either cube,
+ * not an atom, molecule, quantum state, crystallographic site or actual packing.
+ * This deliberately visualizes the macroscopic equation rho = mass / volume.
+ * Switch to particlePlan() for the separate advanced molecular illustration.
+ */
+function teachingPlan(comparison){
+ const bodies=[comparison.left,comparison.right];
+ const maxGrams=comparison.mode==='mass'?5000:5000*Math.max(...bodies.map(b=>b.density));
+ const gramsPerMarker=niceScale(maxGrams/MAX_MARKERS);
+ const make=body=>{
+  const equivalent=body.mass/gramsPerMarker;
+  const rounded=Math.round(equivalent),approximate=rounded<1;
+  return Object.freeze({
+   category:'teaching',perMarker:gramsPerMarker,gramsPerMarker,
+   equivalent,count:Math.max(1,Math.min(MAX_MARKERS,rounded)),
+   approximate,capped:rounded>MAX_MARKERS,
+   markerOpacity:approximate?Math.max(.1,Math.min(.35,equivalent)):1
+  });
+ };
+ return Object.freeze({left:make(comparison.left),right:make(comparison.right),gramsPerMarker});
+}
+function teachingMarkers(count){
+ if(!Number.isSafeInteger(count)||count<1||count>MAX_MARKERS)throw new RangeError('Invalid teaching marker count');
+ const halton=(n,base)=>{let f=1,v=0;while(n){f/=base;v+=f*(n%base);n=Math.floor(n/base);}return v;};
+ // Identical spatial sites for either material and stable sites as quantity grows.
+ return Array.from({length:count},(_,i)=>({
+  x:.085+.83*halton(i+1,2),
+  y:.085+.83*halton(i+1,3),
+  z:.085+.83*halton(i+1,5),
+  type:0
+ }));
+}
+
 function particleMarkers(id,count){
  const m=material(id);if(!m)throw new RangeError('Unknown material');
  if(!Number.isSafeInteger(count)||count<1||count>MAX_MARKERS)throw new RangeError('Invalid marker count');
@@ -207,5 +243,5 @@ function particleMarkers(id,count){
  return out;
 }
 
-return Object.freeze({MATERIALS,material,compute,dimensions,particles,waterResult,idealGasDensity,particlePlan,particleMarkers,particleMoles,AVOGADRO,MAX_MARKERS});
+return Object.freeze({MATERIALS,material,compute,dimensions,particles,waterResult,idealGasDensity,particlePlan,particleMarkers,particleMoles,teachingPlan,teachingMarkers,AVOGADRO,MAX_MARKERS});
 });
