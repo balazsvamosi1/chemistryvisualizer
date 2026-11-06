@@ -11,7 +11,7 @@ const strings={
   title:'Sűrűség – mi fér el ugyanakkora helyen?',intro:'Hasonlíts össze két anyagot. Változtasd a tömeget vagy a térfogatot, majd nézd meg az anyagok belső szerkezetének egyszerűsített modelljét.',
   mode:'Összehasonlítás',volume:'Azonos térfogat',mass:'Azonos tömeg',shape:'Test alakja',cube:'Kocka',cuboid:'Téglatest',quantityVolume:'Közös térfogat',quantityMass:'Közös tömeg',particles:'Részecskeszerkezet megjelenítése',
   chooseA:'Első anyag',chooseB:'Második anyag',density:'Sűrűség',materialMass:'Tömeg',materialVolume:'Térfogat',dimensions:'Méretek',condition:'Referenciaállapot',
-  formula:'Sűrűség = tömeg / térfogat',eqVolume:'Azonos térfogat mellett a nagyobb sűrűségű anyag nehezebb.',eqMass:'Azonos tömeg mellett a kisebb sűrűségű anyag több helyet foglal.',equal:'A két anyag sűrűsége egyenlő.',times:'-szer akkora a sűrűsége, mint a(z) ',drag:'Forgasd a modellt egérrel vagy ujjal. Billentyűzeten a nyilakkal is lehet forgatni.',notScale:'A két ábra NEM méretarányos. A pontos méretek és tömegek a számoknál láthatók.',
+  formula:'Sűrűség = tömeg / térfogat',meterMass:'A tömegek összehasonlítása',meterVolume:'A térfogatok összehasonlítása',ofLargest:' a nagyobbikhoz viszonyítva',summaryMass:'Azonos térfogat mellett a(z) ',summaryMassEnd:'-szor akkora tömegű, mint a(z) ',summaryVolume:'Azonos tömeg mellett a(z) ',summaryVolumeEnd:'-szor akkora térfogatú, mint a(z) ',summaryEqual:'A két anyag tömege és térfogata megegyezik a kiválasztott összehasonlításban.',eqVolume:'Azonos térfogat mellett a nagyobb sűrűségű anyag nehezebb.',eqMass:'Azonos tömeg mellett a kisebb sűrűségű anyag több helyet foglal.',equal:'A két anyag sűrűsége egyenlő.',times:'-szer akkora a sűrűsége, mint a(z) ',drag:'Forgasd a modellt egérrel vagy ujjal. Billentyűzeten a nyilakkal is lehet forgatni.',notScale:'A testek egymáshoz viszonyított mérete a térfogatkülönbséget mutatja. Nagyon nagy eltérésnél a kisebb test minimális rajzméretet kap; a pontos arányt a sáv és a számok jelzik. A részecskék nem méretarányosak.',
   schematic:'A részecskék száma és mérete csak szemléltetés: nem a kocka valódi atomszámát vagy a valós távolságokat mutatja. A sűrűség függ a részecskék tömegétől ÉS térbeli elrendezésétől.',
   source:'Tájékoztató értékek: OpenStax Chemistry és NIST; a fa sűrűsége típustól és nedvességtől függ. Az adatokat nem hőmérséklet-változási szimuláció számítja.',
   compare:'Próbáld ki',preset1:'Víz és jég',preset2:'Víz és alumínium',preset3:'Vas és réz',preset4:'Levegő és víz',
@@ -31,8 +31,8 @@ const strings={
   title:'Dichte – wie viel steckt im gleichen Raum?',intro:'Vergleiche zwei Stoffe. Ändere die Masse oder das Volumen und sieh dir ein vereinfachtes Modell des inneren Aufbaus an.',
   mode:'Vergleich',volume:'Gleiches Volumen',mass:'Gleiche Masse',shape:'Körperform',cube:'Würfel',cuboid:'Quader',quantityVolume:'Gemeinsames Volumen',quantityMass:'Gemeinsame Masse',particles:'Teilchenmodell anzeigen',
   chooseA:'Erster Stoff',chooseB:'Zweiter Stoff',density:'Dichte',materialMass:'Masse',materialVolume:'Volumen',dimensions:'Abmessungen',condition:'Referenzzustand',
-  formula:'Dichte = Masse / Volumen',eqVolume:'Bei gleichem Volumen hat der dichtere Stoff mehr Masse.',eqMass:'Bei gleicher Masse braucht der Stoff mit kleinerer Dichte mehr Platz.',equal:'Die beiden Stoffe haben die gleiche Dichte.',times:'-mal so dicht wie ',
-  drag:'Mit Maus oder Finger drehen. Mit den Pfeiltasten geht es ebenfalls.',notScale:'Die beiden Bilder sind NICHT maßstabsgetreu. Die echten Abmessungen stehen bei den Zahlen.',
+  formula:'Dichte = Masse / Volumen',meterMass:'Massen vergleichen',meterVolume:'Volumen vergleichen',ofLargest:' relativ zum größeren Wert',summaryMass:'Bei gleichem Volumen hat ',summaryMassEnd:'-mal so viel Masse wie ',summaryVolume:'Bei gleicher Masse braucht ',summaryVolumeEnd:'-mal so viel Volumen wie ',summaryEqual:'Beide Stoffe haben bei dieser Einstellung die gleiche Masse und das gleiche Volumen.',eqVolume:'Bei gleichem Volumen hat der dichtere Stoff mehr Masse.',eqMass:'Bei gleicher Masse braucht der Stoff mit kleinerer Dichte mehr Platz.',equal:'Die beiden Stoffe haben die gleiche Dichte.',times:'-mal so dicht wie ',
+  drag:'Mit Maus oder Finger drehen. Mit den Pfeiltasten geht es ebenfalls.',notScale:'Die Körpergrößen zeigen den Volumenunterschied. Bei sehr großen Unterschieden bleibt der kleinere Körper mindestens sichtbar. Balken und Zahlen zeigen das genaue Verhältnis; Teilchen sind nicht maßstabsgetreu.',
   schematic:'Teilchenzahl und Teilchengröße sind schematisch. Sie zeigen weder die reale Atomzahl noch echte Abstände. Die Dichte hängt von der Masse der Teilchen UND ihrer räumlichen Anordnung ab.',
   source:'Näherungswerte aus OpenStax Chemistry und NIST; Holzdichte hängt von Holzart und Feuchte ab. Keine Berechnung veränderlicher Temperaturen.',
   compare:'Beispiele',preset1:'Wasser und Eis',preset2:'Wasser und Aluminium',preset3:'Eisen und Kupfer',preset4:'Luft und Wasser',
@@ -52,8 +52,8 @@ const strings={
   title:'Density – what fits into the same space?',intro:'Compare two materials. Change mass or volume, then look inside a simplified model of their particle arrangements.',
   mode:'Compare',volume:'Same volume',mass:'Same mass',shape:'Solid shape',cube:'Cube',cuboid:'Rectangular prism',quantityVolume:'Shared volume',quantityMass:'Shared mass',particles:'Show particle structures',
   chooseA:'First material',chooseB:'Second material',density:'Density',materialMass:'Mass',materialVolume:'Volume',dimensions:'Dimensions',condition:'Reference conditions',
-  formula:'Density = mass / volume',eqVolume:'For the same volume, the denser material has more mass.',eqMass:'For the same mass, the less dense material occupies more space.',equal:'These materials have the same density.',times:' times as dense as ',
-  drag:'Drag with mouse or finger to rotate; arrow keys also rotate.',notScale:'The two drawings are NOT to scale. Actual dimensions are shown in the measurements.',
+  formula:'Density = mass / volume',meterMass:'Compare masses',meterVolume:'Compare volumes',ofLargest:' of the larger value',summaryMass:'With equal volume, ',summaryMassEnd:' times the mass of ',summaryVolume:'With equal mass, ',summaryVolumeEnd:' times the volume of ',summaryEqual:'Both materials have the same mass and volume in this comparison.',eqVolume:'For the same volume, the denser material has more mass.',eqMass:'For the same mass, the less dense material occupies more space.',equal:'These materials have the same density.',times:' times as dense as ',
+  drag:'Drag with mouse or finger to rotate; arrow keys also rotate.',notScale:'Relative cube sizes show volume differences. For extreme ratios, the smaller object stays minimally visible. Bars and values give the exact ratio; individual particles are not to scale.',
   schematic:'Particle counts and sizes are schematic, not the real number of atoms or distances. Density depends on BOTH particle mass and spatial arrangement.',
   source:'Approximate reference values from OpenStax Chemistry and NIST. Wood varies with species and moisture. No temperature-change physics is simulated.',
   compare:'Try these',preset1:'Water and ice',preset2:'Water and aluminium',preset3:'Iron and copper',preset4:'Air and water',
@@ -93,7 +93,9 @@ function draw(canvas,body,showParticles){
 // Each sample shares the same physical volume scale; keep very small specimens visible.
 const largestVolume=Math.max(comparison.left.volume,comparison.right.volume);
 const relative=Math.max(0.15,Math.cbrt(body.volume/largestVolume));
-const s=Math.min(w/(dims[0]*1.85),h/(dims[1]*1.8))*1.45*relative;
+// Fixed reference at 1000 g or 1000 cm³ makes the slider visibly resize the specimens.
+const sliderScale=Math.max(.48,Math.min(1.12,Math.cbrt(comparison.quantity/1000)));
+const s=Math.min(w/(dims[0]*1.85),h/(dims[1]*1.8))*1.38*relative*sliderScale;
  const v=[];for(let z=0;z<2;z++)for(let y=0;y<2;y++)for(let x=0;x<2;x++)v.push(project(x,y,z,w,h,s,...dims));
  const faces=[[0,1,3,2],[4,5,7,6],[0,1,5,4],[2,3,7,6],[0,2,6,4],[1,3,7,5]].map(p=>({p,depth:p.reduce((s,i)=>s+v[i].z,0)/4})).sort((a,b)=>a.depth-b.depth);
  ctx.fillStyle='rgba(85,157,205,.19)';
@@ -123,6 +125,15 @@ function render(){
  const s=strings[lang()],p=ui.mode.value==='mass'?'mass':'volume',v=Number(ui.slider.value),a=ui.A.value,b=ui.B.value,shape=ui.shape.value;
  comparison=engine.compute(a,b,p,v,shape);
  const qtyLabel=$( 'densityQuantityLabel' );qtyLabel.textContent=p==='volume'?s.quantityVolume:s.quantityMass;
+ const volumes=[comparison.left.volume,comparison.right.volume],masses=[comparison.left.mass,comparison.right.mass];
+ const values=p==='volume'?masses:volumes,maxValue=Math.max(...values),minValue=Math.min(...values);
+ const larger=values[0]>=values[1]?comparison.left:comparison.right;
+ const smaller=values[0]>=values[1]?comparison.right:comparison.left;
+ const ratio=maxValue/minValue;
+ const headline=$('densityComparisonLead');
+ headline.textContent=Math.abs(ratio-1)<1e-10?s.summaryEqual:
+   (p==='volume'?s.summaryMass:s.summaryVolume)+larger.material.labels[li()]+' '+number(ratio,2)+
+   (p==='volume'?s.summaryMassEnd:s.summaryVolumeEnd)+smaller.material.labels[li()]+'.';
  ui.display.textContent=number(v,0)+(p==='volume'?' cm³':' g');
  comparison&&[comparison.left,comparison.right].forEach((body,i)=>{
   const d=body.dimensions.map(x=>number(x,2)).join(' × '),info=[
@@ -134,6 +145,15 @@ function render(){
   ];
   const result=ui.outputs[i];result.replaceChildren();
   for(const [name,value] of info){const row=document.createElement('div'),a=document.createElement('span'),b=document.createElement('strong');row.className='density-stat';a.textContent=name;b.textContent=value;row.append(a,b);result.append(row);}
+  // A bar of equal full width represents the larger sample's mass or volume.
+  // This is not an atom-count visualization: chemical identity and packing both matter.
+  const tag=i===0?'A':'B',measured=values[i],fraction=measured/maxValue,percent=fraction*100;
+  $('densityMeterTitle'+tag).textContent=p==='volume'?s.meterMass:s.meterVolume;
+  const fill=$('densityMeterFill'+tag);
+  fill.style.width=Math.max(.8,percent).toFixed(3)+'%';
+  fill.style.backgroundColor=body.material.color;
+  fill.setAttribute('aria-valuenow',percent.toFixed(2));
+  $('densityMeterValue'+tag).textContent=(p==='volume'?massString(body.mass):volumeString(body.volume))+' · '+number(percent,2)+'%'+s.ofLargest;
   draw(ui.canvases[i],body,ui.particles.checked);
  });
  const explanation=$('densityExplanation');explanation.replaceChildren();

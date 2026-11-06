@@ -32,9 +32,20 @@ window.addEventListener('load',()=>{
    if(beforeA.count<100||beforeB.count<100)throw new Error('Canvas blank: '+JSON.stringify({beforeA,beforeB}));
    const selectA=document.getElementById('densityMaterialA'),selectB=document.getElementById('densityMaterialB');
    if(selectA.value!=='water'||selectB.value!=='aluminum')throw new Error('Wrong default materials: '+selectA.value+'/'+selectB.value);
+   const fillA=document.getElementById('densityMeterFillA'),fillB=document.getElementById('densityMeterFillB');
+   const massFraction=parseFloat(fillA.style.width),metalMassPercent=parseFloat(fillB.style.width);
+   if(!(massFraction>30&&massFraction<40&&metalMassPercent===100))
+     throw new Error('Equal-volume mass bars must show real density difference: '+massFraction+'/'+metalMassPercent);
    const mode=document.getElementById('densityMode');mode.value='mass';mode.dispatchEvent(new Event('change',{bubbles:true}));
    const left=sample('densityCanvasA'),right=sample('densityCanvasB');
-   if(!(left.width>right.width*1.12))throw new Error('Equal-mass samples not visibly sized by volume: '+JSON.stringify({left,right}));
+   if(!(left.width>right.width*1.18))throw new Error('Equal-mass samples not visibly sized by volume: '+JSON.stringify({left,right}));
+   const waterVolumePercent=parseFloat(fillA.style.width),alVolumePercent=parseFloat(fillB.style.width);
+   if(!(waterVolumePercent===100&&alVolumePercent>30&&alVolumePercent<40))
+     throw new Error('Equal-mass volume bars must show real difference: '+waterVolumePercent+'/'+alVolumePercent);
+   const slider=document.getElementById('densityQuantity'),at1000=left.width;
+   slider.value='100';slider.dispatchEvent(new Event('input',{bubbles:true}));
+   const at100=sample('densityCanvasA');
+   if(!(at100.width<at1000*.75))throw new Error('Changing quantity should visibly shrink both cubes: '+JSON.stringify({at100,at1000}));
    document.documentElement.setAttribute('data-density-smoke','PASS');
  }catch(error){document.documentElement.setAttribute('data-density-smoke','FAIL: '+error.message);console.error(error);}
 });
