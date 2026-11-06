@@ -95,6 +95,7 @@ const largestVolume=Math.max(comparison.left.volume,comparison.right.volume);
 const relative=Math.max(0.15,Math.cbrt(body.volume/largestVolume));
 const s=Math.min(w/(dims[0]*1.85),h/(dims[1]*1.8))*1.45*relative;
  const v=[];for(let z=0;z<2;z++)for(let y=0;y<2;y++)for(let x=0;x<2;x++)v.push(project(x,y,z,w,h,s,...dims));
+ canvas.setAttribute('data-density-debug',JSON.stringify({volume:body.volume,relative,s,dims,first:v[0],last:v[7]}));
  const faces=[[0,1,3,2],[4,5,7,6],[0,1,5,4],[2,3,7,6],[0,2,6,4],[1,3,7,5]].map(p=>({p,depth:p.reduce((s,i)=>s+v[i].z,0)/4})).sort((a,b)=>a.depth-b.depth);
  ctx.fillStyle='rgba(85,157,205,.19)';
  for(const {p} of faces){ctx.beginPath();p.forEach((i,j)=>j?ctx.lineTo(v[i].x,v[i].y):ctx.moveTo(v[i].x,v[i].y));ctx.closePath();ctx.fill();}

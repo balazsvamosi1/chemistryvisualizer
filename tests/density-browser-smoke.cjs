@@ -26,7 +26,7 @@ window.addEventListener('load',()=>{
          count++;minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);
        }
      }
-     return{count,nonbg,width:maxX-minX,height:maxY-minY,max,canvas:[w,h],rect:canvas.getBoundingClientRect().width};
+     return{count,nonbg,width:maxX-minX,height:maxY-minY,max,canvas:[w,h],rect:canvas.getBoundingClientRect().width,debug:canvas.getAttribute('data-density-debug')};
    };
    const beforeA=sample('densityCanvasA'),beforeB=sample('densityCanvasB');
    if(beforeA.count<100||beforeB.count<100)throw new Error('Canvas blank: '+JSON.stringify({beforeA,beforeB}));
