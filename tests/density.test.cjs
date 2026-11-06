@@ -31,6 +31,52 @@ test('high-density metals and carbon allotropes are distinguishable',()=>{
  assert.equal(E.material('magnesium').structure,'hcp');
  assert.equal(E.material('graphite').structure,'layered');
 });
+test('proportional particle icons: water and lead have similar number density, not similar mass',()=>{
+ const x=E.compute('water','lead','volume',1000);
+ const p=E.particlePlan(x);
+ assert(Math.abs(p.left.count-p.right.count)<=2,'Water molecules and Pb atoms should have comparable number density');
+ assert(x.right.mass/x.left.mass>11);
+ assert.equal(p.left.perMarker,p.right.perMarker);
+ assert(Math.abs(p.left.moles-p.right.moles)<2);
+ assert(p.left.particleCount>1e25);
+ assert(p.right.particleCount>1e25);
+});
+test('increasing volume must increase icons; shared unit remains constant for a material pair',()=>{
+ const a=E.particlePlan(E.compute('water','lead','volume',100));
+ const b=E.particlePlan(E.compute('water','lead','volume',1000));
+ const c=E.particlePlan(E.compute('water','lead','volume',5000));
+ assert(a.left.count<b.left.count&&b.left.count<c.left.count);
+ assert(a.right.count<b.right.count&&b.right.count<c.right.count);
+ assert.equal(a.left.perMarker,b.left.perMarker);
+ assert.equal(b.left.perMarker,c.left.perMarker);
+ assert(c.left.count<=E.MAX_MARKERS);
+});
+test('equal mass: molecular count depends on molar mass',()=>{
+ const p=E.particlePlan(E.compute('water','lead','mass',1000));
+ assert(p.left.count>p.right.count*7);
+});
+test('equal-volume gases have approximately equal molecule counts under the ideal gas model',()=>{
+ const p=E.particlePlan(E.compute('helium','carbonDioxide','volume',1000));
+ assert.equal(p.left.count,p.right.count);
+ assert.equal(p.left.category,'gas');
+ assert(p.left.perMarker<1);
+});
+test('gas and condensed-phase comparison uses separate zoom, rather than false direct count comparison',()=>{
+ const p=E.particlePlan(E.compute('hydrogen','lead','volume',1000));
+ assert.notEqual(p.left.category,p.right.category);
+ assert.notEqual(p.left.perMarker,p.right.perMarker);
+});
+test('representative particle positions are deterministic, bounded, and count-controlled',()=>{
+ for(const id of ['water','lead','salt','diamond','helium','wood']){
+  for(const n of [1,12,100,250]){
+   const points=E.particleMarkers(id,n);
+   assert.equal(points.length,n);
+   assert.deepEqual(points,E.particleMarkers(id,n));
+   assert(points.every(p=>[p.x,p.y,p.z].every(v=>v>=0&&v<=1)));
+  }
+ }
+ assert.throws(()=>E.particleMarkers('lead',251));
+});
 test('same volume: 1 litre water vs aluminium, mass = density times volume',()=>{
  const x=E.compute('water','aluminum','volume',1000);
  assert.equal(x.left.volume,1000);assert.equal(x.right.volume,1000);
@@ -94,6 +140,8 @@ test('browser UI boots without backend, renders both samples and reacts to contr
  let result=win.ChemistryDensityLab.getComparison();
  assert.equal(result.left.mass,998);assert.equal(result.right.mass,2700);
  assert(nodes.get('densityResultA').children.length>=5);
+ assert(nodes.get('densityParticleInfoA').textContent.includes('Részecskejelek'));
+ assert(nodes.get('densityParticleInfoB').textContent.includes('mol'));
  assert.equal(nodes.get('densityMeterFillA').style.width,'36.963%');
  assert.equal(nodes.get('densityMeterFillB').style.width,'100.000%');
  assert(nodes.get('densityComparisonLead').textContent.includes('2,71'));

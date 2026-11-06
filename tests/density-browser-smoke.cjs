@@ -57,6 +57,24 @@ window.addEventListener('load',()=>{
      throw new Error('Gas law explanation is missing');
    const gasA=sample('densityCanvasA'),gasB=sample('densityCanvasB');
    if(gasA.count<100||gasB.count<100)throw new Error('Gas diagrams are blank: '+JSON.stringify({gasA,gasB}));
+   // Prove that particle counts visibly track the slider without changing the
+   // number of real molecules shown one-for-one.
+   const modeVolume=document.getElementById('densityMode');
+   modeVolume.value='volume';modeVolume.dispatchEvent(new Event('change',{bubbles:true}));
+   const chooseA=document.getElementById('densityMaterialA'),chooseB=document.getElementById('densityMaterialB');
+   chooseA.value='water';chooseB.value='lead';chooseB.dispatchEvent(new Event('change',{bubbles:true}));
+   const initialWater=Number(document.getElementById('densityParticleInfoA').getAttribute('data-markers'));
+   const initialLead=Number(document.getElementById('densityParticleInfoB').getAttribute('data-markers'));
+   if(!(initialWater>0&&Math.abs(initialWater-initialLead)<=2))
+     throw new Error('Water/lead representative number density wrong: '+initialWater+'/'+initialLead);
+   const amount=document.getElementById('densityQuantity');
+   amount.value='5000';amount.dispatchEvent(new Event('input',{bubbles:true}));
+   const largeWater=Number(document.getElementById('densityParticleInfoA').getAttribute('data-markers'));
+   const largeLead=Number(document.getElementById('densityParticleInfoB').getAttribute('data-markers'));
+   if(!(largeWater>initialWater*3&&largeLead>initialLead*3))
+     throw new Error('Particle markers must grow when the volume slider grows: '+JSON.stringify({initialWater,initialLead,largeWater,largeLead}));
+   const finalA=sample('densityCanvasA'),finalB=sample('densityCanvasB');
+   if(finalA.count<100||finalB.count<100)throw new Error('Updated particle diagrams disappeared');
    document.documentElement.setAttribute('data-density-smoke','PASS');
  }catch(error){document.documentElement.setAttribute('data-density-smoke','FAIL: '+error.message);console.error(error);}
 });
