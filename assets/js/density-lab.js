@@ -12,7 +12,7 @@ const strings={
   mode:'Összehasonlítás',volume:'Azonos térfogat',mass:'Azonos tömeg',shape:'Test alakja',cube:'Kocka',cuboid:'Téglatest',quantityVolume:'Közös térfogat',quantityMass:'Közös tömeg',particles:'Részecskeszerkezet megjelenítése',
   chooseA:'Első anyag',chooseB:'Második anyag',density:'Sűrűség',materialMass:'Tömeg',materialVolume:'Térfogat',dimensions:'Méretek',condition:'Referenciaállapot',molarMass:'Moláris tömeg (gáz)',groupNames:["Szilárd anyagok","Folyadékok","Gázok"],gasInfo:"A gázoknál 20 °C-on és 1 atmoszféra nyomáson azonos térfogatban közel ugyanannyi részecske található. A sűrűségkülönbség fő oka a részecskék eltérő tömege. A gázok modelljében ezért hasonló számú molekula látszik, nem több „golyó” a nehezebb gázban.",gasCaution:"A gázok sűrűségét közelítő ideálisgáz-modell adja 20 °C-on, 1 atm mellett; a valós gázok kissé eltérhetnek. Az ólom mérgező, a gázok belélegzése veszélyes lehet: a példák kizárólag virtuálisak.",
   formula:'Sűrűség = tömeg / térfogat',meterMass:'A tömegek összehasonlítása',meterVolume:'A térfogatok összehasonlítása',ofLargest:' a nagyobbikhoz viszonyítva',summaryMass:'Azonos térfogat mellett a(z) ',summaryMassEnd:'-szor akkora tömegű, mint a(z) ',summaryVolume:'Azonos tömeg mellett a(z) ',summaryVolumeEnd:'-szor akkora térfogatú, mint a(z) ',summaryEqual:'A két anyag tömege és térfogata megegyezik a kiválasztott összehasonlításban.',eqVolume:'Azonos térfogat mellett a nagyobb sűrűségű anyag nehezebb.',eqMass:'Azonos tömeg mellett a kisebb sűrűségű anyag több helyet foglal.',equal:'A két anyag sűrűsége egyenlő.',times:'-szer akkora a sűrűsége, mint a(z) ',drag:'Forgasd a modellt egérrel vagy ujjal. Billentyűzeten a nyilakkal is lehet forgatni.',notScale:'A testek egymáshoz viszonyított mérete a térfogatkülönbséget mutatja. Nagyon nagy eltérésnél a kisebb test minimális rajzméretet kap; a pontos arányt a sáv és a számok jelzik. A részecskék nem méretarányosak.',
-  schematic:'Minden jel sok valódi részecskét képvisel. A jelek száma a tömeggel és térfogattal arányosan változik; a rajzolt méret nem méretarányos. A sűrűséget a részecskék száma ÉS az egyes részecskék tömege határozza meg.',particleMarks:'Részecskejelek',mark:'jel',perMark:'1 jel körülbelül',mol:'mol',singleMass:'Egy részecske tömege',atomicUnit:'u',woodNote:'Fa: a jelek a sejtszerkezetet szemléltetik, nem molekulákat.',minimumNote:'Legalább egy jel látható a nagyon kis mennyiségeknél.',mixedNote:'A gázokat más nagyítással ábrázoljuk: a gáz és a szilárd/folyékony anyag jeleinek száma közvetlenül nem összehasonlítható.',
+  schematic:'Minden jel sok valódi részecskét képvisel. A jelek száma a tömeggel és térfogattal arányosan változik; a rajzolt méret nem méretarányos. A sűrűséget a részecskék száma ÉS az egyes részecskék tömege határozza meg.',particleMarks:'Részecskejelek',mark:'jel',perMark:'1 jel körülbelül',mol:'mol',singleMass:'Egy részecske tömege',atomicUnit:'u',woodNote:'Fa: a jelek a sejtszerkezetet szemléltetik, nem molekulákat.',minimumNote:'Legalább egy jel látható a nagyon kis mennyiségeknél.',mixedNote:'A fa sejtszerkezeti jelei nem részecskéket jelölnek, ezért más anyagok részecskejeleivel nem hasonlíthatók össze.',sharedScale:'Közös részecskeszámskála: 1 jel mindkét kockában ugyanannyi részecskét képvisel.',fractional:'Részecskejel-egyenérték',faint:'Egy halvány jel csak szemlélteti a nagyon kis mennyiséget.',argonNote:'Az argon sűrűsége 20 °C-on, 1 atm nyomáson kb. 0,001661 g/cm³; 0 °C-on kb. 0,001784 g/cm³ lenne.',
   source:'Szilárd anyagok: RSC és PubChem referencia-sűrűségek. Gázok: ideálisgáz-számítás (20 °C, 1 atm). A fa sűrűsége nedvességfüggő; itt nincs hőmérséklet- vagy nyomásszimuláció.',
   compare:'Próbáld ki',preset1:'Víz és jég',preset2:'Víz és alumínium',preset3:'Vas és réz',preset4:'Levegő és víz',preset5:"Ólom és alumínium",preset6:"Magnézium és ólom",preset7:"Hélium és szén-dioxid",preset8:"Grafit és gyémánt",preset9:"Hidrogén és kén-hexafluorid",
   structure:'Mit mutat a részecskekép?',struct:{
@@ -34,7 +34,7 @@ const strings={
   chooseA:'Erster Stoff',chooseB:'Zweiter Stoff',density:'Dichte',materialMass:'Masse',materialVolume:'Volumen',dimensions:'Abmessungen',condition:'Referenzzustand',molarMass:'Molare Masse (Gas)',groupNames:["Feststoffe","Flüssigkeiten","Gase"],gasInfo:"Bei gleicher Temperatur (20 °C) und gleichem Druck (1 atm) enthalten gleiche Gasvolumina ungefähr gleich viele Teilchen. Unterschiedliche Dichten entstehen vor allem durch unterschiedliche Teilchenmassen. Darum zeigt die Grafik nicht einfach mehr Teilchen im schwereren Gas.",gasCaution:"Gasdichten sind idealisierte Näherungen bei 20 °C und 1 atm; reale Gase können abweichen. Blei ist giftig und das Einatmen von Gasen kann gefährlich sein: nur virtuelle Beispiele.",
   formula:'Dichte = Masse / Volumen',meterMass:'Massen vergleichen',meterVolume:'Volumen vergleichen',ofLargest:' relativ zum größeren Wert',summaryMass:'Bei gleichem Volumen hat ',summaryMassEnd:'-mal so viel Masse wie ',summaryVolume:'Bei gleicher Masse braucht ',summaryVolumeEnd:'-mal so viel Volumen wie ',summaryEqual:'Beide Stoffe haben bei dieser Einstellung die gleiche Masse und das gleiche Volumen.',eqVolume:'Bei gleichem Volumen hat der dichtere Stoff mehr Masse.',eqMass:'Bei gleicher Masse braucht der Stoff mit kleinerer Dichte mehr Platz.',equal:'Die beiden Stoffe haben die gleiche Dichte.',times:'-mal so dicht wie ',
   drag:'Mit Maus oder Finger drehen. Mit den Pfeiltasten geht es ebenfalls.',notScale:'Die Körpergrößen zeigen den Volumenunterschied. Bei sehr großen Unterschieden bleibt der kleinere Körper mindestens sichtbar. Balken und Zahlen zeigen das genaue Verhältnis; Teilchen sind nicht maßstabsgetreu.',
-  schematic:'Jedes Symbol steht für sehr viele Teilchen. Die Anzahl der Symbole verändert sich proportional zur Stoffmenge; die Größen sind nicht maßstabsgetreu. Sowohl die Anzahl als auch die Masse der Teilchen bestimmen die Dichte.',particleMarks:'Teilchensymbole',mark:'Symbole',perMark:'1 Symbol entspricht ungefähr',mol:'mol',singleMass:'Masse eines Teilchens',atomicUnit:'u',woodNote:'Holz: Symbole für die Zellstruktur, keine einzelnen Moleküle.',minimumNote:'Mindestens ein Symbol bleibt bei kleinen Mengen sichtbar.',mixedNote:'Gase haben eine andere Vergrößerung: Teilchensymbole für Gas und feste/flüssige Stoffe sind nicht direkt vergleichbar.',
+  schematic:'Jedes Symbol steht für sehr viele Teilchen. Die Anzahl der Symbole verändert sich proportional zur Stoffmenge; die Größen sind nicht maßstabsgetreu. Sowohl die Anzahl als auch die Masse der Teilchen bestimmen die Dichte.',particleMarks:'Teilchensymbole',mark:'Symbole',perMark:'1 Symbol entspricht ungefähr',mol:'mol',singleMass:'Masse eines Teilchens',atomicUnit:'u',woodNote:'Holz: Symbole für die Zellstruktur, keine einzelnen Moleküle.',minimumNote:'Mindestens ein Symbol bleibt bei kleinen Mengen sichtbar.',mixedNote:'Die Symbole für die Holz-Zellstruktur stehen nicht für einzelne Teilchen und sind nicht direkt vergleichbar.',sharedScale:'Gemeinsamer Teilchenmaßstab: Ein Symbol steht in beiden Würfeln für die gleiche Teilchenmenge.',fractional:'Teilchensymbol-Anteil',faint:'Ein blasses Symbol zeigt nur die sehr geringe Teilchenmenge an.',argonNote:'Argon hat bei 20 °C und 1 atm etwa 0,001661 g/cm³; bei 0 °C wären es etwa 0,001784 g/cm³.',
   source:'Feststoffe: RSC/PubChem-Referenzwerte. Gase: ideales Gasgesetz (20 °C, 1 atm). Holzdichte hängt von Holzart und Feuchte ab; keine variable Temperatur- oder Drucksimulation.',
   compare:'Beispiele',preset1:'Wasser und Eis',preset2:'Wasser und Aluminium',preset3:'Eisen und Kupfer',preset4:'Luft und Wasser',preset5:"Blei und Aluminium",preset6:"Magnesium und Blei",preset7:"Helium und Kohlenstoffdioxid",preset8:"Graphit und Diamant",preset9:"Wasserstoff und Schwefelhexafluorid",
   structure:'Was zeigt das Teilchenbild?',struct:{
@@ -56,7 +56,7 @@ const strings={
   chooseA:'First material',chooseB:'Second material',density:'Density',materialMass:'Mass',materialVolume:'Volume',dimensions:'Dimensions',condition:'Reference conditions',molarMass:'Molar mass (gas)',groupNames:["Solids","Liquids","Gases"],gasInfo:"At the same temperature (20 °C) and pressure (1 atm), equal volumes of gases contain approximately equal numbers of particles. Their different densities mainly reflect different particle masses, so the heavier gas is not drawn with more particles.",gasCaution:"Gas densities are ideal-gas estimates at 20 °C and 1 atm; real gases differ slightly. Lead is toxic and inhaling gases can be hazardous: virtual examples only.",
   formula:'Density = mass / volume',meterMass:'Compare masses',meterVolume:'Compare volumes',ofLargest:' of the larger value',summaryMass:'With equal volume, ',summaryMassEnd:' times the mass of ',summaryVolume:'With equal mass, ',summaryVolumeEnd:' times the volume of ',summaryEqual:'Both materials have the same mass and volume in this comparison.',eqVolume:'For the same volume, the denser material has more mass.',eqMass:'For the same mass, the less dense material occupies more space.',equal:'These materials have the same density.',times:' times as dense as ',
   drag:'Drag with mouse or finger to rotate; arrow keys also rotate.',notScale:'Relative cube sizes show volume differences. For extreme ratios, the smaller object stays minimally visible. Bars and values give the exact ratio; individual particles are not to scale.',
-  schematic:'Each symbol stands for many real particles. Symbol counts change in proportion to the amount of substance; sizes are not to scale. Both the number and mass of particles determine density.',particleMarks:'Particle symbols',mark:'symbols',perMark:'1 symbol represents about',mol:'mol',singleMass:'Mass of one particle',atomicUnit:'u',woodNote:'Wood: symbols depict cell structure, not individual molecules.',minimumNote:'At least one symbol stays visible for tiny quantities.',mixedNote:'Gases use a different magnification: you cannot compare gas symbols directly with solid/liquid symbols.',
+  schematic:'Each symbol stands for many real particles. Symbol counts change in proportion to the amount of substance; sizes are not to scale. Both the number and mass of particles determine density.',particleMarks:'Particle symbols',mark:'symbols',perMark:'1 symbol represents about',mol:'mol',singleMass:'Mass of one particle',atomicUnit:'u',woodNote:'Wood: symbols depict cell structure, not individual molecules.',minimumNote:'At least one symbol stays visible for tiny quantities.',mixedNote:'Wood markers represent cells, not individual particles, so they are not directly comparable.',sharedScale:'One common particle scale: each symbol represents the same number of particles in both cubes.',fractional:'Fractional particle-symbol equivalent',faint:'One faint symbol only indicates this extremely small amount.',argonNote:'Argon density at 20°C and 1 atm is about 0.001661 g/cm³; at 0°C it would be about 0.001784 g/cm³.',
   source:'Solids: RSC/PubChem reference densities. Gases: ideal gas law (20 °C, 1 atm). Wood depends on species and moisture; no temperature or pressure changes are simulated.',
   compare:'Try these',preset1:'Water and ice',preset2:'Water and aluminium',preset3:'Iron and copper',preset4:'Air and water',preset5:"Lead and aluminium",preset6:"Magnesium and lead",preset7:"Helium and carbon dioxide",preset8:"Graphite and diamond",preset9:"Hydrogen and sulfur hexafluoride",
   structure:'What does the particle view show?',struct:{
@@ -112,6 +112,7 @@ const s=Math.min(w/(dims[0]*1.85),h/(dims[1]*1.8))*1.38*relative*sliderScale;
   const sorted=p.map(a=>({...project(a.x,a.y,a.z,w,h,s,...dims),type:a.type})).sort((a,b)=>a.z-b.z);
   const base=material.color;
   for(const atom of sorted){
+   const symbolOpacity=plan.markerOpacity;
    const r=(material.structure==='gas'?5.0:material.structure==='ionic'?6.7:5.8)*Math.min(1,Math.max(.55,relative));
    if(material.structure==='gas'){
     // Molecular icons are schematic; each point represents one molecule, not one atom.
@@ -121,7 +122,7 @@ const s=Math.min(w/(dims[0]*1.85),h/(dims[1]*1.8))*1.38*relative*sliderScale;
       [[0,0],[-6,0],[6,0],[0,-6],[0,6],[-4,-4],[4,4]];
     for(const [dx,dy] of dots){
      ctx.beginPath();ctx.arc(atom.x+dx,atom.y+dy,n===1?r:r*.58,0,2*Math.PI);
-     ctx.fillStyle=base;ctx.globalAlpha=.9;ctx.fill();ctx.globalAlpha=1;
+     ctx.fillStyle=base;ctx.globalAlpha=.9*symbolOpacity;ctx.fill();ctx.globalAlpha=1;
      ctx.strokeStyle='#072238';ctx.lineWidth=.75;ctx.stroke();
     }
     continue;
@@ -130,22 +131,22 @@ const s=Math.min(w/(dims[0]*1.85),h/(dims[1]*1.8))*1.38*relative*sliderScale;
     // One symbol depicts one H2O molecule, with two H lobes and one O centre.
     ctx.beginPath();ctx.arc(atom.x-3,atom.y+3,Math.max(1.5,r*.36),0,2*Math.PI);
     ctx.arc(atom.x+3,atom.y+3,Math.max(1.5,r*.36),0,2*Math.PI);
-    ctx.fillStyle='#f7f8fa';ctx.fill();
+    ctx.fillStyle='#f7f8fa';ctx.globalAlpha=symbolOpacity;ctx.fill();
     ctx.beginPath();ctx.arc(atom.x,atom.y,r*.72,0,2*Math.PI);
-    ctx.fillStyle=base;ctx.fill();ctx.strokeStyle='#072238';ctx.lineWidth=.8;ctx.stroke();
+    ctx.fillStyle=base;ctx.fill();ctx.strokeStyle='#072238';ctx.lineWidth=.8;ctx.stroke();ctx.globalAlpha=1;
     continue;
    }
    if(material.structure==='ionic'){
     // One symbol represents a NaCl formula unit: paired Na+ and Cl- ions.
     ctx.beginPath();ctx.arc(atom.x-2.8,atom.y,r*.62,0,2*Math.PI);
-    ctx.fillStyle='#96caed';ctx.fill();
+    ctx.fillStyle='#96caed';ctx.globalAlpha=symbolOpacity;ctx.fill();
     ctx.beginPath();ctx.arc(atom.x+2.8,atom.y,r*.78,0,2*Math.PI);
     ctx.fillStyle='#f0b979';ctx.fill();
-    ctx.strokeStyle='#072238';ctx.lineWidth=.8;ctx.stroke();
+    ctx.strokeStyle='#072238';ctx.lineWidth=.8;ctx.stroke();ctx.globalAlpha=1;
     continue;
    }
    ctx.beginPath();ctx.arc(atom.x,atom.y,r,0,2*Math.PI);
-   ctx.fillStyle=base;ctx.globalAlpha=.83+Math.min(.14,(atom.z+1)/9);ctx.fill();ctx.globalAlpha=1;
+   ctx.fillStyle=base;ctx.globalAlpha=(.83+Math.min(.14,(atom.z+1)/9))*symbolOpacity;ctx.fill();ctx.globalAlpha=1;
    ctx.strokeStyle='#072238';ctx.lineWidth=1.25;ctx.stroke();
   }
  }else{
@@ -204,9 +205,13 @@ function render(){
     s.woodNote:
     s.perMark+' '+number(specimen.perMarker,specimen.perMarker<.01?5:3)+' '+s.mol+
     ' · '+s.singleMass+': '+number(body.material.molarMass,3)+' '+s.atomicUnit;
-  markerInfo.textContent=s.particleMarks+': '+specimen.count+' '+s.mark+' · '+details+
-    (specimen.approximate?' · '+s.minimumNote:'');
+  const markerCountText=specimen.approximate?
+    s.fractional+': '+number(specimen.equivalent,3)+' '+s.mark+' · '+s.faint:
+    s.particleMarks+': '+specimen.count+' '+s.mark;
+  markerInfo.textContent=markerCountText+' · '+details;
   markerInfo.setAttribute('data-markers',String(specimen.count));
+  markerInfo.setAttribute('data-marker-equivalent',String(specimen.equivalent));
+  markerInfo.setAttribute('data-marker-scale',String(specimen.perMarker));
   draw(ui.canvases[i],body,ui.particles.checked,specimen);
  });
  const explanation=$('densityExplanation');explanation.replaceChildren();
@@ -216,12 +221,19 @@ function render(){
  const denser=comparison.left.density>=comparison.right.density?comparison.left:comparison.right,less=comparison.left.density>=comparison.right.density?comparison.right:comparison.left;
  const ratio=document.createElement('p');ratio.textContent=same?s.equal:denser.material.labels[li()]+' '+number(denser.density/less.density,1)+s.times+less.material.labels[li()]+'.';explanation.append(ratio);
  const note=document.createElement('p');note.className='density-scale-note';note.textContent=s.notScale;explanation.append(note);
- if(particleDisplay.left.category!==particleDisplay.right.category){
+ if(particleDisplay.left.category==='structure'||particleDisplay.right.category==='structure'){
   const warning=document.createElement('p');warning.className='density-scale-note';warning.textContent=s.mixedNote;
   explanation.append(warning);
  }
  if(comparison.left.material.phase==='gas'||comparison.right.material.phase==='gas'){
   const gasNote=document.createElement('p');gasNote.className='density-gas-note';gasNote.textContent=s.gasInfo;explanation.append(gasNote);
+ }
+ if(particleDisplay.left.category!=='structure'&&particleDisplay.right.category!=='structure'){
+  const scaleInfo=document.createElement('p');scaleInfo.className='density-scale-note';
+  scaleInfo.textContent=s.sharedScale;explanation.append(scaleInfo);
+ }
+ if(a==='argon'||b==='argon'){
+  const note=document.createElement('p');note.className='density-gas-note';note.textContent=s.argonNote;explanation.append(note);
  }
  const caution=document.getElementById('densityCaution');
  if(caution)caution.textContent=s.gasCaution;
