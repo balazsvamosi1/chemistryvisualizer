@@ -17,14 +17,16 @@ window.addEventListener('load',()=>{
      const canvas=document.getElementById(c),ctx=canvas.getContext('2d');
      if(!ctx)throw new Error('2D canvas unavailable '+c);
      const w=canvas.width,h=canvas.height,p=ctx.getImageData(0,0,w,h).data;
-     let count=0,minX=w,maxX=0,minY=h,maxY=0;
+     let count=0,minX=w,maxX=0,minY=h,maxY=0,nonbg=0,max=[0,0,0,0];
      for(let y=0;y<h;y+=2)for(let x=0;x<w;x+=2){
        const i=(y*w+x)*4;
+       if(p[i]!==11||p[i+1]!==32||p[i+2]!==50)nonbg++;
+       max[0]=Math.max(max[0],p[i]);max[1]=Math.max(max[1],p[i+1]);max[2]=Math.max(max[2],p[i+2]);max[3]=Math.max(max[3],p[i+3]);
        if(p[i]>215&&p[i+1]>225&&p[i+2]>230){
          count++;minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);
        }
      }
-     return{count,width:maxX-minX,height:maxY-minY};
+     return{count,nonbg,width:maxX-minX,height:maxY-minY,max,canvas:[w,h],rect:canvas.getBoundingClientRect().width};
    };
    const beforeA=sample('densityCanvasA'),beforeB=sample('densityCanvasB');
    if(beforeA.count<100||beforeB.count<100)throw new Error('Canvas blank: '+JSON.stringify({beforeA,beforeB}));
