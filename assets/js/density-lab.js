@@ -131,8 +131,17 @@ const s=Math.min(w/(dims[0]*1.85),h/(dims[1]*1.8))*1.38*relative*sliderScale;
     ctx.fillStyle=base;ctx.fill();ctx.strokeStyle='#072238';ctx.lineWidth=.8;ctx.stroke();
     continue;
    }
+   if(material.structure==='ionic'){
+    // One symbol represents a NaCl formula unit: paired Na+ and Cl- ions.
+    ctx.beginPath();ctx.arc(atom.x-2.8,atom.y,r*.62,0,2*Math.PI);
+    ctx.fillStyle='#96caed';ctx.fill();
+    ctx.beginPath();ctx.arc(atom.x+2.8,atom.y,r*.78,0,2*Math.PI);
+    ctx.fillStyle='#f0b979';ctx.fill();
+    ctx.strokeStyle='#072238';ctx.lineWidth=.8;ctx.stroke();
+    continue;
+   }
    ctx.beginPath();ctx.arc(atom.x,atom.y,r,0,2*Math.PI);
-   ctx.fillStyle=material.structure==='ionic'&&atom.type===1?'#f0b979':base;ctx.globalAlpha=.83+Math.min(.14,(atom.z+1)/9);ctx.fill();ctx.globalAlpha=1;
+   ctx.fillStyle=base;ctx.globalAlpha=.83+Math.min(.14,(atom.z+1)/9);ctx.fill();ctx.globalAlpha=1;
    ctx.strokeStyle='#072238';ctx.lineWidth=1.25;ctx.stroke();
   }
  }else{

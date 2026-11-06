@@ -52,7 +52,7 @@ const MATERIALS=Object.freeze([
  gas('methane','CH₄',16.043,5,['Metán (CH₄)','Methan (CH₄)','Methane (CH₄)'],'#b6e2aa'),
  gas('xenon','Xe',131.293,1,['Xenon (Xe)','Xenon (Xe)','Xenon (Xe)'],'#e5aeed'),
  gas('sulfurHexafluoride','SF₆',146.055,7,['Kén-hexafluorid (SF₆)','Schwefelhexafluorid (SF₆)','Sulfur hexafluoride (SF₆)'],'#d9f2a1')
-].map(m=>Object.freeze({...m,molarMass:m.molarMass??MOLAR_MASSES[m.id]??null}))));
+].map(m=>Object.freeze({...m,molarMass:m.molarMass??MOLAR_MASSES[m.id]??null})));
 
 const IDS=new Set(MATERIALS.map(m=>m.id));
 function material(id){return MATERIALS.find(m=>m.id===id)||null;}
