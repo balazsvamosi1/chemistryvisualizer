@@ -26,7 +26,17 @@ const strings={
    hcp:"Hatszöges, szorosan illeszkedő rétegek (HCP) egyszerűsített fémrácsa.",layered:"Grafit: szénatomokból álló rétegek, amelyek között nagyobb a távolság; ez nem molekularács.",diamond:"Gyémánt: háromdimenziós, tetraéderes szénatomháló szemléltetése."
   },
   water:'Vízben',floats:'úszna (átlagos sűrűsége kisebb a vízénél)',sinks:'elsüllyedne (átlagos sűrűsége nagyobb a vízénél)',dissolves:'oldódhat, ezért a süllyedés önmagában nem jó példa',notApplicable:'folyadékra vagy gázra nem ilyen egyszerűen értelmezhető',
-  caveat:'Az ábrák oktatási modellek, nem molekuladinamikai szimulációk vagy pontos kristályszerkezeti koordináták.'
+  caveat:'Az ábrák oktatási modellek, nem molekuladinamikai szimulációk vagy pontos kristályszerkezeti koordináták.',
+  advanced:"Haladó nézet: részecskeszám",
+  basicParticles:"Szemléltető pontok megjelenítése",
+  basicTitle:"Szemléltető pontok",
+  simpleUnit:"1 pont = ",
+  faintMass:"Egy halvány pont a teljes pontnál kevesebb tömeget jelez.",
+  basicNote:"Ez egyszerű sűrűségmodell, NEM valódi atomkép és NEM kvantumfizikai szimuláció. Minden pont ugyanakkora tömeget jelöl, nem egy atomot vagy molekulát.",
+  basicTip:"Azonos térfogatban több pont = nagyobb tömeg és sűrűség. Azonos tömegnél ugyanannyi pont kisebb kockában = nagyobb sűrűség.",
+  basicStructure:"A pontok egyforma tömegrészeket jelölnek. Számuk és sűrűségük a test tömegét és térfogatát szemlélteti, NEM a valódi atomok elrendezését.",
+  advancedNote:"Haladó szemléltetés: egy jel sok valódi atomot, molekulát vagy képletegységet képvisel. A rajz nem méretarányos és nem kvantumfizikai modell.",
+  advancedTip:"Haladó mód: a jelek száma moláris tömegből becsült részecskeszámmal arányos, ezért a nehezebb anyagban nem feltétlenül van több jel.",
  },
  de:{
   title:'Dichte – wie viel steckt im gleichen Raum?',intro:'Vergleiche zwei Stoffe. Ändere die Masse oder das Volumen und sieh dir ein vereinfachtes Modell des inneren Aufbaus an.',
@@ -48,7 +58,17 @@ const strings={
    hcp:"Vereinfachte hexagonal dichteste Kugelpackung (HCP) im Metall.",layered:"Graphit: Schichten aus Kohlenstoffatomen mit größeren Abständen zwischen den Schichten; kein Molekülgitter.",diamond:"Diamant: schematisches dreidimensionales tetraedrisches Netz aus Kohlenstoffatomen."
   },
   water:'In Wasser',floats:'würde schwimmen (mittlere Dichte kleiner als Wasser)',sinks:'würde sinken (mittlere Dichte größer als Wasser)',dissolves:'kann sich auflösen, daher ist Sinken kein gutes Beispiel',notApplicable:'für Flüssigkeiten oder Gase nicht so einfach vergleichbar',
-  caveat:'Didaktische Modelle, keine Molekulardynamik oder exakten Kristallkoordinaten.'
+  caveat:'Didaktische Modelle, keine Molekulardynamik oder exakten Kristallkoordinaten.',
+  advanced:"Erweitert: Teilchenzahl",
+  basicParticles:"Schematische Punkte anzeigen",
+  basicTitle:"Anschauliche Punkte",
+  simpleUnit:"1 Punkt = ",
+  faintMass:"Ein blasser Punkt steht für weniger als eine volle Punkte-Einheit.",
+  basicNote:"Ein einfaches Dichtemodell, KEIN Abbild echter Atome und KEINE quantenphysikalische Simulation. Jeder Punkt steht für dieselbe Masse, nicht für ein Atom oder Molekül.",
+  basicTip:"Gleiches Volumen: mehr Punkte bedeuten mehr Masse und höhere Dichte. Gleiche Masse: gleich viele Punkte im kleineren Körper bedeuten höhere Dichte.",
+  basicStructure:"Die Punkte stellen gleich schwere Stoffportionen dar, nicht die reale Anordnung von Atomen.",
+  advancedNote:"Erweiterte Darstellung: Ein Symbol steht für viele reale Atome, Moleküle oder Formeleinheiten. Weder maßstabsgetreu noch ein quantenphysikalisches Modell.",
+  advancedTip:"Im erweiterten Modus folgen die Symbolzahlen einer aus der molaren Masse abgeleiteten Teilchenzahl. Ein dichterer Stoff muss daher nicht mehr Symbole haben.",
  },
  en:{
   title:'Density – what fits into the same space?',intro:'Compare two materials. Change mass or volume, then look inside a simplified model of their particle arrangements.',
@@ -70,11 +90,21 @@ const strings={
    hcp:"Simplified hexagonal close-packed (HCP) metal layers.",layered:"Graphite: layered carbon atom networks, with wider spacing between layers; not individual molecules.",diamond:"Diamond: schematic three-dimensional tetrahedral carbon atom network."
   },
   water:'In water',floats:'would float (average density lower than water)',sinks:'would sink (average density higher than water)',dissolves:'may dissolve, so sinking is not a useful comparison',notApplicable:'not as straightforward for liquids or gases',
-  caveat:'Teaching illustrations only, not molecular dynamics or exact crystallographic coordinates.'
+  caveat:'Teaching illustrations only, not molecular dynamics or exact crystallographic coordinates.',
+  advanced:"Advanced: particle count",
+  basicParticles:"Show illustrative dots",
+  basicTitle:"Illustrative dots",
+  simpleUnit:"1 dot = ",
+  faintMass:"A faint dot represents less than one full dot of material.",
+  basicNote:"A simple density illustration, NOT a picture of real atoms and NOT a quantum-physics simulation. Every dot represents the same mass, not one atom or molecule.",
+  basicTip:"Same volume: more dots mean more mass and higher density. Same mass: the same number of dots in a smaller box means higher density.",
+  basicStructure:"Dots represent equal-mass portions of material, not actual atom positions or packing.",
+  advancedNote:"Advanced illustration: each symbol represents many real atoms, molecules, or formula units. It is not to scale and not a quantum-physics model.",
+  advancedTip:"In advanced mode, symbol counts follow estimated particle numbers from molar mass. Denser matter does not always have more symbols.",
  }
 };
 const ui={section:$('densitySection'),mode:$('densityMode'),shape:$('densityShape'),slider:$('densityQuantity'),display:$('densityQuantityValue'),
- A:$('densityMaterialA'),B:$('densityMaterialB'),particles:$('densityParticles'),
+ A:$('densityMaterialA'),B:$('densityMaterialB'),particles:$('densityParticles'),advanced:$('densityAdvanced'),
  canvases:[$('densityCanvasA'),$('densityCanvasB')],outputs:[$('densityResultA'),$('densityResultB')]};
 const pose={yaw:-.58,pitch:.32};let comparison,particleDisplay;
 const number=(n,max=2)=>new Intl.NumberFormat(lang()==='de'?'de-DE':lang()==='hu'?'hu-HU':'en-US',{maximumFractionDigits:max}).format(n);
@@ -108,11 +138,18 @@ const s=Math.min(w/(dims[0]*1.85),h/(dims[1]*1.8))*1.38*relative*sliderScale;
  ctx.fillStyle='rgba(85,157,205,.19)';
  for(const {p} of faces){ctx.beginPath();p.forEach((i,j)=>j?ctx.lineTo(v[i].x,v[i].y):ctx.moveTo(v[i].x,v[i].y));ctx.closePath();ctx.fill();}
  if(showParticles){
-  const material=body.material,p=engine.particleMarkers(material.id,plan.count);
+  const material=body.material,p=ui.advanced.checked?engine.particleMarkers(material.id,plan.count):engine.teachingMarkers(plan.count);
   const sorted=p.map(a=>({...project(a.x,a.y,a.z,w,h,s,...dims),type:a.type})).sort((a,b)=>a.z-b.z);
   const base=material.color;
   for(const atom of sorted){
    const symbolOpacity=plan.markerOpacity;
+   if(!ui.advanced.checked){
+    // A classroom dot means a constant MASS of bulk material, never an atom.
+    ctx.beginPath();ctx.arc(atom.x,atom.y,4.6,0,2*Math.PI);
+    ctx.fillStyle=base;ctx.globalAlpha=.92*symbolOpacity;ctx.fill();ctx.globalAlpha=1;
+    ctx.strokeStyle='#072238';ctx.lineWidth=1.1;ctx.stroke();
+    continue;
+   }
    const r=(material.structure==='gas'?5.0:material.structure==='ionic'?6.7:5.8)*Math.min(1,Math.max(.55,relative));
    if(material.structure==='gas'){
     // Molecular icons are schematic; each point represents one molecule, not one atom.
@@ -163,7 +200,7 @@ function waterWord(id,s){const state=engine.waterResult(id);return state==='floa
 function render(){
  const s=strings[lang()],p=ui.mode.value==='mass'?'mass':'volume',v=Number(ui.slider.value),a=ui.A.value,b=ui.B.value,shape=ui.shape.value;
  comparison=engine.compute(a,b,p,v,shape);
- particleDisplay=engine.particlePlan(comparison);
+ particleDisplay=ui.advanced.checked?engine.particlePlan(comparison):engine.teachingPlan(comparison);
  const qtyLabel=$( 'densityQuantityLabel' );qtyLabel.textContent=p==='volume'?s.quantityVolume:s.quantityMass;
  const volumes=[comparison.left.volume,comparison.right.volume],masses=[comparison.left.mass,comparison.right.mass];
  const values=p==='volume'?masses:volumes,maxValue=Math.max(...values),minValue=Math.min(...values);
@@ -183,7 +220,7 @@ function render(){
    [s.dimensions,d+' cm'],
    [s.condition,body.material.condition]
   ];
-  if(body.material.phase==='gas'&&Number.isFinite(body.material.molarMass))
+  if(ui.advanced.checked&&body.material.phase==='gas'&&Number.isFinite(body.material.molarMass))
    info.push([s.molarMass,number(body.material.molarMass,3)+' g/mol']);
   // Keep a constant density visible next to the chosen material, independent
   // of the mass/volume slider. It is also present in every dropdown option.
@@ -201,34 +238,42 @@ function render(){
   $('densityMeterValue'+tag).textContent=(p==='volume'?massString(body.mass):volumeString(body.volume))+' · '+number(percent,2)+'%'+s.ofLargest;
   const specimen=i===0?particleDisplay.left:particleDisplay.right;
   const markerInfo=$('densityParticleInfo'+tag);
-  const details=specimen.category==='structure'?
-    s.woodNote:
+  if(ui.advanced.checked){
+   const details=specimen.category==='structure'?s.woodNote:
     s.perMark+' '+number(specimen.perMarker,specimen.perMarker<.01?5:3)+' '+s.mol+
     ' · '+s.singleMass+': '+number(body.material.molarMass,3)+' '+s.atomicUnit;
-  const markerCountText=specimen.approximate?
+   const markerCountText=specimen.approximate?
     s.fractional+': '+number(specimen.equivalent,3)+' '+s.mark+' · '+s.faint:
     s.particleMarks+': '+specimen.count+' '+s.mark;
-  markerInfo.textContent=markerCountText+' · '+details;
+   markerInfo.textContent=markerCountText+' · '+details;
+  }else{
+   const amount=s.simpleUnit+massString(specimen.gramsPerMarker);
+   markerInfo.textContent=specimen.approximate?
+     s.basicTitle+': '+number(specimen.equivalent,3)+' · '+amount+' · '+s.faintMass:
+     s.basicTitle+': '+specimen.count+' · '+amount;
+  }
   markerInfo.setAttribute('data-markers',String(specimen.count));
   markerInfo.setAttribute('data-marker-equivalent',String(specimen.equivalent));
   markerInfo.setAttribute('data-marker-scale',String(specimen.perMarker));
+  markerInfo.setAttribute('data-visual-mode',ui.advanced.checked?'advanced':'classroom');
   draw(ui.canvases[i],body,ui.particles.checked,specimen);
  });
  const explanation=$('densityExplanation');explanation.replaceChildren();
  const heading=document.createElement('strong');heading.textContent=s.formula;explanation.append(heading);
+ const tutorial=document.createElement('p');tutorial.textContent=ui.advanced.checked?s.advancedTip:s.basicTip;explanation.append(tutorial);
  const p1=document.createElement('p');p1.textContent=p==='volume'?s.eqVolume:s.eqMass;explanation.append(p1);
  const same=Math.abs(comparison.densityRatio-1)<1e-12;
  const denser=comparison.left.density>=comparison.right.density?comparison.left:comparison.right,less=comparison.left.density>=comparison.right.density?comparison.right:comparison.left;
  const ratio=document.createElement('p');ratio.textContent=same?s.equal:denser.material.labels[li()]+' '+number(denser.density/less.density,1)+s.times+less.material.labels[li()]+'.';explanation.append(ratio);
  const note=document.createElement('p');note.className='density-scale-note';note.textContent=s.notScale;explanation.append(note);
- if(particleDisplay.left.category==='structure'||particleDisplay.right.category==='structure'){
+ if(ui.advanced.checked&&(particleDisplay.left.category==='structure'||particleDisplay.right.category==='structure')){
   const warning=document.createElement('p');warning.className='density-scale-note';warning.textContent=s.mixedNote;
   explanation.append(warning);
  }
- if(comparison.left.material.phase==='gas'||comparison.right.material.phase==='gas'){
+ if(ui.advanced.checked&&(comparison.left.material.phase==='gas'||comparison.right.material.phase==='gas')){
   const gasNote=document.createElement('p');gasNote.className='density-gas-note';gasNote.textContent=s.gasInfo;explanation.append(gasNote);
  }
- if(particleDisplay.left.category!=='structure'&&particleDisplay.right.category!=='structure'){
+ if(ui.advanced.checked&&particleDisplay.left.category!=='structure'&&particleDisplay.right.category!=='structure'){
   const scaleInfo=document.createElement('p');scaleInfo.className='density-scale-note';
   scaleInfo.textContent=s.sharedScale;explanation.append(scaleInfo);
  }
@@ -237,8 +282,14 @@ function render(){
  }
  const caution=document.getElementById('densityCaution');
  if(caution)caution.textContent=s.gasCaution;
- $('densityStructureA').textContent=s.struct[comparison.left.material.structure];
- $('densityStructureB').textContent=s.struct[comparison.right.material.structure];
+ $('densityStructureA').textContent=ui.advanced.checked?s.struct[comparison.left.material.structure]:s.basicStructure;
+ $('densityStructureB').textContent=ui.advanced.checked?s.struct[comparison.right.material.structure]:s.basicStructure;
+ $('densityStructureTitleA').textContent=ui.advanced.checked?s.structure:s.basicTitle;
+ $('densityStructureTitleB').textContent=ui.advanced.checked?s.structure:s.basicTitle;
+ $('densityParticlesLabel').textContent=ui.advanced.checked?s.particles:s.basicParticles;
+ $('densitySchematic').textContent=ui.advanced.checked?s.advancedNote:s.basicNote;
+ $('densityModelInfo').textContent=ui.advanced.checked?s.advancedNote:s.basicNote;
+ $('densityDisclaimer').textContent=ui.advanced.checked?s.advancedNote:s.basicNote;
  $('densityWaterA').textContent=s.water+': '+waterWord(a,s);
  $('densityWaterB').textContent=s.water+': '+waterWord(b,s);
 }
@@ -246,8 +297,8 @@ function localize(){
  const s=strings[lang()];$('densityTab').textContent=lang()==='hu'?'Sűrűség':lang()==='de'?'Dichte':'Density';
  for(const [id,v] of [
  ['densityTitle',s.title],['densityIntro',s.intro],['densityModeLabel',s.mode],['densityShapeLabel',s.shape],
- ['densityLabelA',s.chooseA],['densityLabelB',s.chooseB],['densityParticlesLabel',s.particles],
- ['densityCompareTitle',s.compare],['densityDragHint',s.drag],['densitySchematic',s.schematic],['densitySource',s.source],
+ ['densityLabelA',s.chooseA],['densityLabelB',s.chooseB],['densityAdvancedLabel',s.advanced],
+ ['densityCompareTitle',s.compare],['densityDragHint',s.drag],['densitySource',s.source],
  ['densityStructureTitleA',s.structure],['densityStructureTitleB',s.structure],['densityDisclaimer',s.caveat]
  ])$(id).textContent=v;
  for(const [id,value] of [['densityVolumeOption',s.volume],['densityMassOption',s.mass],['densityCubeOption',s.cube],['densityCuboidOption',s.cuboid],
@@ -275,7 +326,7 @@ function changedMode(){
  ui.slider.min=isMass?'10':'100';ui.slider.max='5000';ui.slider.step=isMass?'10':'100';
  ui.slider.value=isMass?'1000':'1000';render();
 }
-for(const input of [ui.mode,ui.shape,ui.A,ui.B,ui.particles])input.addEventListener('change',input===ui.mode?changedMode:render);
+for(const input of [ui.mode,ui.shape,ui.A,ui.B,ui.particles,ui.advanced])input.addEventListener('change',input===ui.mode?changedMode:render);
 ui.slider.addEventListener('input',render);
 const presets=[['water','ice'],['water','aluminum'],['iron','copper'],['air','water'],['lead','aluminum'],['magnesium','lead'],['helium','carbonDioxide'],['graphite','diamond'],['hydrogen','sulfurHexafluoride']];
 presets.forEach(([a,b],i)=>$('densityPreset'+(i+1)).addEventListener('click',()=>{ui.A.value=a;ui.B.value=b;render();}));
@@ -296,5 +347,5 @@ if(typeof ResizeObserver!=='undefined'){
 window.addEventListener('resize',()=>{if(!ui.section.classList.contains('hidden'))render();});
 for(const id of ['hu','de','en'])$(id)?.addEventListener('click',()=>queueMicrotask(localize));
 localize();
-window.ChemistryDensityLab={render,localize,getComparison:()=>comparison};
+window.ChemistryDensityLab={render,localize,getComparison:()=>comparison,getDisplayPlan:()=>particleDisplay};
 })();
