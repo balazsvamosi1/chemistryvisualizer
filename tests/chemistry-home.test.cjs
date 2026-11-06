@@ -3,7 +3,7 @@ const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
 const source=read('assets/js/chemistry-home.js');
 function boot(){
  let language='hu',counter=0;
- const names=['homeTab','homeSection','hu','de','en','periodTab','moleculeTab','materialsTab','bunsenTab','stoichTab','acidBaseTab','curriculumTab','gameTab','mazeTab','physicsTab','specTab'];
+ const names=['homeTab','homeSection','hu','de','en','periodTab','moleculeTab','materialsTab','densityTab','bunsenTab','stoichTab','acidBaseTab','curriculumTab','gameTab','mazeTab','physicsTab','specTab'];
  const nodes={};
  function element(id='new-'+counter++){
   return {id,textContent:'',className:'',children:[],listeners:{},type:'',classList:{contains(c){return c==='active'&&id===language;}},
@@ -25,7 +25,7 @@ test('new home page is the initial view and is in the main navigation',()=>{
  assert.match(html,/<button class="active" id="homeTab"/);
  assert.match(html,/id="homeSection"/);
  assert.match(html,/id="periodSection"/);
- assert.match(html,/assets\/js\/chemistry-home\.js\?v=0\.2105/);
+ assert.match(html,/assets\/js\/chemistry-home\.js\?v=0\.2106/);
  assert.match(html,/assets\/css\/chemistry-home\.css\?v=0\.2105/);
  assert.match(nav,/selected='homeTab'/);
  assert.match(nav,/homeTab:'homeSection'/);
@@ -37,15 +37,15 @@ test('home explains scope and limitations in all three languages',()=>{
   setLanguage(language);
   const txt=walk(nodes.homeSection).map(x=>x.textContent).join(' | ');
   for(const fragment of examples[language])assert(txt.includes(fragment),language+': '+fragment);
-  assert.equal(walk(nodes.homeSection).filter(n=>n.className==='home-card').length,11);
+  assert.equal(walk(nodes.homeSection).filter(n=>n.className==='home-card').length,12);
  }
 });
 test('direct home buttons open their corresponding existing tabs',()=>{
  const {nodes,walk,routes}=boot();
  const buttons=walk(nodes.homeSection).filter(n=>n.className==='home-open');
- assert.equal(buttons.length,11);
+ assert.equal(buttons.length,12);
  buttons.forEach(button=>button.click());
- const names=['periodTab','moleculeTab','materialsTab','bunsenTab','stoichTab','acidBaseTab','curriculumTab','gameTab','mazeTab','physicsTab','specTab'];
+ const names=['periodTab','moleculeTab','materialsTab','densityTab','bunsenTab','stoichTab','acidBaseTab','curriculumTab','gameTab','mazeTab','physicsTab','specTab'];
  assert.deepEqual(routes.filter(x=>x.endsWith('Tab')&&!x.startsWith('nav:')),names);
  assert.deepEqual(routes.filter(x=>x.startsWith('nav:')),names.map(x=>'nav:'+x));
 });
