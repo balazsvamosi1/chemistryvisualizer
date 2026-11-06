@@ -82,7 +82,7 @@ function project(x,y,z,w,h,scale,dx,dy,dz){
  x=(x-.5)*dx;y=(y-.5)*dy;z=(z-.5)*dz;
  const a=x*Math.cos(pose.yaw)-z*Math.sin(pose.y),b=x*Math.sin(pose.yaw)+z*Math.cos(pose.yaw);
  const v=y*Math.cos(pose.pitch)-b*Math.sin(pose.pitch),depth=y*Math.sin(pose.pitch)+b*Math.cos(pose.pitch);
- return {x:w/2+a*scale,y:h/2-v*scale,z:depth};
+ return {x:w/2+a*scale,y:h/2-v*scale,z:depth,debugA:a,debugB:b,debugW:w,debugScale:scale,debugYaw:pose.yaw};
 }
 function draw(canvas,body,showParticles){
  const rect=canvas.getBoundingClientRect(),w=Math.max(230,rect.width||320),h=282,dpr=Math.min(2,window.devicePixelRatio||1);
