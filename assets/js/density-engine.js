@@ -14,6 +14,14 @@ const gas=(id,formula,molarMass,atoms,labels,color)=>({
  id,rho:idealGasDensity(molarMass),phase:'gas',structure:'gas',condition:'20°C, 1 atm',
  formula,molarMass,atoms,labels,color
 });
+const AVOGADRO=6.02214076e23;
+const MOLAR_MASSES=Object.freeze({
+ water:18.01528,ice:18.01528,ethanol:46.06844,
+ aluminum:26.9815385,iron:55.845,copper:63.546,gold:196.96657,
+ salt:58.44277,lead:207.2,magnesium:24.305,zinc:65.38,silver:107.8682,
+ tungsten:183.84,osmium:190.23,graphite:12.011,diamond:12.011
+});
+// Wood is heterogeneous: it has no meaningful single particle molar mass.
 const MATERIALS=Object.freeze([
  {id:'water',rho:0.998,phase:'liquid',structure:'liquid',condition:'20°C',labels:['Víz','Wasser','Water'],color:'#58c5f5'},
  {id:'ice',rho:0.917,phase:'solid',structure:'ice',condition:'0°C',labels:['Jég','Eis','Ice'],color:'#b6e9fa'},
@@ -44,7 +52,8 @@ const MATERIALS=Object.freeze([
  gas('methane','CH₄',16.043,5,['Metán (CH₄)','Methan (CH₄)','Methane (CH₄)'],'#b6e2aa'),
  gas('xenon','Xe',131.293,1,['Xenon (Xe)','Xenon (Xe)','Xenon (Xe)'],'#e5aeed'),
  gas('sulfurHexafluoride','SF₆',146.055,7,['Kén-hexafluorid (SF₆)','Schwefelhexafluorid (SF₆)','Sulfur hexafluoride (SF₆)'],'#d9f2a1')
-]);
+].map(m=>Object.freeze({...m,molarMass:m.molarMass??MOLAR_MASSES[m.id]??null}))));
+
 const IDS=new Set(MATERIALS.map(m=>m.id));
 function material(id){return MATERIALS.find(m=>m.id===id)||null;}
 function finitePositive(value){return typeof value==='number'&&Number.isFinite(value)&&value>0;}
@@ -121,5 +130,73 @@ function particles(id){
  }
  return out;
 }
-return Object.freeze({MATERIALS,material,compute,dimensions,particles,waterResult,idealGasDensity});
+
+const MAX_MARKERS=250;
+// Each dot represents a known (rounded) amount of substance, NOT one literal atom.
+// Use one common legend scale within each phase class; gases need a microscope zoom.
+function particleCategory(m){return m.phase==='gas'?'gas':m.id==='wood'?'structure':'condensed';}
+function particleMoles(body){return body.material.molarMass?body.mass/body.material.molarMass:null;}
+function niceScale(minimum){
+ if(!(minimum>0))return 1;
+ const exponent=Math.floor(Math.log10(minimum)),base=10**exponent;
+ return [1,2,5,10].map(x=>x*base).find(x=>x>=minimum-1e-12)||10*base;
+}
+function particlePlan(comparison){
+ const bodies=[comparison.left,comparison.right],plans={},scales={};
+ for(const category of ['condensed','gas','structure']){
+  const sameCategory=bodies.filter(b=>particleCategory(b.material)===category);
+  if(!sameCategory.length)continue;
+  const reference=Math.max(...sameCategory.map(b=>{
+   const referenceMass=comparison.mode==='mass'?5000:5000*b.density;
+   return category==='structure'?referenceMass/b.density/25:referenceMass/b.material.molarMass;
+  }));
+  // A single marker represents one or more moles, with a sensible rounded scale.
+  // For wood the marker is a schematic cell feature per 25 cm³, not a molecule.
+  scales[category]=niceScale(reference/MAX_MARKERS);
+ }
+ for(const body of bodies){
+  const category=particleCategory(body.material);
+  const units=category==='structure'?body.volume/25:particleMoles(body);
+  const perMarker=scales[category];
+  const exact=units/perMarker,rounded=Math.round(exact);
+  const count=Math.min(MAX_MARKERS,Math.max(1,rounded));
+  plans[body===comparison.left?'left':'right']={
+   count,units,moles:particleMoles(body),perMarker,category,
+   approximate:rounded===0,capped:rounded>MAX_MARKERS,
+   // True particle count; UI formats in scientific notation instead of listing atoms.
+   particleCount:particleMoles(body)===null?null:particleMoles(body)*AVOGADRO
+  };
+ }
+ return Object.freeze({left:plans.left,right:plans.right,scales:Object.freeze(scales)});
+}
+function particleMarkers(id,count){
+ const m=material(id);if(!m)throw new RangeError('Unknown material');
+ if(!Number.isSafeInteger(count)||count<1||count>MAX_MARKERS)throw new RangeError('Invalid marker count');
+ const structured=!['gas','liquid','porous'].includes(m.structure);
+ const side=Math.ceil(Math.cbrt(count*1.28));
+ const out=[];
+ if(structured){
+  const sites=[];
+  for(let x=0;x<side;x++)for(let y=0;y<side;y++)for(let z=0;z<side;z++){
+   const stagger=m.structure==='hcp'||m.structure==='layered'?((y+z)%2)*.25:0;
+   const px=Math.min(.94,(x+.5+stagger)/side),py=(y+.5)/side,pz=(z+.5)/side;
+   sites.push({x:px,y:py,z:pz,type:m.structure==='ionic'?(x+y+z)%2:0});
+  }
+  let state=Array.from(id).reduce((a,ch)=>(Math.imul(a,33)+ch.charCodeAt(0))>>>0,7)+count;
+  for(let i=sites.length-1;i>0;i--){
+   state=(Math.imul(state,1664525)+1013904223)>>>0;
+   const j=state%(i+1);[sites[i],sites[j]]=[sites[j],sites[i]];
+  }
+  return sites.slice(0,count);
+ }
+ const halton=(n,base)=>{let f=1,result=0;while(n>0){f/=base;result+=f*(n%base);n=Math.floor(n/base);}return result;};
+ const offset=Array.from(id).reduce((a,ch)=>a+ch.charCodeAt(0),0);
+ for(let i=0;i<count;i++){
+  const k=i+offset%113+1;
+  out.push({x:.08+.84*halton(k,2),y:.08+.84*halton(k,3),z:.08+.84*halton(k,5),type:0});
+ }
+ return out;
+}
+
+return Object.freeze({MATERIALS,material,compute,dimensions,particles,waterResult,idealGasDensity,particlePlan,particleMarkers,particleMoles,AVOGADRO,MAX_MARKERS});
 });
