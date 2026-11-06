@@ -26,7 +26,7 @@ const strings={
    hcp:"Hatszöges, szorosan illeszkedő rétegek (HCP) egyszerűsített fémrácsa.",layered:"Grafit: szénatomokból álló rétegek, amelyek között nagyobb a távolság; ez nem molekularács.",diamond:"Gyémánt: háromdimenziós, tetraéderes szénatomháló szemléltetése."
   },
   water:'Vízben',floats:'úszna (átlagos sűrűsége kisebb a vízénél)',sinks:'elsüllyedne (átlagos sűrűsége nagyobb a vízénél)',dissolves:'oldódhat, ezért a süllyedés önmagában nem jó példa',notApplicable:'folyadékra vagy gázra nem ilyen egyszerűen értelmezhető',
-  caveat:'Az ábrák oktatási modellek, nem molekuladinamikai szimulációk vagy pontos kristályszerkezeti koordináták.'
+  caveat:'Az ábrák oktatási modellek, nem molekuladinamikai szimulációk vagy pontos kristályszerkezeti koordináták.',
   advanced:"Haladó nézet: részecskeszám",
   basicParticles:"Szemléltető pontok megjelenítése",
   basicTitle:"Szemléltető pontok",
@@ -58,7 +58,7 @@ const strings={
    hcp:"Vereinfachte hexagonal dichteste Kugelpackung (HCP) im Metall.",layered:"Graphit: Schichten aus Kohlenstoffatomen mit größeren Abständen zwischen den Schichten; kein Molekülgitter.",diamond:"Diamant: schematisches dreidimensionales tetraedrisches Netz aus Kohlenstoffatomen."
   },
   water:'In Wasser',floats:'würde schwimmen (mittlere Dichte kleiner als Wasser)',sinks:'würde sinken (mittlere Dichte größer als Wasser)',dissolves:'kann sich auflösen, daher ist Sinken kein gutes Beispiel',notApplicable:'für Flüssigkeiten oder Gase nicht so einfach vergleichbar',
-  caveat:'Didaktische Modelle, keine Molekulardynamik oder exakten Kristallkoordinaten.'
+  caveat:'Didaktische Modelle, keine Molekulardynamik oder exakten Kristallkoordinaten.',
   advanced:"Erweitert: Teilchenzahl",
   basicParticles:"Schematische Punkte anzeigen",
   basicTitle:"Anschauliche Punkte",
@@ -90,7 +90,7 @@ const strings={
    hcp:"Simplified hexagonal close-packed (HCP) metal layers.",layered:"Graphite: layered carbon atom networks, with wider spacing between layers; not individual molecules.",diamond:"Diamond: schematic three-dimensional tetrahedral carbon atom network."
   },
   water:'In water',floats:'would float (average density lower than water)',sinks:'would sink (average density higher than water)',dissolves:'may dissolve, so sinking is not a useful comparison',notApplicable:'not as straightforward for liquids or gases',
-  caveat:'Teaching illustrations only, not molecular dynamics or exact crystallographic coordinates.'
+  caveat:'Teaching illustrations only, not molecular dynamics or exact crystallographic coordinates.',
   advanced:"Advanced: particle count",
   basicParticles:"Show illustrative dots",
   basicTitle:"Illustrative dots",
