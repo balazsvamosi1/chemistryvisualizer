@@ -129,10 +129,10 @@ function render(){
  const values=p==='volume'?masses:volumes,maxValue=Math.max(...values),minValue=Math.min(...values);
  const larger=values[0]>=values[1]?comparison.left:comparison.right;
  const smaller=values[0]>=values[1]?comparison.right:comparison.left;
- const ratio=maxValue/minValue;
+ const comparisonRatio=maxValue/minValue;
  const headline=$('densityComparisonLead');
- headline.textContent=Math.abs(ratio-1)<1e-10?s.summaryEqual:
-   (p==='volume'?s.summaryMass:s.summaryVolume)+larger.material.labels[li()]+' '+number(ratio,2)+
+ headline.textContent=Math.abs(comparisonRatio-1)<1e-10?s.summaryEqual:
+   (p==='volume'?s.summaryMass:s.summaryVolume)+larger.material.labels[li()]+' '+number(comparisonRatio,2)+
    (p==='volume'?s.summaryMassEnd:s.summaryVolumeEnd)+smaller.material.labels[li()]+'.';
  ui.display.textContent=number(v,0)+(p==='volume'?' cm³':' g');
  comparison&&[comparison.left,comparison.right].forEach((body,i)=>{
