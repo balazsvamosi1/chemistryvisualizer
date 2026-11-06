@@ -1,6 +1,16 @@
-# 3D Chemistry Lab — Beta 0.2108
+# 3D Chemistry Lab — Beta 0.2109
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
+
+## Beta 0.2109 – 7–8th-grade density materials
+- Expanded Density Lab from **10 to 27 substances**, grouped as solids, liquids and gases. Added lead (Pb), magnesium, zinc, silver, tungsten, osmium, graphite and diamond; plus hydrogen, helium, nitrogen, oxygen, carbon dioxide, argon, methane, xenon and sulfur hexafluoride.
+- Gas densities are estimated consistently using `ρ = pM/(RT)` at 20°C and 1 atm. Display gas mass in g/L as well as g/cm³, and the molar mass, with explicit ideal-gas approximations.
+- Two carbon allotropes clarify how the *same element* can have different density; heavy metals offer interesting volume comparisons.
+- Added simple 3D HCP, layered graphite, and diamond-network pictures, plus small molecular icons with fixed molecule count for gases at the same pressure and temperature. These remain schematic rather than atomically exact.
+- Added five further compare-buttons, localized material groupings, learning notes, and safety warnings for lead and gases, with HU/DE/EN support.
+- Added physics/math, gas, material, UI and Chromium regression checks; no CDN or server dependency. GitHub Pages remains supported.
+- Solid density source examples: [RSC periodic table](https://periodic-table.rsc.org/) and [PubChem Periodic Table](https://pubchem.ncbi.nlm.nih.gov/periodic-table/density/). Gas reference: ideal gas equation, as in [OpenStax Chemistry](https://openstax.org/books/chemistry/pages/9-3-stoichiometry-of-gaseous-substances-mixtures-and-reactions).
+- Approximate values vary with reference conditions; no claim of gas properties at high pressure or non-standard temperature. All gases are depicted for classroom understanding, not physical experiments.
 
 ## Beta 0.2108 – visually comparable density and volume
 - Added prominent, mode-specific, proportional **mass bars** (same volume) and **volume bars** (same mass), with exact numeric values and HU/DE/EN explanations.
@@ -34,9 +44,9 @@ A modular browser-based chemistry laboratory and ten-level Chemistry Quest educa
 ## Version numbering
 
 - **First release:** `0.01`.
-- **Current release:** `0.2108`. Future Chemistry Lab public versions will remain below `1.0`.
+- **Current release:** `0.2109`. Future Chemistry Lab public versions will remain below `1.0`.
 - **Historical convention:** old `A.B.C` release labels become `0.ABBC`, where A is one digit, B is zero-padded to two digits, and C is one digit. Examples: `1.9.7 → 0.1097`, `2.9.8 → 0.2098`, `2.10.0 → 0.2100`, `2.10.2 → 0.2102`. If C was omitted, use zero: `1.5 → 0.1050`. The original `0.01` is preserved unchanged.
-- **Next version:** `0.2109`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
+- **Next version:** `0.2110`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
 - Older technical asset cache keys (such as `?v=2.1.7`) and third-party dependency/API versions are **not** changed: they are not release labels.
 
 ## Beta 0.2103 — Arcade maze and renewable resources (2026-11-04)
