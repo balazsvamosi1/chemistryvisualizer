@@ -33,3 +33,12 @@
 .density-science-note{font-size:14px;line-height:1.6;padding:11px 13px;margin:9px 0;background:#152c3f;border:1px solid #3f576c;border-radius:8px}
 .density-disclaimer{color:#bfd2e1;font-size:13px;margin:12px 0}
 @media(max-width:680px){.density-comparison{grid-template-columns:1fr}.density-card{padding:12px}.density-canvas{height:270px}.density-controls{grid-template-columns:1fr}#densitySection{padding:12px}}
+
+/* Beta 0.2108: comparison is explicit even when particles look similar. */
+.density-comparison-lead{font-size:clamp(16px,2vw,20px);font-weight:750;line-height:1.55;background:#163f58;color:#f0fcff;border:2px solid #78cfe4;padding:13px 17px;border-radius:12px;margin:16px 0}
+.density-meter{display:grid;gap:8px;padding:11px 12px;background:#102e44;border:1px solid #426781;border-radius:10px;margin:12px 0}
+.density-meter-heading{display:flex;align-items:baseline;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.density-meter-heading strong{font-size:15px}
+.density-meter-heading span{font-size:13px;color:#c5eaf3;overflow-wrap:anywhere}
+.density-meter-track{width:100%;height:26px;border-radius:7px;background:#071b2c;border:1px solid #66839b;overflow:hidden}
+.density-meter-fill{height:100%;min-width:1px;border-radius:6px;transition:width .22s ease-out,background-color .22s ease-out}

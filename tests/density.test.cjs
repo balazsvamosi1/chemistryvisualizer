@@ -71,9 +71,15 @@ test('browser UI boots without backend, renders both samples and reacts to contr
  let result=win.ChemistryDensityLab.getComparison();
  assert.equal(result.left.mass,998);assert.equal(result.right.mass,2700);
  assert(nodes.get('densityResultA').children.length>=5);
+ assert.equal(nodes.get('densityMeterFillA').style.width,'36.963%');
+ assert.equal(nodes.get('densityMeterFillB').style.width,'100.000%');
+ assert(nodes.get('densityComparisonLead').textContent.includes('2,71'));
  nodes.get('densityMode').value='mass';nodes.get('densityMode').emit('change');
  result=win.ChemistryDensityLab.getComparison();
  assert.equal(result.left.mass,1000);assert.equal(result.right.mass,1000);
+ assert.equal(nodes.get('densityMeterFillA').style.width,'100.000%');
+ assert.equal(nodes.get('densityMeterFillB').style.width,'36.963%');
+ assert(nodes.get('densityComparisonLead').textContent.includes('térfogatú'));
  nodes.get('densityPreset1').emit('click');
  assert.equal(win.ChemistryDensityLab.getComparison().right.id,'ice');
  nodes.get('densityShape').value='cuboid';nodes.get('densityShape').emit('change');
