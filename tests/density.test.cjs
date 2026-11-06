@@ -71,10 +71,27 @@ test('equal-volume gases have approximately equal molecule counts under the idea
  assert.equal(p.left.category,'gas');
  assert(p.left.perMarker<1);
 });
-test('gas and condensed-phase comparison uses separate zoom, rather than false direct count comparison',()=>{
+test('water and argon use one common physical particle scale',()=>{
+ const comparison=E.compute('water','argon','volume',5000),p=E.particlePlan(comparison);
+ assert.equal(p.left.perMarker,p.right.perMarker);
+ assert(p.left.count>80);
+ assert.equal(p.right.count,1);
+ assert(p.right.approximate);
+ assert(p.right.equivalent<.5);
+ assert(p.right.markerOpacity<=.32);
+ assert(p.left.moles/p.right.moles>1300&&p.left.moles/p.right.moles<1400);
+ assert(Math.abs(comparison.left.density/comparison.right.density-601)<3);
+});
+test('gas and condensed matter share the same moles-per-symbol scale',()=>{
  const p=E.particlePlan(E.compute('hydrogen','lead','volume',1000));
  assert.notEqual(p.left.category,p.right.category);
- assert.notEqual(p.left.perMarker,p.right.perMarker);
+ assert.equal(p.left.perMarker,p.right.perMarker);
+});
+test('argon and helium show equal marker counts for equal gas volumes',()=>{
+ const p=E.particlePlan(E.compute('argon','helium','volume',5000));
+ assert.equal(p.left.perMarker,p.right.perMarker);
+ assert.equal(p.left.count,p.right.count);
+ assert(p.left.count>30);
 });
 test('representative particle positions are deterministic, bounded, and count-controlled',()=>{
  for(const id of ['water','lead','salt','diamond','helium','wood']){
@@ -170,6 +187,13 @@ test('browser UI boots without backend, renders both samples and reacts to contr
  nodes.get('densityPreset7').emit('click');
  assert.equal(win.ChemistryDensityLab.getComparison().left.id,'helium');
  assert.equal(win.ChemistryDensityLab.getComparison().right.id,'carbonDioxide');
+ nodes.get('densityMaterialA').value='water';nodes.get('densityMaterialB').value='argon';
+ nodes.get('densityMode').value='volume';nodes.get('densityMode').emit('change');
+ assert(nodes.get('densityParticleInfoB').textContent.includes('Részecskejel-egyenérték'));
+ assert(nodes.get('densityExplanation').children.some(child=>child.textContent?.includes('Közös részecskeszámskála')));
+ assert(nodes.get('densityExplanation').children.some(child=>child.textContent?.includes('0,001661')));
+ nodes.get('densityMaterialA').value='helium';nodes.get('densityMaterialB').value='carbonDioxide';
+ nodes.get('densityMode').emit('change');
  assert.match(nodes.get('densitySelectedA').textContent,/0,00016\d+ g\/cm³/);
  assert(nodes.get('densitySelectedB').textContent.endsWith('g/cm³'));
  assert(nodes.get('densityExplanation').children.some(child=>child.className==='density-gas-note'));

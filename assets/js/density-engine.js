@@ -133,7 +133,7 @@ function particles(id){
 
 const MAX_MARKERS=250;
 // Each dot represents a known (rounded) amount of substance, NOT one literal atom.
-// Use one common legend scale within each phase class; gases need a microscope zoom.
+// Use one common physical particle count scale across gases, liquids and solids.
 function particleCategory(m){return m.phase==='gas'?'gas':m.id==='wood'?'structure':'condensed';}
 function particleMoles(body){return body.material.molarMass?body.mass/body.material.molarMass:null;}
 function niceScale(minimum){
@@ -143,32 +143,41 @@ function niceScale(minimum){
 }
 function particlePlan(comparison){
  const bodies=[comparison.left,comparison.right],plans={},scales={};
- for(const category of ['condensed','gas','structure']){
-  const sameCategory=bodies.filter(b=>particleCategory(b.material)===category);
-  if(!sameCategory.length)continue;
-  const reference=Math.max(...sameCategory.map(b=>{
-   const referenceMass=comparison.mode==='mass'?5000:5000*b.density;
-   return category==='structure'?referenceMass/b.density/25:referenceMass/b.material.molarMass;
-  }));
-  // A single marker represents one or more moles, with a sensible rounded scale.
-  // For wood the marker is a schematic cell feature per 25 cm³, not a molecule.
-  scales[category]=niceScale(reference/MAX_MARKERS);
- }
- for(const body of bodies){
+ // A marker is always the SAME number of physical particle units (moles)
+ // in BOTH specimens, even if one is a gas and the other is a solid.
+ // Choosing a different scale for gases makes them falsely look denser.
+ const molecular=bodies.filter(body=>particleCategory(body.material)!=='structure');
+ const referenceMoles=Math.max(0,...molecular.map(body=>{
+  const upperMass=comparison.mode==='mass'?5000:5000*body.density;
+  return upperMass/body.material.molarMass;
+ }));
+ const sharedScale=niceScale(referenceMoles/MAX_MARKERS);
+ scales.condensed=sharedScale;
+ scales.gas=sharedScale;
+ const wood=bodies.filter(body=>particleCategory(body.material)==='structure');
+ scales.structure=wood.length?niceScale(Math.max(...wood.map(body=>
+  (comparison.mode==='mass'?5000/body.density:5000)/25
+ ))/MAX_MARKERS):null;
+ for(const [index,body] of bodies.entries()){
   const category=particleCategory(body.material);
   const units=category==='structure'?body.volume/25:particleMoles(body);
-  const perMarker=scales[category];
-  const exact=units/perMarker,rounded=Math.round(exact);
+  const perMarker=category==='structure'?scales.structure:sharedScale;
+  const equivalent=units/perMarker;
+  const rounded=Math.round(equivalent);
   const count=Math.min(MAX_MARKERS,Math.max(1,rounded));
-  plans[body===comparison.left?'left':'right']={
-   count,units,moles:particleMoles(body),perMarker,category,
+  const moles=particleMoles(body);
+  plans[index===0?'left':'right']={
+   count,units,moles,perMarker,category,equivalent,
    approximate:rounded===0,capped:rounded>MAX_MARKERS,
-   // True particle count; UI formats in scientific notation instead of listing atoms.
-   particleCount:particleMoles(body)===null?null:particleMoles(body)*AVOGADRO
+   // One faint illustrative symbol represents less than a whole common-scale
+   // marker; the caption always displays its fractional equivalent.
+   markerOpacity:rounded===0?Math.max(0.08,Math.min(.32,equivalent)):1,
+   particleCount:moles===null?null:moles*AVOGADRO
   };
  }
  return Object.freeze({left:plans.left,right:plans.right,scales:Object.freeze(scales)});
 }
+
 function particleMarkers(id,count){
  const m=material(id);if(!m)throw new RangeError('Unknown material');
  if(!Number.isSafeInteger(count)||count<1||count>MAX_MARKERS)throw new RangeError('Invalid marker count');

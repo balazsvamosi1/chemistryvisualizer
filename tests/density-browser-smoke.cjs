@@ -93,6 +93,16 @@ window.addEventListener('load',()=>{
      throw new Error('Particle markers must grow when the volume slider grows: '+JSON.stringify({initialWater,initialLead,largeWater,largeLead}));
    const finalA=sample('densityCanvasA'),finalB=sample('densityCanvasB');
    if(finalA.count<100||finalB.count<100)throw new Error('Updated particle diagrams disappeared');
+   chooseA.value='water';chooseB.value='argon';chooseB.dispatchEvent(new Event('change',{bubbles:true}));
+   const piA=document.getElementById('densityParticleInfoA'),piB=document.getElementById('densityParticleInfoB');
+   const waterSymbols=Number(piA.getAttribute('data-markers')),argonSymbols=Number(piB.getAttribute('data-markers'));
+   const waterEquivalent=Number(piA.getAttribute('data-marker-equivalent')),argonEquivalent=Number(piB.getAttribute('data-marker-equivalent'));
+   const waterScale=Number(piA.getAttribute('data-marker-scale')),argonScale=Number(piB.getAttribute('data-marker-scale'));
+   if(!(waterSymbols>80&&argonSymbols===1&&argonEquivalent<.5&&waterEquivalent>100&&waterScale===argonScale))
+     throw new Error('Water/argon common scale failed: '+JSON.stringify({waterSymbols,argonSymbols,waterEquivalent,argonEquivalent,waterScale,argonScale}));
+   if(!piB.textContent.includes('egyenérték'))throw new Error('Argon fractional indicator missing');
+   if(!document.getElementById('densityExplanation').textContent.includes('Közös részecskeszámskála'))throw new Error('Shared scale explanation missing');
+   if(!document.getElementById('densitySelectedB').textContent.includes('0,0016607'))throw new Error('Argon density changed unexpectedly');
    document.documentElement.setAttribute('data-density-smoke','PASS');
  }catch(error){document.documentElement.setAttribute('data-density-smoke','FAIL: '+error.message);console.error(error);}
 });
