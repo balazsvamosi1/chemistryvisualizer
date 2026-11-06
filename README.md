@@ -1,6 +1,14 @@
-# 3D Chemistry Lab — Beta 0.2105
+# 3D Chemistry Lab — Beta 0.2106
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
+
+## Beta 0.2106 – Density / Dichte / Sűrűség
+- New self-contained browser-only density module under Explore: rotate two sample cubes or cuboids, switch between same-volume and same-mass comparisons, adjust the common value and show masses, dimensions and densities.
+- Ten examples: water, ice, dry air, ethanol, aluminium, iron, copper, gold, rock salt, and representative dry pine. Displays selected temperatures/pressure where applicable.
+- Schematic (not-to-scale) solid, liquid, gas, ionic, metallic, ice and porous materials, with explicit scientific limitations; particle counts are **not** used in density calculations.
+- HU/DE/EN, touch/mouse/keyboard rotation, and four example comparisons; usable on static GitHub Pages, without any external JavaScript, API, backend or data downloads.
+- Density data and teaching references: [OpenStax Chemistry §1.4](https://openstax.org/books/chemistry/pages/1-4-measurements) and [NIST measurement school](https://www.nist.gov/system/files/documents/iaao/Mass_Francisco-Garcia.pdf). Wood density is illustrative and can vary with moisture and species.
+- PhET Density is useful pedagogical inspiration; no PhET code or assets were reused.
 
 ## Beta 0.2105 – start page
 
@@ -12,9 +20,9 @@ A modular browser-based chemistry laboratory and ten-level Chemistry Quest educa
 ## Version numbering
 
 - **First release:** `0.01`.
-- **Current release:** `0.2105`. Future Chemistry Lab public versions will remain below `1.0`.
+- **Current release:** `0.2106`. Future Chemistry Lab public versions will remain below `1.0`.
 - **Historical convention:** old `A.B.C` release labels become `0.ABBC`, where A is one digit, B is zero-padded to two digits, and C is one digit. Examples: `1.9.7 → 0.1097`, `2.9.8 → 0.2098`, `2.10.0 → 0.2100`, `2.10.2 → 0.2102`. If C was omitted, use zero: `1.5 → 0.1050`. The original `0.01` is preserved unchanged.
-- **Next version:** `0.2104`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
+- **Next version:** `0.2107`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
 - Older technical asset cache keys (such as `?v=2.1.7`) and third-party dependency/API versions are **not** changed: they are not release labels.
 
 ## Beta 0.2103 — Arcade maze and renewable resources (2026-11-04)
