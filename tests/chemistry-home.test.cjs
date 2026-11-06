@@ -25,7 +25,7 @@ test('new home page is the initial view and is in the main navigation',()=>{
  assert.match(html,/<button class="active" id="homeTab"/);
  assert.match(html,/id="homeSection"/);
  assert.match(html,/id="periodSection"/);
- assert.match(html,/assets\/js\/chemistry-home\.js\?v=0\.2105/);
+ assert.match(html,/assets\/js\/chemistry-home\.js\?v=0\.2106/);
  assert.match(html,/assets\/css\/chemistry-home\.css\?v=0\.2105/);
  assert.match(nav,/selected='homeTab'/);
  assert.match(nav,/homeTab:'homeSection'/);
