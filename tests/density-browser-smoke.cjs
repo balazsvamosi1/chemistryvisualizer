@@ -46,6 +46,24 @@ window.addEventListener('load',()=>{
    slider.value='100';slider.dispatchEvent(new Event('input',{bubbles:true}));
    const at100=sample('densityCanvasA');
    if(!(at100.width<at1000*.75))throw new Error('Changing quantity should visibly shrink both cubes: '+JSON.stringify({at100,at1000}));
+   // The earlier version plateaued above ~1400: every step must now increase
+   // the actual pixel size, not only the number of particles.
+   const measured=[];
+   for(const amount of [100,500,1000,2500,5000]){
+     slider.value=String(amount);slider.dispatchEvent(new Event('input',{bubbles:true}));
+     const a=sample('densityCanvasA'),b=sample('densityCanvasB');
+     measured.push([amount,a.width,b.width]);
+     const rhoA=document.getElementById('densitySelectedA').textContent;
+     const rhoB=document.getElementById('densitySelectedB').textContent;
+     if(!rhoA.includes('g/cm³')||!rhoB.includes('g/cm³'))
+       throw new Error('Density in g/cm³ absent beside material name: '+rhoA+' / '+rhoB);
+   }
+   for(let i=1;i<measured.length;i++){
+      if(!(measured[i][1]>measured[i-1][1]*1.08&&measured[i][2]>measured[i-1][2]*1.08))
+        throw new Error('Cube size plateaued even though volume increased: '+JSON.stringify(measured));
+   }
+   if(!document.getElementById('densityMaterialA').selectedOptions[0].textContent.includes('g/cm³'))
+      throw new Error('Dropdown options missing g/cm³ density');
    document.getElementById('densityPreset5').click();
    if(document.getElementById('densityMaterialA').value!=='lead'||document.getElementById('densityMaterialB').value!=='aluminum')
      throw new Error('Lead preset did not change material selections');
