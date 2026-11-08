@@ -1,6 +1,14 @@
-# 3D Chemistry Lab — Beta 0.2115
+# 3D Chemistry Lab — Beta 0.2116
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
+
+## Beta 0.2116 – temperature and water phase changes
+- Add a distinct Temperature / States of Matter view to Discovery → Density. Water is modelled at 1 atm from −30 to +120 °C with a draggable slider and five preset temperatures.
+- Animated schematic H₂O molecules distinguish ordered ice, mobile liquid and diffuse moving vapour. 0 °C and 100 °C indicate possible two-phase coexistence, and **do not** invent a phase fraction from temperature alone.
+- Show approximate phase density and the volume occupied by a fixed 100 g water sample (with a mixed-phase value deliberately unspecified at transitions). Water density above 40 °C is a rounded teaching approximation; steam uses the ideal gas equation at 1 atm.
+- Volume changes and the enormous gas expansion are clearly described numerically because the particle diagram uses separate visual magnification and is not to scale.
+- HU/DE/EN accessibility labels, reduced-motion support, a visible model limitation note. The original density comparison, its visual semantics and Academy’s four ungraded lessons remain unchanged.
+- No frameworks, remote assets or backend; compatible with GitHub Pages. Regression tests cover all five temperatures, states, original compare view and live Chromium canvas.
 
 ## Beta 0.2115 – Density Academy (four non-assessed discovery lessons)
 - Add **Sűrűség / Dichte / Density** to the Chemistry Academy with four localized short discovery lessons (mass vs volume; density with lead and aluminium; calculating density; floating vs sinking).
@@ -87,9 +95,9 @@ A modular browser-based chemistry laboratory and ten-level Chemistry Quest educa
 ## Version numbering
 
 - **First release:** `0.01`.
-- **Current release:** `0.2115`. Future Chemistry Lab public versions will remain below `1.0`.
+- **Current release:** `0.2116`. Future Chemistry Lab public versions will remain below `1.0`.
 - **Historical convention:** old `A.B.C` release labels become `0.ABBC`, where A is one digit, B is zero-padded to two digits, and C is one digit. Examples: `1.9.7 → 0.1097`, `2.9.8 → 0.2098`, `2.10.0 → 0.2100`, `2.10.2 → 0.2102`. If C was omitted, use zero: `1.5 → 0.1050`. The original `0.01` is preserved unchanged.
-- **Next version:** `0.2116`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
+- **Next version:** `0.2117`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
 - Older technical asset cache keys (such as `?v=2.1.7`) and third-party dependency/API versions are **not** changed: they are not release labels.
 
 ## Beta 0.2103 — Arcade maze and renewable resources (2026-11-04)
