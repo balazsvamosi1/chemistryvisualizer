@@ -1,6 +1,15 @@
-# 3D Chemistry Lab — Beta 0.2116
+# 3D Chemistry Lab — Beta 0.2117
 
 A modular browser-based chemistry laboratory and ten-level Chemistry Quest educational game. Includes HU/DE/EN support, periodic table, isotope browser, materials, reaction and physics labs, and 2D/3D molecule tools. The sections below retain earlier release notes.
+
+## Beta 0.2117 – two-material phase comparison (grades 7–8)
+- Replace the water-only temperature screen with **two adjacent material models** sharing the same 1-atm temperature slider and fixed 100-g sample mass.
+- Introduce eleven substances: water, ethanol, mercury, aluminium, iron, lead, oxygen, nitrogen, carbon dioxide, sulfur and paraffin wax. Each card shows state, phase thresholds, density (g/cm³), volume, moving schematic particles and a relative volume bar.
+- Three selectable temperature ranges (−230…150/600/3200 °C) and automatic range selection; one-click buttons jump to room temperature, either material's melting or boiling point, and eight suggested comparison pairs.
+- Special scientific cases: CO₂ **sublimes at −78.5 °C at 1 atm** (no liquid phase); paraffin wax melts across an **approximate 47–65 °C range** rather than at a single point; neither gets an invented normal boiling point. Sulfur gas and material regimes without adequate density data display unavailable values, not false precision.
+- At phase boundaries density and fixed-mass volume remain unassigned because temperature alone does not specify phase fractions.
+- Gas density uses the ideal gas equation only for well-defined molecular species; other solids and liquids use approximate reference densities, not a predictive equation of state.
+- Preserves original classroom density comparison and four ungraded Academy lessons. HU/DE/EN and desktop/mobile responsive design, static GitHub Pages operation. Includes physics regressions and dual-canvas Chromium smoke tests.
 
 ## Beta 0.2116 – temperature and water phase changes
 - Add a distinct Temperature / States of Matter view to Discovery → Density. Water is modelled at 1 atm from −30 to +120 °C with a draggable slider and five preset temperatures.
@@ -95,9 +104,9 @@ A modular browser-based chemistry laboratory and ten-level Chemistry Quest educa
 ## Version numbering
 
 - **First release:** `0.01`.
-- **Current release:** `0.2116`. Future Chemistry Lab public versions will remain below `1.0`.
+- **Current release:** `0.2117`. Future Chemistry Lab public versions will remain below `1.0`.
 - **Historical convention:** old `A.B.C` release labels become `0.ABBC`, where A is one digit, B is zero-padded to two digits, and C is one digit. Examples: `1.9.7 → 0.1097`, `2.9.8 → 0.2098`, `2.10.0 → 0.2100`, `2.10.2 → 0.2102`. If C was omitted, use zero: `1.5 → 0.1050`. The original `0.01` is preserved unchanged.
-- **Next version:** `0.2117`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
+- **Next version:** `0.2118`; after `0.2109`, continue with `0.2110`. Each final patch digit runs from 0 to 9, ensuring an ordered sequence.
 - Older technical asset cache keys (such as `?v=2.1.7`) and third-party dependency/API versions are **not** changed: they are not release labels.
 
 ## Beta 0.2103 — Arcade maze and renewable resources (2026-11-04)

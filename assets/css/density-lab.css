@@ -149,3 +149,42 @@
  .density-phase-presets{grid-template-columns:repeat(3,minmax(0,1fr))}
  .density-phase-badges span{font-size:11px}
 }
+
+/* 0.2117 dual-substance temperature and phase comparison */
+#densitySection .density-phase-layout{grid-template-columns:minmax(244px,290px) minmax(0,1fr);gap:14px}
+#densitySection .density-phase-main{min-width:0;display:grid;gap:8px}
+#densitySection .density-phase-main>.density-comparison-lead{margin:0;font-size:14px;padding:10px}
+#densitySection .density-phase-controls label{font-size:13px}
+#densitySection .density-phase-controls select{width:100%;min-height:38px;padding:6px 8px;background:#193a50;color:#edfaff;border:1px solid #50748a;border-radius:7px}
+#densitySection .density-phase-controls{gap:6px;max-height:calc(100dvh - 150px);overflow-y:auto;scrollbar-width:thin}
+#densitySection .density-phase-presets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+#densitySection .density-phase-presets button{font-size:11px;padding:6px 5px;min-height:36px}
+#densitySection .density-phase-presets button.active{background:#21606c;border-color:#8adadc}
+#densitySection .density-phase-jumps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+#densitySection .density-phase-jumps button{padding:7px 5px;border:1px solid #69889d;border-radius:7px;background:#1a3d56;color:#f1faff;min-height:35px;font-size:12px;cursor:pointer}
+#densitySection .density-phase-jumps button:disabled{opacity:.38;cursor:not-allowed}
+#densitySection .density-phase-scale-note{font-size:11px;color:#c7e6e9}
+#densitySection .density-phase-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+#densitySection .density-phase-card{min-width:0;background:#10283b;border:1px solid #42647a;border-radius:12px;padding:11px}
+#densitySection .density-phase-card h3{font-size:16px;margin:0 0 7px}
+#densitySection .density-phase-badges{margin:0 0 7px}
+#densitySection .density-phase-badges span{font-size:12px}
+#densitySection .density-phase-card canvas{display:block;width:100%;height:auto;max-height:300px;background:#0b2032;border-radius:8px;border:1px solid #355e77}
+#densitySection .density-phase-card .density-phase-values{gap:0;margin-top:8px}
+#densitySection .density-phase-card .density-phase-values>div{padding:5px 0}
+#densitySection .density-phase-card .density-phase-values strong{font-size:13px}
+#densitySection .density-phase-card .density-meter{padding:7px 9px;margin:8px 0}
+#densitySection .density-phase-card .density-meter-heading{font-size:11px}
+#densitySection .density-phase-card .density-meter-track{height:14px}
+#densitySection .density-phase-explanation{font-size:13px;line-height:1.48}
+#densitySection #phaseMoleculeNote{font-size:12px;color:#a8d1dc}
+@media(max-width:1100px){
+ #densitySection .density-phase-layout{display:block}
+ #densitySection .density-phase-controls{position:static;max-height:none;overflow:visible;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:12px}
+ #densitySection .density-phase-controls h3,#densitySection .density-phase-controls>p,#densitySection .density-phase-presets,#densitySection .density-phase-jumps{grid-column:1/-1}
+}
+@media(max-width:650px){
+ #densitySection .density-phase-cards{grid-template-columns:1fr}
+ #densitySection .density-phase-controls{grid-template-columns:1fr}
+ #densitySection .density-phase-controls>*{grid-column:1/-1}
+}
