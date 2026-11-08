@@ -48,16 +48,17 @@ test('exactly 72 H₂O markers in all states and bounded coordinates',()=>{
  assert.equal(E.molecules('boiling',2000).filter(p=>p.part==='gas').length,36);
  assert.notDeepEqual(E.molecules('gas',0),E.molecules('gas',3000));
 });
-test('phase view stays separate, localizable and does not modify Density scientific comparison',()=>{
- const html=read('index.html'),js=read('assets/js/water-phase.js'),densityJs=read('assets/js/density-lab.js');
- for(const id of ['densityViewCompare','densityViewPhase','phaseTemperature','phaseCanvas','phasePressure','phaseCaution','phasePreset0','phasePreset100'])
+test('new dual phase view leaves standalone density model and original water engine compatible',()=>{
+ const html=read('index.html'),js=read('assets/js/phase-compare.js'),densityJs=read('assets/js/density-lab.js');
+ for(const id of ['densityViewCompare','densityViewPhase','phaseTemperature','phaseCanvasA','phaseCanvasB',
+  'phaseMaterialA','phaseMaterialB','phasePressure','phaseCaution','phaseComparePresets'])
   assert(html.includes('id="'+id+'"'),id);
  assert(html.includes('phase-compare-engine.js?v=0.2117'));
  assert(html.includes('phase-compare.js?v=0.2117'));
  assert(js.includes("showComparison:()=>show('compare')"));
- assert(js.includes('getSnapshot:current'));
+ assert(js.includes('getSnapshot:snapshots'));
  assert(densityJs.includes('window.ChemistryPhaseCompare?.showComparison?.()'));
- for(const term of ['Hőmérséklet és halmazállapot','Temperatur und Aggregatzustand','Temperature and states of matter'])
-  assert(js.includes(term),term);
+ for(const word of ['Hőmérséklet és halmazállapot','Temperatur und Aggregatzustand','Temperature and states of matter'])
+  assert(js.includes(word),word);
  assert(!js.includes('ChemistryLearningProgress'));
 });
