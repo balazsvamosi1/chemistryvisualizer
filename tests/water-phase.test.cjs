@@ -52,11 +52,11 @@ test('phase view stays separate, localizable and does not modify Density scienti
  const html=read('index.html'),js=read('assets/js/water-phase.js'),densityJs=read('assets/js/density-lab.js');
  for(const id of ['densityViewCompare','densityViewPhase','phaseTemperature','phaseCanvas','phasePressure','phaseCaution','phasePreset0','phasePreset100'])
   assert(html.includes('id="'+id+'"'),id);
- assert(html.includes('water-phase-engine.js?v=0.2116'));
- assert(html.includes('water-phase.js?v=0.2116'));
+ assert(html.includes('phase-compare-engine.js?v=0.2117'));
+ assert(html.includes('phase-compare.js?v=0.2117'));
  assert(js.includes("showComparison:()=>show('compare')"));
  assert(js.includes('getSnapshot:current'));
- assert(densityJs.includes('window.ChemistryWaterPhase?.showComparison?.()'));
+ assert(densityJs.includes('window.ChemistryPhaseCompare?.showComparison?.()'));
  for(const term of ['Hőmérséklet és halmazállapot','Temperatur und Aggregatzustand','Temperature and states of matter'])
   assert(js.includes(term),term);
  assert(!js.includes('ChemistryLearningProgress'));

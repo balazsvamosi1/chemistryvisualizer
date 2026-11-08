@@ -41,7 +41,7 @@ test('language changes, search, family switching retain stable detail node and n
  assert.match(app,/if\(materialDetailVisible&&!detail\.hidden\)showMaterial\(\)/);
 });
 test('new assets are cache-busted and loaded before main application code',()=>{
- assert.match(html,/Beta 0\.2116/);
+ assert.match(html,/Beta 0\.2117/);
  const appIndex=html.indexOf('app-core.js?v=2.10.1');
  assert.ok(appIndex>0);
  assert.ok(html.indexOf('material-preview.js?v=2.9.8')<appIndex);
