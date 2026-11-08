@@ -118,6 +118,28 @@ academyTopic('speculative','specTab',['Spekulatív modellek tudományos korláta
 [['Egyenlő-e a hipotézis és a bizonyíték?','Sind Hypothese und Beleg identisch?','Is a hypothesis the same as evidence?'],['Nem','Nein','No'],['Igen','Ja','Yes'],['Csak vákuumban','Nur im Vakuum','Only in vacuum']],
 [['Bizonyít-e fázisstabilitást egy paraméter csúszkája?','Beweist ein Schieberegler Phasenstabilität?','Does adjusting a slider prove phase stability?'],['Nem','Nein','No'],['Igen','Ja','Yes'],['Csak alacsony nyomáson','Nur bei wenig Druck','Only at low pressure']]
 ]);
+// Density discovery is a guided teaching aid, not a test: no scored question bank.
+academyTopic('density','densityTab',['Sűrűség – felfedező leckék (7–8. osztály)','Dichte entdecken (Klasse 7–8)','Explore density (grades 7–8)'],[
+ ['A tömeg (m) azt mutatja, mennyi anyag van egy testben; grammban vagy kilogrammban mérjük. A térfogat (V) azt mutatja, mennyi helyet foglal el; például cm³-ben vagy literben. Két egyforma tömegű test eltérő térfogatú lehet.','Die Masse (m) wird in Gramm oder Kilogramm gemessen. Das Volumen (V) gibt an, wie viel Raum ein Körper einnimmt, zum Beispiel in cm³ oder Litern. Zwei gleich schwere Körper können unterschiedlich groß sein.','Mass (m) is measured in grams or kilograms. Volume (V) tells us how much space an object occupies, for example in cm³ or litres. Two equally heavy objects can take up different amounts of space.'],
+ ['A sűrűség egységnyi térfogatra jutó tömeg: ρ = m/V. Azonos térfogat mellett az ólom sokkal nehezebb, mint az alumínium. Az egyszerű modell pontjai azonos tömegrészeket jelölnek, nem valódi atomokat.','Dichte ist Masse pro Volumen: ρ = m/V. Bei gleichem Volumen ist Blei wesentlich schwerer als Aluminium. Die Punkte im einfachen Modell stellen gleiche Massenanteile dar, keine echten Atome.','Density means mass per volume: ρ = m/V. For the same volume, lead is considerably heavier than aluminium. The dots in the simple view represent equal portions of mass, not actual atoms.'],
+ ['A sűrűséget a tömeg és a térfogat hányadosából számítjuk: ρ = m/V. Például 1000 cm³ alumínium tömege körülbelül 2700 g: 2700 ÷ 1000 = 2,7 g/cm³. Egy liter víz tömege 20 °C-on körülbelül 998 g.','Dichte berechnet man mit ρ = m/V. 1000 cm³ Aluminium besitzen etwa 2700 g Masse: 2700 ÷ 1000 = 2,7 g/cm³. Ein Liter Wasser hat bei 20 °C ungefähr eine Masse von 998 g.','Calculate density with ρ = m/V. For example, 1000 cm³ of aluminium has a mass of about 2700 g: 2700 ÷ 1000 = 2.7 g/cm³. One litre of water has a mass of about 998 g at 20 °C.'],
+ ['A víznél kisebb átlagos sűrűségű test úszik, a nagyobb sűrűségű általában elsüllyed. A száraz fenyőfa sűrűsége például körülbelül 0,5 g/cm³, a vasé körülbelül 7,87 g/cm³, míg a vízé 0,998 g/cm³. Ez összehasonlítás, nem folyadékdinamikai szimuláció.','Ein Körper mit geringerer mittlerer Dichte als Wasser schwimmt normalerweise; mit größerer Dichte sinkt er im Allgemeinen. Trockenes Kiefernholz hat näherungsweise 0,5 g/cm³, Eisen 7,87 g/cm³ und Wasser bei 20 °C ungefähr 0,998 g/cm³. Der Vergleich ist keine Strömungssimulation.','An object with lower average density than water generally floats; an object with greater density generally sinks. Dry pine is approximately 0.5 g/cm³, iron 7.87 g/cm³, and water about 0.998 g/cm³ at 20 °C. This is a comparison, not a fluid simulation.']
+],[]);
+const densityActivities=Object.freeze([
+ {scenario:{left:'lead',right:'aluminum',mode:'mass',quantity:1000,shape:'cube'},
+  prompt:{hu:'Mindkét test tömege 1000 g. Melyik foglal el több helyet: az ólom vagy az alumínium?',de:'Beide Körper haben eine Masse von 1000 g. Welcher braucht mehr Platz: Blei oder Aluminium?',en:'Both samples have a mass of 1000 g. Which takes up more space: lead or aluminium?'},
+  explanation:{hu:'Az alumínium nagyobb térfogatot foglal el ugyanakkora tömeg mellett. A tömeg és a térfogat két különböző tulajdonság.',de:'Bei gleicher Masse benötigt Aluminium mehr Platz. Masse und Volumen sind unterschiedliche Größen.',en:'At the same mass, aluminium occupies more volume. Mass and volume are different properties.'}},
+ {scenario:{left:'lead',right:'aluminum',mode:'volume',quantity:1000,shape:'cube'},
+  prompt:{hu:'Mindkét kocka 1000 cm³ térfogatú. Melyik nehezebb, és mit mutatnak a szemléltető pontok?',de:'Beide Würfel haben ein Volumen von 1000 cm³. Welcher ist schwerer und was zeigen die Punkte?',en:'Both cubes occupy 1000 cm³. Which is heavier, and what do the illustrative dots show?'},
+  explanation:{hu:'Az ólom tömege 11,34 kg, az alumíniumé 2,70 kg. Az ólom sűrűsége körülbelül 4,2-szer nagyobb. Az alapmód pontjai azonos tömegrészeket jelölnek, nem atomokat.',de:'Blei hat 11,34 kg Masse, Aluminium 2,70 kg. Blei ist etwa 4,2-mal so dicht. Die Punkte im einfachen Modus stellen gleich schwere Portionen dar, keine Atome.',en:'Lead has a mass of 11.34 kg and aluminium 2.70 kg. Lead is about 4.2 times as dense. Basic-mode dots represent equal mass portions, not atoms.'}},
+ {scenario:{left:'water',right:'aluminum',mode:'volume',quantity:1000,shape:'cube'},
+  prompt:{hu:'A térfogat mindkét oldalon 1000 cm³. Oszd el a kiírt tömeget 1000-rel: mennyi a sűrűség g/cm³-ben?',de:'Beide Proben haben 1000 cm³ Volumen. Teile die angezeigte Masse in Gramm durch 1000: Wie groß ist die Dichte in g/cm³?',en:'Both samples have a volume of 1000 cm³. Divide the mass in grams by 1000. What is each density in g/cm³?'},
+  explanation:{hu:'Víz: 998 g ÷ 1000 cm³ = 0,998 g/cm³. Alumínium: 2700 g ÷ 1000 cm³ = 2,70 g/cm³. A képlet: ρ = m/V.',de:'Wasser: 998 g ÷ 1000 cm³ = 0,998 g/cm³. Aluminium: 2700 g ÷ 1000 cm³ = 2,70 g/cm³. Die Formel lautet ρ = m/V.',en:'Water: 998 g ÷ 1000 cm³ = 0.998 g/cm³. Aluminium: 2700 g ÷ 1000 cm³ = 2.70 g/cm³. Formula: ρ = m/V.'}},
+ {scenario:{left:'wood',right:'iron',mode:'volume',quantity:1000,shape:'cube'},
+  prompt:{hu:'Nézd meg a fa és a vas „Vízben” jelzését. Melyik úszna, melyik süllyedne el?',de:'Vergleiche die Angaben „In Wasser“ für Holz und Eisen. Was schwimmt, was sinkt?',en:'Read the “In water” notes for wood and iron. Which would float and which would sink?'},
+  explanation:{hu:'A száraz fa átlagos sűrűsége (kb. 0,50 g/cm³) kisebb a vízénél, ezért úszik. A vasé (kb. 7,87 g/cm³) nagyobb, ezért egy tömör vasdarab elsüllyed. Az alak és a bezárt levegő is számít, ezért egy acélhajó úszhat.',de:'Trockenes Holz (etwa 0,50 g/cm³) ist im Mittel weniger dicht als Wasser und schwimmt. Ein massives Stück Eisen (etwa 7,87 g/cm³) sinkt. Form und eingeschlossene Luft spielen ebenfalls eine Rolle: Ein Stahlschiff kann schwimmen.',en:'Dry wood (about 0.50 g/cm³) is less dense than water and floats. A solid piece of iron (about 7.87 g/cm³) sinks. Shape and trapped air also matter: a steel ship can float.'}}
+]);
+
 // The Bunsen Lab is simulation-only; its complete P2 teaching bank lives in Academy.
 const bunsenEducation=(root&&root.BunsenEducation)||(typeof require==='function'?require('./bunsen-education.js'):null);
 if(bunsenEducation){
@@ -137,9 +159,9 @@ if(bunsenEducation){
  }
 }
 function shuffle(arr,rng=Math.random){const x=arr.slice();for(let i=x.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
-function session(id,exam=false,rng=Math.random){const set=id==='all'?topics.flatMap(t=>t.bank.map(q=>({...q,topic:t.id}))):topics.find(x=>x.id===id)?.bank.map(q=>({...q,topic:id}))||[];const count=id==='all'?(exam?14:10):(id.startsWith('bunsen-')?(exam?10:6):(exam?4:3));const selected=id==='all'&&exam?[...shuffle(topics.map(t=>({...shuffle(t.bank,rng)[0],topic:t.id})),rng),...shuffle(set,rng)].filter((q,i,a)=>a.findIndex(x=>x.id===q.id)===i).slice(0,count):shuffle(set,rng).slice(0,count);return selected.map(q=>{const ord=shuffle([0,1,2],rng);return {...q,choices:Object.fromEntries(locales.map(l=>[l,ord.map(i=>q.choices[l][i])])),answer:ord.indexOf(q.answer)}})}
+function session(id,exam=false,rng=Math.random){const set=id==='all'?topics.flatMap(t=>t.bank.map(q=>({...q,topic:t.id}))):topics.find(x=>x.id===id)?.bank.map(q=>({...q,topic:id}))||[];const count=id==='all'?(exam?14:10):(id.startsWith('bunsen-')?(exam?10:6):(exam?4:3));const selected=id==='all'&&exam?[...shuffle(topics.filter(t=>t.bank.length>0).map(t=>({...shuffle(t.bank,rng)[0],topic:t.id})),rng),...shuffle(set,rng)].filter((q,i,a)=>a.findIndex(x=>x.id===q.id)===i).slice(0,count):shuffle(set,rng).slice(0,count);return selected.map(q=>{const ord=shuffle([0,1,2],rng);return {...q,choices:Object.fromEntries(locales.map(l=>[l,ord.map(i=>q.choices[l][i])])),answer:ord.indexOf(q.answer)}})}
 function grade(qs,answers){const correct=qs.filter((q,i)=>q.answer===answers[i]).length;return{correct,total:qs.length,percent:qs.length?Math.round(correct*100/qs.length):0,missed:qs.filter((q,i)=>q.answer!==answers[i])}}
-return Object.freeze({topics,locales,session,grade});
+return Object.freeze({topics,locales,session,grade,densityActivities});
 });
 (function(){
 'use strict';if(typeof document==='undefined')return;
@@ -147,8 +169,62 @@ const api=window.ChemistryCurriculum,$=id=>document.getElementById(id),sec=$('cu
 const tr={hu:{title:'Kémia Akadémia',intro:'Válassz témát, tanuld meg a leckéket, gyakorolj, majd vizsgázz. A feladatok a leckékre épülnek.',all:'Átfogó kémia',learn:'Tanulás',practice:'Gyakorlás',exam:'Vizsga',check:'Ellenőrzés',next:'Következő',restart:'Újrakezdés',open:'Nyisd meg a kapcsolódó labort',lesson:'Lecke',question:'Kérdés',correct:'Helyes.',wrong:'Nem helyes.',choose:'Válassz választ.',review:'Kapcsolódó lecke megnyitása',score:'Eredmény',report:'Ismétlendő leckék',done:'Befejezve',limit:'A modellek szemléltetők, nem helyettesítik a valós kísérleteket.',topics:'Témakör',explain:'Magyarázat',hunt:'Elemvadászat'},de:{title:'Chemie-Akademie',intro:'Thema auswählen, Lektionen lesen, üben und prüfen. Alle Aufgaben basieren auf dem Lernstoff.',all:'Chemie gesamt',learn:'Lernen',practice:'Üben',exam:'Prüfung',check:'Prüfen',next:'Weiter',restart:'Neustart',open:'Zugehöriges Labor öffnen',lesson:'Lektion',question:'Frage',correct:'Richtig.',wrong:'Nicht richtig.',choose:'Antwort wählen.',review:'Zugehörige Lektion öffnen',score:'Ergebnis',report:'Lektionen zum Wiederholen',done:'Fertig',limit:'Modelle sind Illustrationen und ersetzen keine echten Experimente.',topics:'Thema',explain:'Erklärung',hunt:'Elementjagd'},en:{title:'Chemistry Academy',intro:'Choose a topic, read lessons, practise, then take an exam. Each question is taught in the lessons.',all:'All chemistry',learn:'Learn',practice:'Practice',exam:'Exam',check:'Check',next:'Next',restart:'Restart',open:'Open related lab',lesson:'Lesson',question:'Question',correct:'Correct.',wrong:'Incorrect.',choose:'Choose an answer.',review:'Open related lesson',score:'Score',report:'Lessons to review',done:'Complete',limit:'Models are illustrative and cannot replace real experiments.',topics:'Topic',explain:'Explanation',hunt:'Element Hunt'}};
 let topic='atoms',mode='learn',index=0,answers=[],checked=false,completed=false,qs=[],recordedSession=false;
 const hunt=$('huntSection');if(hunt)sec.append(hunt);
+let densityRevealed=false,densityVisited=false;
+const densityUI={
+ hu:{intro:'Négy rövid, szabadon felfedezhető sűrűséglecke. Nincs pontozás, vizsga vagy tudásmérés.',observe:'Figyeld meg:',open:'Kísérlet megnyitása a Sűrűség laborban',back:'Vissza az Akadémia leckéjéhez',show:'Magyarázat megjelenítése',hide:'Magyarázat elrejtése',next:'Következő felfedezés',again:'Első lecke',note:'Az egyszerű modell pontjai azonos tömegű anyagrészeket jelölnek, nem atomokat. Nem kvantumfizikai szimuláció.',without:'Próbálgasd szabadon a csúszkát és az anyagokat, majd térj vissza a leckéhez.'},
+ de:{intro:'Vier kurze Entdeckungslektionen zur Dichte. Ohne Punkte, Prüfungen oder Leistungsmessung.',observe:'Beobachte:',open:'Versuch im Dichtelabor öffnen',back:'Zurück zur Akademie-Lektion',show:'Erklärung anzeigen',hide:'Erklärung ausblenden',next:'Nächste Entdeckung',again:'Erste Lektion',note:'Die Punkte im einfachen Modell stehen für gleich schwere Materialportionen, nicht für Atome. Keine quantenphysikalische Simulation.',without:'Verändere den Regler und die Stoffe nach Belieben und kehre dann zur Lektion zurück.'},
+ en:{intro:'Four short density discovery lessons. No scores, exams or assessment.',observe:'Explore:',open:'Open experiment in Density Lab',back:'Back to Academy lesson',show:'Show explanation',hide:'Hide explanation',next:'Next discovery',again:'First lesson',note:'Basic-model dots represent equal-mass portions, not atoms. This is not a quantum-physics simulation.',without:'Experiment freely with the slider and materials, then return to the lesson.'}
+};
+let densityReturnButton=null;
+function closeDensityReturn(){if(densityReturnButton){densityReturnButton.remove();densityReturnButton=null;}}
+function densityLabOpen(){
+ const activity=api.densityActivities[index];
+ if(!activity)return;
+ const lab=$('densitySection');
+ const controller=window.ChemistryDensityLab;
+ if(!lab||typeof controller?.configure!=='function'){
+  $('curriculumFeedback').textContent=densityUI[lang()].without;
+  return;
+ }
+ densityVisited=true;
+ controller.configure(activity.scenario);
+ closeDensityReturn();
+ densityReturnButton=document.createElement('button');
+ densityReturnButton.id='academyDensityReturn';
+ densityReturnButton.type='button';
+ densityReturnButton.textContent=densityUI[lang()].back;
+ densityReturnButton.className='academy-density-return';
+ densityReturnButton.addEventListener('click',()=>{
+  closeDensityReturn();window.ChemistryNavigation?.activate('curriculumTab');
+  if(!window.ChemistryNavigation)$('curriculumTab').click();
+  render();
+ });
+ lab.prepend(densityReturnButton);
+ window.ChemistryNavigation?.activate('densityTab');
+ if(!window.ChemistryNavigation)$('densityTab').click();
+}
+function renderDensityDiscovery(content){
+ const ui=densityUI[lang()],topicData=api.topics.find(x=>x.id==='density'),activity=api.densityActivities[index];
+ $('curriculumCheck').hidden=true;$('curriculumNext').hidden=true;$('curriculumRestart').hidden=true;
+ $('curriculumOpen').hidden=true;
+ const heading=add(content,'h3',topicData.title[lang()]+' · '+t('lesson')+' '+(index+1)+'/4');
+ heading.className='academy-density-heading';
+ add(content,'p',ui.intro,'academy-density-intro');
+ add(content,'p',topicData.lesson[index][lang()],'academy-lesson');
+ add(content,'strong',ui.observe);
+ add(content,'p',activity.prompt[lang()],'academy-density-observation');
+ const open=add(content,'button',ui.open,'academy-density-open');open.type='button';open.addEventListener('click',densityLabOpen);
+ add(content,'p',ui.without,'hint');
+ const reveal=add(content,'button',densityRevealed?ui.hide:ui.show,'academy-density-reveal');
+ reveal.type='button';reveal.setAttribute('aria-expanded',String(densityRevealed));
+ reveal.addEventListener('click',()=>{densityRevealed=!densityRevealed;render()});
+ if(densityRevealed)add(content,'p',activity.explanation[lang()],'academy-density-explanation');
+ const next=add(content,'button',index===3?ui.again:ui.next,'academy-density-next');
+ next.type='button';next.addEventListener('click',()=>{index=(index+1)%4;densityRevealed=false;densityVisited=false;render()});
+ add(content,'p',ui.note,'hint');
+}
 const lang=()=>['hu','de','en'].find(x=>$(x)?.classList.contains('active'))||'hu',t=k=>tr[lang()][k],add=(node,tag,str,cls)=>{const n=document.createElement(tag);n.textContent=str;if(cls)n.className=cls;node.append(n);return n};
-function reset(){index=0;answers=[];checked=false;completed=false;recordedSession=false;qs=mode==='learn'||mode==='guided'?[]:api.session(topic,mode==='exam');render()}
+function reset(){index=0;answers=[];checked=false;completed=false;recordedSession=false;densityRevealed=false;densityVisited=false;if(topic==='density')mode='learn';qs=mode==='learn'||mode==='guided'?[]:api.session(topic,mode==='exam');render()}
 function jump(id){if(id==='huntSection'){mode='hunt';reset();return}const dest=$(id);if(!dest)return;const tabId=api.topics.find(x=>x.id===topic)?.tab;if(tabId&&window.ChemistryNavigation){$(tabId)?.click();window.ChemistryNavigation.activate(tabId);return}document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden'));document.querySelectorAll('.tabs > button').forEach(b=>b.classList.remove('active'));dest.classList.remove('hidden');$(tabId)?.classList.add('active')}
 function lessonButton(host,q){const b=add(host,'button',t('review')+' ('+t('lesson')+' '+(q.lessonIndex+1)+')');b.type='button';b.addEventListener('click',()=>{topic=q.topic;mode='learn';index=q.lessonIndex;qs=[];checked=false;completed=false;answers=[];render()})}
 
@@ -237,6 +313,8 @@ function render(){
  if(hunt)hunt.classList.toggle('hidden',!isHunt);
  const content=$('curriculumContent'),feedback=$('curriculumFeedback');content.replaceChildren();feedback.textContent='';$('curriculumCheck').textContent=t('check');$('curriculumNext').textContent=t('next');$('curriculumRestart').textContent=t('restart');$('curriculumCheck').hidden=mode==='learn'||mode==='guided'||checked||completed;$('curriculumNext').hidden=completed;
  if(mode==='hunt'){content.hidden=true;for(const id of ['curriculumCheck','curriculumNext','curriculumRestart'])$(id).hidden=true;return}content.hidden=false;
+ if(topic==='density'){mode='learn';for(const v of ['practice','exam','curriculumguided']){const id=v==='curriculumguided'?v:'curriculum'+v;$(id).hidden=true}renderDensityDiscovery(content);return;}
+ for(const id of ['curriculumpractice','curriculumexam','curriculumguided'])$(id).hidden=false;
  if(mode==='guided'){renderGuided(content);return;}
  if(mode==='learn'){
  const node=api.topics.find(x=>x.id===topic),lessons=node.lesson;index=Math.min(index,lessons.length-1);add(content,'h3',node.title[lang()]+' · '+t('lesson')+' '+(index+1)+'/'+lessons.length);add(content,'p',lessons[index][lang()],'academy-lesson');add(content,'p',t('limit'),'hint');$('curriculumNext').textContent=index===lessons.length-1?t('restart'):t('next');return;
@@ -247,9 +325,9 @@ function render(){
  if(checked){if(mode==='practice'){feedback.textContent=answers[index]===q.answer?t('correct'):t('wrong')+' '+q.choices[lang()][q.answer];lessonButton(content,q)}else feedback.textContent=''}
 }
 function show(){document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden'));document.querySelectorAll('.tabs > button').forEach(b=>b.classList.remove('active'));sec.classList.remove('hidden');tab.classList.add('active');render()}
-tab.addEventListener('click',show);$('curriculumTopic').addEventListener('change',e=>{topic=e.target.value;guidedReset();reset()});for(const v of ['learn','practice','exam','hunt'])$('curriculum'+v).addEventListener('click',()=>{mode=v;guidedReset();reset()});
+tab.addEventListener('click',show);$('curriculumTopic').addEventListener('change',e=>{topic=e.target.value;closeDensityReturn();guidedReset();reset()});for(const v of ['learn','practice','exam','hunt'])$('curriculum'+v).addEventListener('click',()=>{mode=v;guidedReset();reset()});
 const topicSections={atoms:'periodSection',bonds:'moleculeSection',stoich:'stoichSection',acids:'acidBaseSection',quest:'gameSection',hunt:'huntSection',materials:'materialsSection',physics:'physicsSection',speculative:'specSection','bunsen-basic':'bunsenSection','bunsen-advanced':'bunsenSection','bunsen-upper':'bunsenSection'};
-$('curriculumOpen').addEventListener('click',()=>{if(topicSections[topic])jump(topicSections[topic])});
+$('curriculumOpen').addEventListener('click',()=>{if(topic==='density'){densityLabOpen();return}if(topicSections[topic])jump(topicSections[topic])});
 $('curriculumCheck').addEventListener('click',()=>{if(!Number.isInteger(answers[index])){$('curriculumFeedback').textContent=t('choose');return}checked=true;render()});
 $('curriculumNext').addEventListener('click',()=>{if(mode==='learn'){index=(index+1)%api.topics.find(x=>x.id===topic).lesson.length;render();return}if(!checked)return;if(index+1===qs.length)completed=true;else{index++;checked=false}render()});
 $('curriculumRestart').addEventListener('click',()=>{guidedReset();reset()});

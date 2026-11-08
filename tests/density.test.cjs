@@ -268,3 +268,13 @@ test('all density assets are local and the Explore navigation includes density',
  assert(home.includes("'densityTab'"));
  assert(!module.includes('fetch(')&&!module.includes('import('));
 });
+
+test('Academy density lab bridge exposes scenario configuration while preserving standalone Explore mode',()=>{
+ const js=read('assets/js/density-lab.js'),academy=read('assets/js/chemistry-curriculum.js');
+ assert(js.includes('function configure(scenario)'));
+ assert(js.includes('window.ChemistryDensityLab={render,localize,configure,'));
+ assert(academy.includes("academyTopic('density','densityTab'"));
+ assert(academy.includes("function renderDensityDiscovery(content)"));
+ assert(academy.includes("function densityLabOpen()"));
+ assert(!academy.includes("record('density'"));
+});

@@ -347,5 +347,22 @@ if(typeof ResizeObserver!=='undefined'){
 window.addEventListener('resize',()=>{if(!ui.section.classList.contains('hidden'))render();});
 for(const id of ['hu','de','en'])$(id)?.addEventListener('click',()=>queueMicrotask(localize));
 localize();
-window.ChemistryDensityLab={render,localize,getComparison:()=>comparison,getDisplayPlan:()=>particleDisplay};
+// A small, validated bridge used by Academy discovery activities.
+// Free Explore mode remains unchanged; no scoring or persistent state.
+function configure(scenario){
+ if(!scenario||!engine.material(scenario.left)||!engine.material(scenario.right))return false;
+ if(!['mass','volume'].includes(scenario.mode))return false;
+ if(!Number.isFinite(scenario.quantity)||scenario.quantity<=0||scenario.quantity>5000)return false;
+ ui.mode.value=scenario.mode;
+ ui.slider.min=scenario.mode==='mass'?'10':'100';
+ ui.slider.max='5000';ui.slider.step=scenario.mode==='mass'?'10':'100';
+ ui.slider.value=String(scenario.quantity);
+ ui.shape.value=scenario.shape==='cuboid'?'cuboid':'cube';
+ ui.A.value=scenario.left;ui.B.value=scenario.right;
+ ui.particles.checked=true;ui.advanced.checked=false;
+ render();
+ requestAnimationFrame(render);
+ return true;
+}
+window.ChemistryDensityLab={render,localize,configure,getComparison:()=>comparison,getDisplayPlan:()=>particleDisplay};
 })();

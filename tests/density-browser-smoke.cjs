@@ -151,6 +151,49 @@ window.addEventListener('load',()=>{
      if(!(summary.x>=cr.x-2&&summary.right<=cr.right+2))
        throw new Error('Live comparison summary no longer near the controls');
    }
+   // Four non-assessed Academy lessons must open the SAME physical lab,
+   // preload its settings, then return to the exact lesson without scoring.
+   const academy=document.getElementById('curriculumTab');academy.click();
+   const topicSelect=document.getElementById('curriculumTopic');
+   topicSelect.value='density';topicSelect.dispatchEvent(new Event('change',{bubbles:true}));
+   const academyPanel=document.getElementById('curriculumSection');
+   if(academyPanel.classList.contains('hidden'))throw new Error('Academy tab not visible');
+   const topics=document.getElementById('curriculumContent');
+   const cases=[
+     ['lead','aluminum','mass',1000],
+     ['lead','aluminum','volume',1000],
+     ['water','aluminum','volume',1000],
+     ['wood','iron','volume',1000]
+   ];
+   if(document.getElementById('curriculumexam').hidden!==true
+       ||document.getElementById('curriculumpractice').hidden!==true)
+     throw new Error('Density discovery must not offer quizzes or exams');
+   for(let i=0;i<cases.length;i++){
+     const launch=topics.querySelector('.academy-density-open');
+     if(!launch)throw new Error('Missing Academy discovery lab launch at lesson '+i);
+     launch.click();
+     const [aId,bId,modeId,q]=cases[i];
+     const state=window.ChemistryDensityLab.getComparison();
+     if(!(state.left.id===aId&&state.right.id===bId&&state.mode===modeId
+       &&state.quantity===q))
+       throw new Error('Academy lab preset mismatch at lesson '+i+': '+JSON.stringify(state));
+     if(document.getElementById('densitySection').classList.contains('hidden'))
+       throw new Error('Density lab not shown from Academy');
+     const back=document.getElementById('academyDensityReturn');
+     if(!back)throw new Error('No return to Academy');
+     back.click();
+     if(academyPanel.classList.contains('hidden')||document.getElementById('academyDensityReturn'))
+       throw new Error('Returning from lab did not restore Academy');
+     const explanation=topics.querySelector('.academy-density-reveal');
+     if(!explanation)throw new Error('Non-scored explanation control missing');
+     explanation.click();
+     if(!topics.querySelector('.academy-density-explanation'))
+       throw new Error('Explanation not shown at lesson '+i);
+     if(topics.querySelector('input[type="radio"]'))
+       throw new Error('Density discovery must not ask scored questions');
+     topics.querySelector('.academy-density-next').click();
+   }
+   if(!topics.textContent.includes('1/4'))throw new Error('Fourth lesson did not wrap to first');
    document.documentElement.setAttribute('data-density-smoke','PASS');
  }catch(error){document.documentElement.setAttribute('data-density-smoke','FAIL: '+error.message);console.error(error);}
 });

@@ -81,3 +81,12 @@ main>section{scroll-margin-top:82px;min-width:0}
 .competency-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:9px}
 .competency-item{display:grid;gap:3px;border:1px solid #35566b;border-radius:8px;padding:10px}
 .competency-item span{font-size:.88rem}
+
+/* 0.2115: density discovery is optional, non-scored and reuses the existing lab. */
+#curriculumSection .academy-density-intro{font-size:14px;color:#bce5ec;line-height:1.55}
+#curriculumSection .academy-density-heading{margin-bottom:8px}
+#curriculumSection .academy-density-observation{background:#173d50;border-left:4px solid #86d8d0;padding:12px 14px;border-radius:7px;line-height:1.6}
+#curriculumSection .academy-density-explanation{background:#173b42;border-left:4px solid #83cfa7;padding:13px 15px;border-radius:7px;line-height:1.65;margin:12px 0}
+#curriculumSection .academy-density-open{background:#185e6a;color:#f3ffff;border:1px solid #82d9e0;font-weight:700;min-height:46px}
+#curriculumSection .academy-density-reveal,#curriculumSection .academy-density-next{min-height:42px}
+#densitySection>.academy-density-return{display:block;position:sticky;top:112px;z-index:42;background:#164f62;border:2px solid #89e2e7;color:#fff;font-weight:700;border-radius:10px;padding:11px 16px;margin:0 0 12px;min-height:46px}
