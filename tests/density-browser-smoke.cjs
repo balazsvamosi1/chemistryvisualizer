@@ -194,6 +194,58 @@ window.addEventListener('load',()=>{
      topics.querySelector('.academy-density-next').click();
    }
    if(!topics.textContent.includes('1/4'))throw new Error('Fourth lesson did not wrap to first');
+   // Independent state-change view; no scoring or damage to the verified
+   // density comparison when the learner switches back.
+   document.getElementById('densityTab').click();
+   window.ChemistryNavigation?.activate('densityTab',false);
+   const stateButton=document.getElementById('densityViewPhase');
+   const densityButton=document.getElementById('densityViewCompare');
+   if(!stateButton||!densityButton)throw new Error('Density view selector is missing');
+   const baseline=window.ChemistryDensityLab.getComparison();
+   stateButton.click();
+   const panel=document.getElementById('densitySection');
+   const phasePanel=document.getElementById('densityPhasePanel');
+   if(phasePanel.hidden||panel.dataset.densityView!=='phase')
+    throw new Error('Phase view does not open');
+   const temp=document.getElementById('phaseTemperature');
+   const tested=[
+    [-15,'solid',.917],
+    [0,'melting',null],
+    [20,'liquid',.9982],
+    [100,'boiling',null],
+    [120,'gas',.00055]
+   ];
+   for(const [value,expectedPhase,expectedDensity] of tested){
+    temp.value=String(value);temp.dispatchEvent(new Event('input',{bubbles:true}));
+    const actual=window.ChemistryWaterPhase.getSnapshot();
+    if(actual.phase!==expectedPhase||actual.temperature!==value)
+     throw new Error('Phase slider wrong at '+value+': '+JSON.stringify(actual));
+    if(expectedDensity===null){
+     if(actual.density!==null||document.getElementById('phaseCoexistence').hidden)
+      throw new Error('Boundary phase must show coexistence, not invented density');
+    }else if(Math.abs(actual.density-expectedDensity)>(expectedPhase==='gas'?.00006:.003))
+     throw new Error('Density incorrect for '+expectedPhase+': '+actual.density);
+    if(!document.getElementById('phaseExplanation').textContent)
+     throw new Error('Missing phase-specific explanation');
+   }
+   const waterCanvas=document.getElementById('phaseCanvas');
+   const waterCtx=waterCanvas.getContext('2d');
+   if(!waterCtx)throw new Error('Phase canvas missing 2D context');
+   const pixels=waterCtx.getImageData(0,0,waterCanvas.width,waterCanvas.height).data;
+   let illuminated=0;
+   for(let i=0;i<pixels.length;i+=24){
+    if(pixels[i]>90&&pixels[i+1]>115&&pixels[i+2]>120)illuminated++;
+   }
+   if(illuminated<200)throw new Error('Water phase animation canvas is visually blank');
+   if(!document.getElementById('phaseCaution').textContent.includes('NEM kvantumfizikai'))
+    throw new Error('Missing teaching model disclaimer');
+   // The existing Academy bridge must return to normal comparison mode.
+   window.ChemistryDensityLab.configure({left:'lead',right:'aluminum',mode:'volume',quantity:1000,shape:'cube'});
+   if(panel.dataset.densityView!=='compare'||!phasePanel.hidden)
+    throw new Error('Academy scenario failed to restore regular comparison');
+   densityButton.click();
+   if(panel.dataset.densityView!=='compare')
+    throw new Error('Can not switch back to density comparison');
    document.documentElement.setAttribute('data-density-smoke','PASS');
  }catch(error){document.documentElement.setAttribute('data-density-smoke','FAIL: '+error.message);console.error(error);}
 });

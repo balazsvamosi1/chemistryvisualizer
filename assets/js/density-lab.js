@@ -353,6 +353,7 @@ function configure(scenario){
  if(!scenario||!engine.material(scenario.left)||!engine.material(scenario.right))return false;
  if(!['mass','volume'].includes(scenario.mode))return false;
  if(!Number.isFinite(scenario.quantity)||scenario.quantity<=0||scenario.quantity>5000)return false;
+ window.ChemistryWaterPhase?.showComparison?.();
  ui.mode.value=scenario.mode;
  ui.slider.min=scenario.mode==='mass'?'10':'100';
  ui.slider.max='5000';ui.slider.step=scenario.mode==='mass'?'10':'100';
