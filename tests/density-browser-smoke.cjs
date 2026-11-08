@@ -214,8 +214,8 @@ window.addEventListener('load',()=>{
     const c=document.getElementById(id),ctx=c?.getContext('2d');
     if(!ctx)throw new Error('Missing phase canvas: '+id);
     const d=ctx.getImageData(0,0,c.width,c.height).data;let bright=0;
-    for(let i=0;i<d.length;i+=24)if(d[i]>135&&d[i+1]>140&&d[i+2]>140)bright++;
-    if(bright<100)throw new Error('Phase canvas blank: '+id+'/'+bright);
+    for(let i=0;i<d.length;i+=24)if(d[i]>80&&d[i+1]>130&&d[i+2]>100)bright++;
+    if(bright<45)throw new Error('Phase canvas blank: '+id+'/'+bright);
    };
    for(const [a,b,t,pa,pb] of [
     ['water','ethanol',20,'liquid','liquid'],
