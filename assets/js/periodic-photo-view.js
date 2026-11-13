@@ -6,9 +6,9 @@ const root=$('periodSection'), table=$('ptable'), detail=$('atomDetail');
 if(!root||!table||!detail||!Array.isArray(window.elements)&&typeof elements==='undefined')return;
 const photos=window.ChemistryElementPhotos||{};
 const t={
- hu:{classic:'Klasszikus',photo:'Képes',note:'Valódi elemminták és jelölt illusztrációk. Képekhez internetkapcsolat szükséges. Vízszintesen görgethető.',missing:'Nincs hiteles kép',illustration:'Illusztráció',example:'Elemminta',source:'Kép forrása',offline:'A kép nem tölthető be',credit:'Fotó jóváírása'},
- de:{classic:'Klassisch',photo:'Mit Bildern',note:'Echte Elementproben und gekennzeichnete Illustrationen. Bilder benötigen Internet. Horizontal scrollen.',missing:'Kein belegtes Bild',illustration:'Illustration',example:'Elementprobe',source:'Bildquelle',offline:'Bild nicht verfügbar',credit:'Bildnachweis'},
- en:{classic:'Classic',photo:'Photos',note:'Real element samples and clearly marked illustrations. Photos require internet. Scroll horizontally.',missing:'No verified photo',illustration:'Illustration',example:'Element sample',source:'Image source',offline:'Image unavailable',credit:'Image attribution'}
+ hu:{classic:'Klasszikus',photo:'Képes',note:'Valódi elemminták és jelölt illusztrációk. Képekhez internetkapcsolat szükséges. Vízszintesen görgethető.',missing:'Nincs hiteles kép',radioactive:'Radioaktív',radioactiveTitle:'Radioaktív, mesterséges elem',radioactiveNote:'Ezt az elemet mesterségesen állítják elő, rendkívül kis mennyiségben. Minden ismert izotópja radioaktív, ezért nem áll rendelkezésre hagyományos elemminta-fotó.',illustration:'Illusztráció',example:'Elemminta',source:'Kép forrása',offline:'A kép nem tölthető be',credit:'Fotó jóváírása'},
+ de:{classic:'Klassisch',photo:'Mit Bildern',note:'Echte Elementproben und gekennzeichnete Illustrationen. Bilder benötigen Internet. Horizontal scrollen.',missing:'Kein belegtes Bild',radioactive:'Radioaktiv',radioactiveTitle:'Radioaktives, künstliches Element',radioactiveNote:'Dieses Element wird künstlich in äußerst kleinen Mengen erzeugt. Alle bekannten Isotope sind radioaktiv; deshalb gibt es kein herkömmliches Foto einer Elementprobe.',illustration:'Illustration',example:'Elementprobe',source:'Bildquelle',offline:'Bild nicht verfügbar',credit:'Bildnachweis'},
+ en:{classic:'Classic',photo:'Photos',note:'Real element samples and clearly marked illustrations. Photos require internet. Scroll horizontally.',missing:'No verified photo',radioactive:'Radioactive',radioactiveTitle:'Synthetic, radioactive element',radioactiveNote:'This element is produced artificially in extremely small quantities. All known isotopes are radioactive, so no conventional photograph of an element sample is available.',illustration:'Illustration',example:'Element sample',source:'Image source',offline:'Image unavailable',credit:'Image attribution'}
 };
 const oldWrap=table.parentElement;
 oldWrap.id='periodClassicWrap';
@@ -29,11 +29,18 @@ try{view=sessionStorage.getItem('chemistry-period-view')==='photo'?'photo':'clas
 function locale(){return ['hu','de','en'].includes(lang)?lang:'en'}
 function word(k){return t[locale()][k]}
 function matching(e){return !query||[e.z,e.s,e.hu,e.de,e.en||''].join(' ').toLocaleLowerCase().includes(query)}
+function needsRadiationPlaceholder(e,meta){return e.z>=105&&e.z<=118&&!meta.url}
+function radiationVisual(large){
+ const holder=document.createElement('div');holder.className=large?'photo-radioactive-detail':'photo-tile-placeholder photo-tile-radioactive';
+ const icon=document.createElement('span');icon.className='photo-radioactivity-symbol';icon.textContent='☢︎';icon.setAttribute('aria-hidden','true');
+ const caption=document.createElement('span');caption.className='photo-radioactivity-caption';caption.textContent=word('radioactive');
+ holder.append(icon,caption);return holder;
+}
 function makeTile(e){
  const b=document.createElement('button');b.type='button';
  b.className='photo-tile'+(e.z===selected?' selected':'')+(matching(e)?'':' dim');
  b.style.cssText='--c:'+palette[e.cat]+';grid-column:'+e.g+';grid-row:'+e.r;
- b.setAttribute('aria-label',e.z+' '+e[locale()]+' ('+e.s+')');
+ b.setAttribute('aria-label',e.z+' '+e[locale()]+' ('+e.s+')'+(e.z>=105&&e.z<=118?' — '+word('radioactive'):''));
  b.title=e.z+' · '+e[locale()];
  const head=document.createElement('div');head.className='photo-tile-head';
  const symbol=document.createElement('strong');symbol.textContent=e.s;
@@ -48,6 +55,8 @@ function makeTile(e){
   const fail=()=>{im.hidden=true;const fall=document.createElement('div');fall.className='photo-tile-placeholder';fall.textContent=word('offline');b.append(fall)};
   im.addEventListener('error',fail,{once:true});b.append(im);
   if(meta.illustration){const badge=document.createElement('span');badge.className='photo-image-label';badge.textContent=word('illustration');b.append(badge)}
+ }else if(needsRadiationPlaceholder(e,meta)){
+  b.append(radiationVisual(false));
  }else{
   const missing=document.createElement('div');missing.className='photo-tile-placeholder';missing.textContent=word('missing');b.append(missing);
  }
@@ -71,9 +80,10 @@ function updateInfo(){
  const e=elements[selected-1], meta=photos[e.z]||{};
  const container=document.createElement('div');container.className='photo-focus';
  if(meta.url){const im=document.createElement('img');im.alt=meta.title||e[locale()];im.loading='lazy';im.referrerPolicy='no-referrer';im.src=meta.url;container.append(im)}
+ else if(needsRadiationPlaceholder(e,meta))container.append(radiationVisual(true));
  const text=document.createElement('div');
- const title=document.createElement('strong');title.textContent=meta.url?(meta.illustration?word('illustration'):word('example')):word('missing');text.append(title);
- const desc=document.createElement('p');desc.textContent=meta.url?(meta.title||e[locale()]):word('missing');text.append(desc);
+ const title=document.createElement('strong');title.textContent=meta.url?(meta.illustration?word('illustration'):word('example')):needsRadiationPlaceholder(e,meta)?word('radioactiveTitle'):word('missing');text.append(title);
+ const desc=document.createElement('p');desc.textContent=meta.url?(meta.title||e[locale()]):needsRadiationPlaceholder(e,meta)?word('radioactiveNote'):word('missing');text.append(desc);
  if(meta.url){
   const a=document.createElement('a');a.textContent=word('source');a.href=meta.url;a.target='_blank';a.rel='noopener noreferrer';text.append(a);
   const credit=document.createElement('p');credit.textContent=word('credit')+': '+(meta.attribution||'—');text.append(credit);
