@@ -95,6 +95,11 @@ function choose(next){
 }
 classic.addEventListener('click',()=>choose('classic'));
 photo.addEventListener('click',()=>choose('photo'));
+// The core language buttons re-render the periodic table, but this optional
+// switcher is outside that renderer; refresh its labels on every language change.
+for(const id of ['hu','de','en']){
+ $(id)?.addEventListener('click',()=>queueMicrotask(relabel));
+}
 const previous=renderTable;
 renderTable=function(){previous();if(view==='photo')renderPhoto()};
 const observer=new MutationObserver(()=>{if(view==='photo')updateInfo()});
