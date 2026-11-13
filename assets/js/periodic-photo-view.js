@@ -5,10 +5,13 @@ const $=id=>document.getElementById(id);
 const root=$('periodSection'), table=$('ptable'), detail=$('atomDetail');
 if(!root||!table||!detail||!Array.isArray(window.elements)&&typeof elements==='undefined')return;
 const photos=window.ChemistryElementPhotos||{};
+// No known stable isotopes. Bi-209 is a special case: its extremely slow alpha decay
+// (half-life about 1.9 × 10^19 years) was experimentally observed.
+function isRadioactiveElement(z){return z===43||z===61||z>=83&&z<=118}
 const t={
- hu:{classic:'Klasszikus',photo:'Képes',note:'Valódi elemminták és jelölt illusztrációk. Képekhez internetkapcsolat szükséges. Vízszintesen görgethető.',missing:'Nincs hiteles kép',radioactive:'Radioaktív',radioactiveTitle:'Radioaktív, mesterséges elem',radioactiveNote:'Ezt az elemet mesterségesen állítják elő, rendkívül kis mennyiségben. Minden ismert izotópja radioaktív, ezért nem áll rendelkezésre hagyományos elemminta-fotó.',illustration:'Illusztráció',example:'Elemminta',source:'Kép forrása',offline:'A kép nem tölthető be',credit:'Fotó jóváírása'},
- de:{classic:'Klassisch',photo:'Mit Bildern',note:'Echte Elementproben und gekennzeichnete Illustrationen. Bilder benötigen Internet. Horizontal scrollen.',missing:'Kein belegtes Bild',radioactive:'Radioaktiv',radioactiveTitle:'Radioaktives, künstliches Element',radioactiveNote:'Dieses Element wird künstlich in äußerst kleinen Mengen erzeugt. Alle bekannten Isotope sind radioaktiv; deshalb gibt es kein herkömmliches Foto einer Elementprobe.',illustration:'Illustration',example:'Elementprobe',source:'Bildquelle',offline:'Bild nicht verfügbar',credit:'Bildnachweis'},
- en:{classic:'Classic',photo:'Photos',note:'Real element samples and clearly marked illustrations. Photos require internet. Scroll horizontally.',missing:'No verified photo',radioactive:'Radioactive',radioactiveTitle:'Synthetic, radioactive element',radioactiveNote:'This element is produced artificially in extremely small quantities. All known isotopes are radioactive, so no conventional photograph of an element sample is available.',illustration:'Illustration',example:'Element sample',source:'Image source',offline:'Image unavailable',credit:'Image attribution'}
+ hu:{classic:'Klasszikus',photo:'Képes',note:'Valódi elemminták és jelölt illusztrációk. Képekhez internetkapcsolat szükséges. Vízszintesen görgethető.',missing:'Nincs hiteles kép',radioactive:'Radioaktív',bismuthNote:'A bizmut-209 radioaktivitása rendkívül gyenge (felezési ideje kb. 1,9 × 10¹⁹ év).',radioactiveTitle:'Radioaktív, mesterséges elem',radioactiveNote:'Ezt az elemet mesterségesen állítják elő, rendkívül kis mennyiségben. Minden ismert izotópja radioaktív, ezért nem áll rendelkezésre hagyományos elemminta-fotó.',illustration:'Illusztráció',example:'Elemminta',source:'Kép forrása',offline:'A kép nem tölthető be',credit:'Fotó jóváírása'},
+ de:{classic:'Klassisch',photo:'Mit Bildern',note:'Echte Elementproben und gekennzeichnete Illustrationen. Bilder benötigen Internet. Horizontal scrollen.',missing:'Kein belegtes Bild',radioactive:'Radioaktiv',bismuthNote:'Bismut-209 ist nur äußerst schwach radioaktiv (Halbwertszeit ca. 1,9 × 10¹⁹ Jahre).',radioactiveTitle:'Radioaktives, künstliches Element',radioactiveNote:'Dieses Element wird künstlich in äußerst kleinen Mengen erzeugt. Alle bekannten Isotope sind radioaktiv; deshalb gibt es kein herkömmliches Foto einer Elementprobe.',illustration:'Illustration',example:'Elementprobe',source:'Bildquelle',offline:'Bild nicht verfügbar',credit:'Bildnachweis'},
+ en:{classic:'Classic',photo:'Photos',note:'Real element samples and clearly marked illustrations. Photos require internet. Scroll horizontally.',missing:'No verified photo',radioactive:'Radioactive',bismuthNote:'Bismuth-209 is extremely weakly radioactive (half-life about 1.9 × 10¹⁹ years).',radioactiveTitle:'Synthetic, radioactive element',radioactiveNote:'This element is produced artificially in extremely small quantities. All known isotopes are radioactive, so no conventional photograph of an element sample is available.',illustration:'Illustration',example:'Element sample',source:'Image source',offline:'Image unavailable',credit:'Image attribution'}
 };
 const oldWrap=table.parentElement;
 oldWrap.id='periodClassicWrap';
@@ -40,8 +43,9 @@ function makeTile(e){
  const b=document.createElement('button');b.type='button';
  b.className='photo-tile'+(e.z===selected?' selected':'')+(matching(e)?'':' dim');
  b.style.cssText='--c:'+palette[e.cat]+';grid-column:'+e.g+';grid-row:'+e.r;
- b.setAttribute('aria-label',e.z+' '+e[locale()]+' ('+e.s+')'+(e.z>=105&&e.z<=118?' — '+word('radioactive'):''));
- b.title=e.z+' · '+e[locale()];
+ const radiationLabel=isRadioactiveElement(e.z)?' — '+(e.z===83?word('bismuthNote'):word('radioactive')):'';
+ b.setAttribute('aria-label',e.z+' '+e[locale()]+' ('+e.s+')'+radiationLabel);
+ b.title=e.z+' · '+e[locale()]+radiationLabel;
  const head=document.createElement('div');head.className='photo-tile-head';
  const symbol=document.createElement('strong');symbol.textContent=e.s;
  const number=document.createElement('small');number.textContent=e.z;
@@ -59,6 +63,15 @@ function makeTile(e){
   b.append(radiationVisual(false));
  }else{
   const missing=document.createElement('div');missing.className='photo-tile-placeholder';missing.textContent=word('missing');b.append(missing);
+ }
+ // The 105–118 tiles already show the large trefoil as their image substitute.
+ // On other radioactive elements, place just a small bottom-left corner marker.
+ if(isRadioactiveElement(e.z)&&!needsRadiationPlaceholder(e,meta)){
+  const corner=document.createElement('span');
+  corner.className='photo-tile-radiation-corner';
+  corner.textContent='☢';
+  corner.setAttribute('aria-hidden','true');
+  b.append(corner);
  }
  // Delegate to the unmodified table's selection handler and its detail popup.
  b.addEventListener('click',()=>{
