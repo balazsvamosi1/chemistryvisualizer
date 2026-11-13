@@ -1,0 +1,69 @@
+/* Chemistry Lab — six interactive mini-games, isolated from existing games and labs. */
+#miniGamesSection{margin-top:16px;line-height:1.5}
+.mg-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.mg-top h2{margin:0;font-size:clamp(22px,2.7vw,31px)}
+.mg-intro{color:#c6dcec;margin:0 0 14px}
+.mg-catalog{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,215px),1fr));gap:12px}
+.mg-card{display:flex;flex-direction:column;gap:8px;background:#102b3e;border:1px solid #3f6379;border-radius:13px;padding:15px;min-width:0;min-height:174px}
+.mg-card-icon{font-size:24px;line-height:1}
+.mg-card h3{margin:0;font-size:17px;color:#e8f8ff}
+.mg-card p{margin:0;color:#bfd4e3;font-size:13px;flex:1}
+.mg-card .mg-go{align-self:flex-start}
+.mg-go,.mg-action{padding:10px 14px;border:1px solid #6abdd4;background:#15526a;color:#f5feff;font-weight:700;border-radius:9px;cursor:pointer}
+.mg-go:hover,.mg-action:hover{background:#24718b}
+.mg-game{border:1px solid #315c75;background:#0a1f31;border-radius:14px;padding:clamp(12px,2vw,24px);max-width:100%;min-width:0}
+.mg-game-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid #385771;padding-bottom:12px;margin-bottom:16px}
+.mg-game-head h3{font-size:clamp(18px,2.2vw,24px);margin:0}
+.mg-progress{font-weight:650;color:#9de3f1;font-variant-numeric:tabular-nums}
+.mg-area{max-width:800px;margin:0 auto;display:grid;gap:15px;justify-items:stretch}
+.mg-question{font-size:clamp(16px,2vw,21px);font-weight:700;color:#eafaff;margin:0}
+.mg-sub{font-size:13px;color:#c0d6e5;margin:0}
+.mg-options{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.mg-options button,.mg-tools button{min-height:43px;border-radius:9px}
+.mg-options button{flex:1 1 130px;max-width:240px;font-weight:650;padding:10px 12px}
+.mg-options button:focus-visible,.mg-card button:focus-visible,.mg-tools button:focus-visible,.mg-action:focus-visible,.mg-lab-links button:focus-visible{outline:3px solid #f4de91;outline-offset:2px}
+.mg-message{min-height:48px;padding:12px 14px;border:1px solid #365b71;border-left:4px solid #59c0db;border-radius:9px;color:#e1f1ff;background:#102f43;line-height:1.5}
+.mg-message[data-kind="good"]{border-left-color:#8de7ac;background:#133b37}
+.mg-message[data-kind="try"]{border-left-color:#ffca70;background:#40321f}
+.mg-controls{display:flex;flex-wrap:wrap;gap:9px;justify-content:space-between;margin-top:14px;align-items:center}
+.mg-controls button{min-height:42px}
+.mg-photo{display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:194px;padding:10px;border-radius:11px;background:#0a1728;border:1px solid #38566c}
+.mg-photo img{display:block;object-fit:contain;width:100%;height:min(30vh,185px);min-height:140px}
+.mg-credit{font-size:10px;color:#a7c5d9;overflow-wrap:anywhere}
+.mg-tank{position:relative;width:min(100%,390px);height:200px;margin:0 auto;border:4px solid #8dc4d7;border-radius:14px 14px 23px 23px;background:linear-gradient(to bottom,#102334 0 22%,#2a6489b0 22% 100%);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.mg-tank::after{content:"";position:absolute;top:22%;left:0;right:0;height:3px;background:#97dcfa}
+.mg-specimen{position:absolute;left:50%;top:10%;transform:translateX(-50%);width:82px;height:82px;border:2px solid #f5ffffaa;border-radius:12px;display:flex;justify-content:center;align-items:center;font-weight:750;color:#0b2032;text-shadow:0 1px #ffffff70;transition:top .4s ease;z-index:2}
+.mg-specimen.floats{top:9%}.mg-specimen.sinks{top:58%}
+.mg-tank-text{position:absolute;bottom:7px;right:10px;font-size:12px;color:#e2f7ff}
+.mg-thermometer{width:100%;accent-color:#7cddf4}
+.mg-slider-row{display:grid;gap:8px;grid-template-columns:1fr auto;align-items:center}
+.mg-value{padding:7px 12px;border-radius:9px;background:#193d50;border:1px solid #416c7b;font-weight:750;min-width:100px;text-align:center}
+.mg-particles{width:100%;height:122px;background:#0b1a2d;border:1px solid #3e647a;border-radius:10px;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));align-items:center;justify-items:center;overflow:hidden;padding:15px;gap:5px}
+.mg-particles i{display:block;width:clamp(8px,1.1vw,16px);height:clamp(8px,1.1vw,16px);border-radius:50%;background:#79d2f3;box-shadow:0 0 10px #4dcff755}
+.mg-particles.solid{align-content:center;row-gap:1px}
+.mg-particles.liquid{align-content:end;row-gap:3px}
+.mg-particles.gas{align-content:space-between;row-gap:15px}
+.mg-flame-scene{height:205px;display:flex;align-items:flex-end;justify-content:center;border:1px solid #3e627a;background:radial-gradient(ellipse at bottom,#1b455d,#061322 67%);border-radius:12px;padding-bottom:22px}
+.mg-flame-fire{height:132px;width:85px;border-radius:74% 12% 62% 25%;transform:rotate(45deg);background:linear-gradient(135deg,var(--flame),#a4e5ff 78%);box-shadow:0 0 40px var(--flame);filter:saturate(1.15)}
+.mg-flame-nozzle{position:absolute;height:33px;width:42px;border-radius:5px 5px 12px 12px;background:linear-gradient(90deg,#31566d,#87b0c4,#31566d);transform:translateY(31px)}
+.mg-beaker{width:170px;height:155px;border:4px solid #9cc5d9;border-top:0;border-radius:0 0 16px 16px;position:relative;margin:10px auto;background:linear-gradient(to top,var(--liquid),transparent);display:flex;align-items:center;justify-content:center}
+.mg-beaker:before{content:"";position:absolute;top:0;left:-10px;right:-10px;height:4px;background:#9cc5d9;border-radius:5px}
+.mg-beaker strong{background:#0a2439dc;padding:7px 12px;border-radius:8px;font-size:24px;color:#f3fdff;font-variant-numeric:tabular-nums}
+.mg-tools{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px}
+.mg-tools input[type="number"]{width:108px;min-width:108px;padding:9px}
+.mg-tools input[type="range"]{width:min(100%,520px);accent-color:#71d4f0}
+.mg-molecule-board{position:relative;width:100%;max-width:500px;height:260px;margin:0 auto;border:1px solid #4e7185;background:radial-gradient(ellipse at center,#1b4053,#091728);border-radius:12px;overflow:hidden}
+.mg-molecule-board svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.mg-node{position:absolute;transform:translate(-50%,-50%);width:51px;height:51px;border-radius:50%;background:#144b70;border:2px solid #8bc9e4;color:white;font-size:18px;font-weight:750;display:flex;align-items:center;justify-content:center;min-width:0;padding:0;z-index:2}
+.mg-node.chosen{outline:4px solid #ffd885;outline-offset:2px}
+.mg-bond-menu{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;align-items:center}
+.mg-bond-menu select{min-width:130px}
+.mg-atom-add{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+.mg-atom-add button{font-size:17px;font-weight:750;min-width:52px}
+.mg-lab-links{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin:0 0 13px;padding:9px 12px;background:#102d42;border:1px solid #37627b;border-radius:10px}
+.mg-lab-links span{font-size:12px;font-weight:650;color:#c8e8f5}
+.mg-lab-links button{padding:8px 11px;border:1px solid #61adca;background:#165269;color:#f5fdff;border-radius:8px;font-size:12px;font-weight:700}
+.mg-lab-links button:hover{background:#26758e}
+[hidden].mg-game,[hidden].mg-catalog{display:none!important}
+@media(max-width:650px){.mg-game{padding:12px}.mg-photo img{height:145px;min-height:125px}.mg-catalog{grid-template-columns:1fr}.mg-game-head{align-items:flex-start}.mg-slider-row{grid-template-columns:1fr}.mg-tools button{flex:1 1 auto}.mg-molecule-board{height:225px}}
+@media(prefers-reduced-motion:reduce){.mg-specimen{transition:none}.mg-flame-fire{filter:none}}
