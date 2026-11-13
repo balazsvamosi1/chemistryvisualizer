@@ -1,0 +1,27 @@
+/* Optional photo mode: original periodic grid and selectors are unchanged. */
+.period-view-switch{display:inline-flex;gap:4px;padding:4px;background:#091929;border:1px solid #315369;border-radius:12px;flex-wrap:wrap}
+.period-view-switch button{border:0;background:transparent;min-width:0;padding:9px 14px;font-weight:600}
+.period-view-switch button[aria-pressed="true"]{background:#176078;color:#fff;box-shadow:inset 0 0 0 1px #73d6f0}
+.period-view-switch button:focus-visible,.photo-tile:focus-visible{outline:3px solid #ffe299;outline-offset:2px}
+.photo-wrap{overflow-x:auto;padding:3px 0 12px;scrollbar-gutter:stable}
+.photo-grid{display:grid;grid-template-columns:repeat(18,minmax(104px,1fr));grid-template-rows:repeat(10,113px);gap:6px;min-width:1974px}
+.photo-tile{position:relative;min-width:0;display:flex;flex-direction:column;overflow:hidden;background:#102435;border:1px solid var(--c);border-radius:9px;color:#ecf8ff;cursor:pointer;text-align:left;padding:0;transition:border-color .12s,transform .12s}
+.photo-tile:hover{transform:translateY(-2px);border-color:white;z-index:1}
+.photo-tile.selected{outline:3px solid #b6edff;outline-offset:0;z-index:2}
+.photo-tile.dim{opacity:.22}
+.photo-tile-head{display:flex;align-items:baseline;gap:5px;justify-content:space-between;padding:3px 6px;background:color-mix(in srgb,var(--c),#091729 72%);width:100%;min-height:26px}
+.photo-tile-head strong{font-size:21px;line-height:1.1;color:#fff}
+.photo-tile-head small{font-size:10px;color:#deedfa}
+.photo-tile-name{padding:3px 6px;width:100%;font-size:11px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.photo-tile-image{width:100%;height:61px;object-fit:cover;object-position:center;background:#182d40;display:block}
+.photo-tile-image[hidden]{display:none}
+.photo-tile-placeholder{height:61px;display:flex;align-items:center;justify-content:center;text-align:center;padding:5px;color:#cbd9e6;font-size:10px;background:repeating-linear-gradient(125deg,#132a3e,#132a3e 10px,#1a3348 10px,#1a3348 20px)}
+.photo-image-label{position:absolute;right:3px;bottom:2px;background:#051624e8;color:#f4faff;padding:1px 3px;font-size:8px;border-radius:3px}
+.photo-overview-note{color:#b4cfde;font-size:12px;margin:2px 0 12px}
+.photo-focus{padding:10px 0;display:grid;grid-template-columns:minmax(100px,170px) 1fr;gap:12px;align-items:center}
+.photo-focus img{width:100%;aspect-ratio:4/3;object-fit:contain;border:1px solid #35536a;border-radius:9px;background:#0b1a29}
+.photo-focus strong{display:block;font-size:13px;margin-bottom:5px}
+.photo-focus p{margin:5px 0;font-size:11px;line-height:1.45;color:#c5d7e3;overflow-wrap:anywhere}
+.photo-focus a{color:#8ee4fc;font-size:11px}
+#periodPhotoDetail[hidden],#photoWrap[hidden],#periodClassicWrap[hidden]{display:none!important}
+@media(max-width:700px){.period-view-switch{width:100%}.period-view-switch button{flex:1}.photo-grid{grid-template-columns:repeat(18,minmax(92px,1fr));min-width:1728px}.photo-focus{grid-template-columns:1fr}.photo-focus img{max-width:220px}}
