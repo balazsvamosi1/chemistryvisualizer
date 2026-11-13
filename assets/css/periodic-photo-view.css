@@ -25,6 +25,9 @@
 .photo-radioactive-detail .photo-radioactivity-symbol{font-size:clamp(56px,5vw,78px)}
 .photo-radioactive-detail .photo-radioactivity-caption{font-size:12px}
 @media(max-width:850px){.photo-tile-radioactive .photo-radioactivity-symbol{font-size:38px}.photo-tile-radioactive .photo-radioactivity-caption{font-size:10px}}
+/* Small, non-interactive scientific marker, intentionally not covering the atomic number or the photo's illustration label. */
+.photo-tile-radiation-corner{position:absolute;left:3px;bottom:3px;z-index:2;display:flex;align-items:center;justify-content:center;width:17px;height:17px;border:1px solid #473017;border-radius:4px;background:#f1b95e;color:#241910;box-shadow:0 1px 4px #0009;font-family:system-ui,'Segoe UI Symbol','Apple Symbols',sans-serif;font-size:14px;line-height:1;pointer-events:none}
+@media(max-width:850px){.photo-tile-radiation-corner{width:18px;height:18px;font-size:15px}}
 .photo-image-label{position:absolute;right:3px;bottom:2px;background:#051624e8;color:#f4faff;padding:1px 3px;font-size:8px;border-radius:3px}
 .photo-overview-note{color:#b4cfde;font-size:12px;margin:2px 0 12px}
 .photo-focus{padding:10px 0;display:grid;grid-template-columns:minmax(100px,170px) 1fr;gap:12px;align-items:center}
