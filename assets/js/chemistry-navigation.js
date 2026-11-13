@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(typeof document==='undefined')return;
-const panels={homeTab:'homeSection',periodTab:'periodSection',moleculeTab:'moleculeSection',reactionTab:'reactionSection',huntTab:'huntSection',materialsTab:'materialsSection',densityTab:'densitySection',bunsenTab:'bunsenSection',stoichTab:'stoichSection',acidBaseTab:'acidBaseSection',physicsTab:'physicsSection',specTab:'specSection',curriculumTab:'curriculumSection',gameTab:'gameSection',mazeTab:'mazeSection',miniGamesTab:'miniGamesSection'};
+const panels={homeTab:'homeSection',periodTab:'periodSection',moleculeTab:'moleculeSection',reactionTab:'reactionSection',huntTab:'huntSection',materialsTab:'materialsSection',densityTab:'densitySection',bunsenTab:'bunsenSection',stoichTab:'stoichSection',acidBaseTab:'acidBaseSection',physicsTab:'physicsSection',specTab:'specSection',curriculumTab:'curriculumSection',miniGamesTab:'miniGamesSection',gameTab:'gameSection',mazeTab:'mazeSection'};
 const $=id=>document.getElementById(id),tabs=Object.keys(panels).filter(id=>$(id)&&$(id).getAttribute('style')!=='display:none!important');
 let selected='homeTab';
 let visibleGroup='explore';
