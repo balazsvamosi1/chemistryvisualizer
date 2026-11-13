@@ -70,6 +70,16 @@ function open(id){
  window.ChemistryNavigation?.activate('miniGamesTab',false);
  requestAnimationFrame(()=>root.scrollIntoView({behavior:'smooth',block:'start'}));
 }
+function goLab(id){
+ const tabs={elements:'periodTab',molecule:'moleculeTab',density:'densityTab',phase:'densityTab',flame:'bunsenTab',acid:'acidBaseTab'};
+ const tabId=tabs[id],tab=$(tabId);if(!tab)return;
+ tab.click();
+ window.ChemistryNavigation?.activate(tabId,false);
+ if(id==='phase')$('densityViewPhase')?.click();
+ else if(id==='density')$('densityViewCompare')?.click();
+ const panel=gameData.find(g=>g.id===id)?.lab;
+ requestAnimationFrame(()=>$(panel)?.scrollIntoView({behavior:'smooth',block:'start'}));
+}
 function close(){
  state.game=null;state.completed=false;
  stage.hidden=true;catalog.hidden=false;renderCatalog();
@@ -85,6 +95,7 @@ function roundScaffold(description,tip){
  const message=el('div','mg-message',w('Próbáld ki a feladatot!','Probiere es aus!','Try the challenge!'));message.setAttribute('role','status');message.setAttribute('aria-live','polite');
  const footer=el('div','mg-controls');
  footer.append(btn(w('← Játékok','← Spiele','← Games'),close));
+ footer.append(btn(w('Vissza a laborhoz','Zurück zum Labor','Back to lab'),()=>goLab(state.game)));
  stage.append(area,message,footer);
  return{area,message,footer};
 }
@@ -123,11 +134,17 @@ function renderRound(){
 }
 function elementRound(){
  const challenge=BANK.elements[state.round],e=elementByZ(challenge.z);
+ const clues={
+  16:['Sárga kénkristályok','Gelbe Schwefelkristalle','Yellow sulfur crystals'],
+  29:['Vöröses rézminta','Rötliche Kupferprobe','Reddish copper sample'],
+  79:['Sárga, fémes aranyminta','Gelbe metallische Goldprobe','Yellow metallic gold sample'],
+  26:['Vastartalmú meteoritdarabok','Eisenhaltige Meteoritenstücke','Iron-bearing meteorite fragments']
+ };
  const ui=roundScaffold(w('Melyik elemet látod a fényképen?','Welches Element zeigt das Foto?','Which element is shown in the photo?'),w('Nézd meg a mintát, majd válassz vegyjelet.','Betrachte die Probe und wähle ein Elementsymbol.','Study the sample, then pick its symbol.'));
  const frame=el('div','mg-photo'),meta=window.ChemistryElementPhotos?.[e.z];
  if(meta?.url){
-  const img=el('img');img.alt=w('Ismeretlen elemminta','Unbekannte Elementprobe','Unknown element sample');img.src=meta.url;img.loading='lazy';img.referrerPolicy='no-referrer';img.addEventListener('error',()=>{img.hidden=true;frame.append(el('p','mg-sub',w('A fotó nem érhető el.','Foto nicht verfügbar.','Image unavailable.')))});frame.append(img);
- }else frame.append(el('p','mg-sub',w('A fotó jelenleg nem érhető el.','Foto nicht verfügbar.','Image unavailable.')));
+  const img=el('img');img.alt=w('Ismeretlen elemminta','Unbekannte Elementprobe','Unknown element sample');img.src=meta.url;img.loading='lazy';img.referrerPolicy='no-referrer';img.addEventListener('error',()=>{img.hidden=true;frame.append(el('p','mg-sub',w('A fotó nem érhető el. Támpont: ','Foto nicht verfügbar. Hinweis: ','Image unavailable. Clue: ')+say(clues[e.z]||[e.hu,e.de,e.en])))});frame.append(img);
+ }else frame.append(el('p','mg-sub',w('A fotó jelenleg nem érhető el. Támpont: ','Foto nicht verfügbar. Hinweis: ','Image unavailable. Clue: ')+say(clues[e.z]||[e.hu,e.de,e.en])));
  ui.area.append(frame);
  const options=el('div','mg-options');
  for(const z of challenge.choices){
