@@ -17,6 +17,14 @@
 .photo-tile-image{flex:1 1 0;min-height:0;width:100%;height:0;object-fit:cover;object-position:center;background:#182d40;display:block}
 .photo-tile-image[hidden]{display:none}
 .photo-tile-placeholder{flex:1 1 0;min-height:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:3px;color:#cbd9e6;font-size:clamp(8px,.6vw,10px);background:repeating-linear-gradient(125deg,#132a3e,#132a3e 10px,#1a3348 10px,#1a3348 20px)}
+/* Radioactivity is a property of these synthetic elements, not a generic missing-image indicator. */
+.photo-tile-radioactive{flex-direction:column;gap:0;background:linear-gradient(145deg,#dfaa65 0%,#b97845 100%);color:#241b15}
+.photo-radioactivity-symbol{font-family:system-ui,'Segoe UI Symbol','Apple Symbols',sans-serif;font-size:clamp(23px,3vw,43px);font-weight:700;line-height:1.05;display:block}
+.photo-radioactivity-caption{font-size:clamp(7px,.65vw,10px);font-weight:700;line-height:1.05;display:block;text-align:center}
+.photo-radioactive-detail{background:linear-gradient(135deg,#dfaa65,#b97845);border:1px solid #ddbb83;border-radius:9px;aspect-ratio:4/3;min-height:108px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#241b15;text-align:center;padding:9px}
+.photo-radioactive-detail .photo-radioactivity-symbol{font-size:clamp(56px,5vw,78px)}
+.photo-radioactive-detail .photo-radioactivity-caption{font-size:12px}
+@media(max-width:850px){.photo-tile-radioactive .photo-radioactivity-symbol{font-size:38px}.photo-tile-radioactive .photo-radioactivity-caption{font-size:10px}}
 .photo-image-label{position:absolute;right:3px;bottom:2px;background:#051624e8;color:#f4faff;padding:1px 3px;font-size:8px;border-radius:3px}
 .photo-overview-note{color:#b4cfde;font-size:12px;margin:2px 0 12px}
 .photo-focus{padding:10px 0;display:grid;grid-template-columns:minmax(100px,170px) 1fr;gap:12px;align-items:center}
