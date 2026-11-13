@@ -43,7 +43,7 @@
 .mg-particles.solid{align-content:center;row-gap:1px}
 .mg-particles.liquid{align-content:end;row-gap:3px}
 .mg-particles.gas{align-content:space-between;row-gap:15px}
-.mg-flame-scene{height:205px;display:flex;align-items:flex-end;justify-content:center;border:1px solid #3e627a;background:radial-gradient(ellipse at bottom,#1b455d,#061322 67%);border-radius:12px;padding-bottom:22px}
+.mg-flame-scene{position:relative;height:205px;display:flex;align-items:flex-end;justify-content:center;border:1px solid #3e627a;background:radial-gradient(ellipse at bottom,#1b455d,#061322 67%);border-radius:12px;padding-bottom:22px}
 .mg-flame-fire{height:132px;width:85px;border-radius:74% 12% 62% 25%;transform:rotate(45deg);background:linear-gradient(135deg,var(--flame),#a4e5ff 78%);box-shadow:0 0 40px var(--flame);filter:saturate(1.15)}
 .mg-flame-nozzle{position:absolute;height:33px;width:42px;border-radius:5px 5px 12px 12px;background:linear-gradient(90deg,#31566d,#87b0c4,#31566d);transform:translateY(31px)}
 .mg-beaker{width:170px;height:155px;border:4px solid #9cc5d9;border-top:0;border-radius:0 0 16px 16px;position:relative;margin:10px auto;background:linear-gradient(to top,var(--liquid),transparent);display:flex;align-items:center;justify-content:center}
