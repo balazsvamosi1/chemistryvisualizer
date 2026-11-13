@@ -2,14 +2,14 @@
 (function(){
 'use strict';
 if(typeof document==='undefined')return;
-const panels={homeTab:'homeSection',periodTab:'periodSection',moleculeTab:'moleculeSection',reactionTab:'reactionSection',huntTab:'huntSection',materialsTab:'materialsSection',densityTab:'densitySection',bunsenTab:'bunsenSection',stoichTab:'stoichSection',acidBaseTab:'acidBaseSection',physicsTab:'physicsSection',specTab:'specSection',curriculumTab:'curriculumSection',gameTab:'gameSection',mazeTab:'mazeSection'};
+const panels={homeTab:'homeSection',periodTab:'periodSection',moleculeTab:'moleculeSection',reactionTab:'reactionSection',huntTab:'huntSection',materialsTab:'materialsSection',densityTab:'densitySection',bunsenTab:'bunsenSection',stoichTab:'stoichSection',acidBaseTab:'acidBaseSection',physicsTab:'physicsSection',specTab:'specSection',curriculumTab:'curriculumSection',gameTab:'gameSection',mazeTab:'mazeSection',miniGamesTab:'miniGamesSection'};
 const $=id=>document.getElementById(id),tabs=Object.keys(panels).filter(id=>$(id)&&$(id).getAttribute('style')!=='display:none!important');
 let selected='homeTab';
 let visibleGroup='explore';
 const groupDefinitions=[
  {key:'explore',items:['periodTab','moleculeTab','materialsTab','densityTab','homeTab']},
  {key:'experiment',items:['bunsenTab','stoichTab','acidBaseTab','physicsTab']},
- {key:'learn',items:['curriculumTab','gameTab','mazeTab']},
+ {key:'learn',items:['curriculumTab','miniGamesTab','gameTab','mazeTab']},
  {key:'advanced',items:['specTab']}
 ];
 const groupNames={
